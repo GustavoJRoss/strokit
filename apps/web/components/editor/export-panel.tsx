@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { type ExportTab, useEditorStore } from "@/store/editor-store";
 import { selectComponentName, selectExportCode } from "@/store/selectors";
 import { CodeBlock } from "./code-block";
+import { VideoExportButton } from "./video-export-dialog";
 
 const HINTS: Record<ExportTab, string> = {
   css: "SVG com <style> embutido. Zero runtime.",
@@ -74,6 +75,7 @@ export function ExportPanel({ collapsed, onToggleCollapsed, fill = false }: Expo
               <CopyIcon data-icon="inline-start" />
               Copiar
             </Button>
+            <VideoExportButton />
             <Button variant="outline" size="sm" disabled={!code} onClick={download}>
               <DownloadIcon data-icon="inline-start" />
               {tab === "css" ? "Baixar .svg" : "Baixar .tsx"}

@@ -15,10 +15,15 @@ export function baseName(fileName: string): string {
 }
 
 export function downloadText(content: string, fileName: string, type: string): void {
-  const url = URL.createObjectURL(new Blob([content], { type }));
+  downloadBlob(new Blob([content], { type }), fileName);
+}
+
+export function downloadBlob(blob: Blob, fileName: string): void {
+  const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
   link.download = fileName;
   link.click();
-  URL.revokeObjectURL(url);
+  // Revoking right away can cut large downloads short in some browsers.
+  window.setTimeout(() => URL.revokeObjectURL(url), 30_000);
 }
