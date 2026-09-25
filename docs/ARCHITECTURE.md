@@ -84,8 +84,6 @@ type AnimationSpec = {
   version: 1;
   name: string;
   global: {
-    playbackRate: number;
-    background: "light" | "dark" | "checker";
     autoStroke: { enabled: boolean; width: number };   // RF4
     a11y: { label: string; mode: "img" | "status" };
   };
@@ -151,7 +149,11 @@ interface Preset<P> {
 
 ### Preview
 
-O editor chama `compile()` e depois `exporters.css()`, e injeta o resultado dentro de um container isolado (Shadow DOM ou `<iframe srcdoc>`, a decidir na Fase 2, preferindo Shadow DOM). Isso cumpre a regra "preview = export" e evita que o CSS da animação vaze para a UI do editor. Controles de play/pause/velocidade usam a Web Animations API (`element.getAnimations()`) sobre as animações CSS já aplicadas, sem gerar outro código.
+O editor chama `compile()` e depois `exporters.css(compiled, { includeElementIds: true })`, e injeta o resultado num **Shadow DOM** (decidido na Fase 2). O CSS é idêntico ao exportado; a única diferença no markup são os `data-sk-id`, usados para hover e seleção. Isso cumpre a regra "preview = export" e evita que o CSS da animação vaze para a UI do editor. Controles de play/pause/velocidade usam a Web Animations API (`shadowRoot.getAnimations()`) sobre as animações CSS já aplicadas, sem gerar outro código.
+
+**Simular reduced motion:** o preview troca, via CSSOM, o `media` da regra `@media (prefers-reduced-motion: reduce)` do próprio stylesheet exportado para `all` (e de volta). O texto do CSS nunca é reescrito.
+
+**Hover/seleção:** um overlay HTML fora do Shadow DOM desenha o `getBoundingClientRect()` dos elementos; clicar no canvas seleciona (`composedPath()` até o `data-sk-id`).
 
 ## 5. Segurança (sanitização)
 
@@ -201,14 +203,25 @@ Sem dependências; CSS em `<style>` escopado pelo prefixo ou em CSS module opcio
 ```ts
 type EditorState = {
   doc: SvgDocument | null;
+  fileName: string | null;
+  importWarnings: ImportWarning[];
   spec: AnimationSpec;
   selection: string[];
-  playback: { playing: boolean; rate: number; reducedMotion: boolean };
+  selectionAnchor: string | null;   // para seleção por intervalo (Shift)
+  hovered: string | null;
+  playback: {                        // estado só do preview, nunca exportado
+    playing: boolean;
+    rate: number;
+    reducedMotion: boolean;
+    background: "light" | "dark" | "checker";
+    restartToken: number;
+  };
   exportTab: "css" | "react" | "motion";
+  exportOpen: boolean;
 };
 ```
 
-Derivados (`compiled`, `cssOutput`, `reactOutput`…) são memoizados por seletores e **não** ficam guardados no store. Undo/redo com `zundo` na Fase 5 (opcional). Sincronização com a URL feita com debounce de 300 ms.
+Derivados (`selectCompiled`, `selectCssExport`, `selectPreviewMarkup`, `selectActiveTrack`) são seletores memoizados pela identidade das entradas (`memoizeLast`) e **não** ficam guardados no store: todos os componentes compartilham um único compile por mudança de spec. Undo/redo com `zundo` na Fase 5 (opcional). Sincronização com a URL feita com debounce de 300 ms.
 
 ## 9. Compartilhamento por URL
 
@@ -256,11 +269,16 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-25 | Cor animada via `stroke: var(--sk-stroke, <cor original>)` é aplicada pelo `compile()`, não pelo preset; auto-stroke usa a cor do fill | Presets ficam sem lógica de cor; RF4 e regra 7 em um só lugar |
 | 2026-09-25 | Export CSS agrupa elementos com regra idêntica em uma classe `sk-<hash>-N`; `data-sk-id` é removido do export (mantido com `includeElementIds` para o preview, sem mudar o CSS) | CSS curto; o preview continua usando exatamente o mesmo CSS |
 | 2026-09-25 | Spike do `pathLength` virou teste e2e permanente nos 3 motores | Garante que regressões de navegador sejam detectadas |
+| 2026-09-25 | `global.playbackRate` e `global.background` saíram da `AnimationSpec` e foram para `playback` no store | São estado do preview; duplicavam o store (regra 1) |
+| 2026-09-25 | Preview em Shadow DOM; reduced motion simulado trocando o `media` da regra via CSSOM | O texto do CSS continua idêntico ao exportado, sem nenhuma derivação textual |
+| 2026-09-25 | Destaque de sintaxe: Shiki carregado sob demanda, engine JS (sem WASM), tema github-light; o `<style>` do SVG é destacado como CSS em segmento próprio | A gramática HTML do Shiki não trata `<style>` dentro de `<svg>` como CSS |
+| 2026-09-25 | `exactOptionalPropertyTypes` desligado só em `apps/web` | Componentes shadcn/Radix não são escritos para essa flag; o core continua com ela |
+| 2026-09-25 | shadcn `slider.tsx` alterado para repassar `aria-label` ao thumb | O Radix nomeia o thumb, não o root; sem isso os sliders ficam sem nome acessível |
+| 2026-09-25 | Ao importar, todas as camadas recebem `draw`; o auto-stroke é ligado quando alguma camada só tem preenchimento | O usuário vê a animação imediatamente, inclusive em logos só com fill (RF4) |
+| 2026-09-25 | ParamsPanel gera os controles dos params via `describeParams()` (core), lendo `z.number/enum/boolean` e `.meta({ label, step, unit })` | Adicionar preset não exige tocar na UI |
 
 ### Pendências abertas (decidir até a fase indicada)
 
-- **Fase 2:** tirar `global.playbackRate` e `global.background` da `AnimationSpec` (são estado do preview e duplicam `playback` no store, violando a regra 1).
-- **Fase 2:** simular reduced motion no Shadow DOM reescrevendo o bloco `@media (prefers-reduced-motion: reduce)` do CSS exportado como `:host([data-sk-reduced])`. É a única derivação textual permitida sobre a saída do exportador.
 - **Fase 3:** `stagger-draw` com `iterations: infinite` embute o atraso nos keyframes (ciclo `duration + (n-1)*step`), porque `animation-delay` só vale na 1ª iteração.
 - **Fase 4:** o export Motion aproxima o CSS (usa o `pathLength` do Motion); o WYSIWYG só vale para o CSS. Isso precisa aparecer na aba.
 - **Fase 5:** com static export a OG image é gerada no build; não há OG por animação compartilhada (o hash não chega ao servidor).

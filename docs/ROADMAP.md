@@ -35,15 +35,15 @@ Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm 
 
 ## Fase 2 — Editor MVP
 
-- [ ] Store Zustand (ARCHITECTURE §8) com seletores memoizados
-- [ ] Layout: toolbar superior, canvas central, painel de camadas à esquerda, painel de parâmetros à direita, painel de export embaixo (colapsável)
-- [ ] Import por drag-and-drop, file picker e colar markup; erros amigáveis (arquivo inválido, grande demais, sem elementos desenháveis)
-- [ ] Canvas: preview isolado (Shadow DOM) renderizando a saída do `exporters.css()`
-- [ ] Camadas: lista, hover destaca, seleção múltipla, "selecionar tudo"
-- [ ] PresetPicker (por enquanto só `draw`) e ParamsPanel gerado a partir do `paramsSchema` + `timing`
-- [ ] Controles: play/pause/restart, velocidade, fundo, simular reduced motion (Web Animations API)
-- [ ] ExportPanel: aba CSS com highlight (Shiki), copiar, baixar `.svg`
-- [ ] 3 logos de exemplo originais em `apps/web/public/examples/`
+- [x] Store Zustand (ARCHITECTURE §8) com seletores memoizados
+- [x] Layout: toolbar superior, canvas central, painel de camadas à esquerda, painel de parâmetros à direita, painel de export embaixo (colapsável)
+- [x] Import por drag-and-drop, file picker e colar markup; erros amigáveis (arquivo inválido, grande demais, sem elementos desenháveis)
+- [x] Canvas: preview isolado (Shadow DOM) renderizando a saída do `exporters.css()`
+- [x] Camadas: lista, hover destaca, seleção múltipla, "selecionar tudo"
+- [x] PresetPicker (por enquanto só `draw`) e ParamsPanel gerado a partir do `paramsSchema` + `timing`
+- [x] Controles: play/pause/restart, velocidade, fundo, simular reduced motion (Web Animations API)
+- [x] ExportPanel: aba CSS com highlight (Shiki), copiar, baixar `.svg`
+- [x] 3 logos de exemplo originais em `apps/web/public/examples/`
 
 **Aceite:** e2e — carregar exemplo → mudar duração → ver o CSS mudar → copiar. Preview e export idênticos.
 
