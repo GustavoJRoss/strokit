@@ -14,6 +14,12 @@ export { getPreset, presetIds, presets } from "./presets";
 export { describeParams, type ParamField, type ParamMeta } from "./presets/fields";
 export type { Preset, PresetContext, PresetOutput } from "./presets/types";
 export {
+  animationLength,
+  type FrameOptions,
+  renderFrame,
+  sampleAnimation,
+} from "./render/frame";
+export {
   decodeShare,
   encodeShare,
   PROJECT_EXTENSION,
