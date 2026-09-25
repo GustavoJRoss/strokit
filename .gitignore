@@ -12,3 +12,4 @@ next-env.d.ts
 .env*.local
 .vercel
 apps/web/e2e/.spike/
+.claude/

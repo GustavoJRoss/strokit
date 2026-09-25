@@ -12,6 +12,7 @@
       "!**/components/ui",
       "!**/public/r",
       "!**/test/fixtures",
+      "!**/public/examples",
       "!**/__snapshots__"
     ]
   },

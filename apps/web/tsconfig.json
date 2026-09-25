@@ -5,10 +5,15 @@
     "allowJs": false,
     "jsx": "react-jsx",
     "incremental": true,
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "exactOptionalPropertyTypes": false
   },
   "include": [
     "next-env.d.ts",
