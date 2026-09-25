@@ -14,6 +14,9 @@
       "!**/test/fixtures",
       "!**/public/examples",
       "!**/exemplos/generated",
+      "!**/home/generated",
+      "!**/public/showcase",
+      "!**/public/brand",
       "!**/__snapshots__"
     ]
   },

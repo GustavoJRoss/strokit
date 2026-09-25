@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" class="sk-e14m9w" role="img" aria-label="Órbita"><style>
+.sk-e14m9w-0 {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sk-e14m9w-t0-pulse 1400ms ease-in-out 0ms infinite normal both;
+}
+@keyframes sk-e14m9w-t0-pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-e14m9w * {
+    animation: none;
+  }
+  .sk-e14m9w-0 {
+    opacity: 1;
+    transform: none;
+  }
+}
+</style><title>Órbita</title><g fill="none" stroke="#4f46e5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><circle cx="80" cy="80" r="58" class="sk-e14m9w-0"/><g transform="rotate(-28 80 80)"><ellipse cx="80" cy="80" rx="72" ry="26" stroke="#a5b4fc" stroke-width="4" class="sk-e14m9w-0"/></g><path d="M58 92 C 62 70, 76 60, 98 62" class="sk-e14m9w-0"/><circle cx="126" cy="46" r="9" stroke="#f59e0b" class="sk-e14m9w-0"/></g></svg>

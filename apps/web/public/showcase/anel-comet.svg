@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-wxsyyl" role="img" aria-label="Anel"><style>
+.sk-wxsyyl-0 {
+  stroke: var(--sk-stroke, #111111);
+  stroke-dasharray: 0.2 0.8;
+  animation: sk-wxsyyl-t0-comet 1600ms linear 0ms infinite normal both;
+}
+@keyframes sk-wxsyyl-t0-comet {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-wxsyyl * {
+    animation: none;
+  }
+  .sk-wxsyyl-0 {
+    stroke-dasharray: none;
+  }
+}
+</style><title>Anel</title><circle cx="60" cy="60" r="44" fill="none" stroke="#111111" stroke-width="8" pathLength="1" class="sk-wxsyyl-0"/><circle cx="60" cy="60" r="26" fill="none" stroke="#111111" stroke-width="4" pathLength="1" class="sk-wxsyyl-0"/></svg>

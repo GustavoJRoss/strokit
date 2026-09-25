@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 120" width="240" height="120">
+  <title>Assinatura</title>
+  <path d="M16 84 C 34 30, 58 18, 62 40 C 66 62, 40 92, 34 76 C 28 60, 70 48, 92 62 C 110 74, 104 90, 96 84 C 88 78, 112 50, 130 58 C 146 66, 134 88, 144 86 C 156 84, 162 56, 176 60 C 190 64, 180 86, 194 84 C 206 82, 214 66, 226 62" fill="none" stroke="#111111" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 100 H 210" fill="none" stroke="#111111" stroke-width="3" stroke-linecap="round"/>
+</svg>

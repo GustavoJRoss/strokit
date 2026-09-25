@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="140" height="140" class="sk-fyoota" role="img" aria-label="Selo"><style>
+.sk-fyoota-0 {
+  stroke: var(--sk-stroke, #111111);
+  stroke-dasharray: 0.0408 0.0306;
+  animation: sk-fyoota-t0-march 800ms linear 0ms infinite normal both;
+}
+@keyframes sk-fyoota-t0-march {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -0.0714;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-fyoota * {
+    animation: none;
+  }
+}
+</style><title>Selo</title><g fill="none" stroke="#111111" stroke-linejoin="round"><circle cx="70" cy="70" r="62" stroke-width="4" pathLength="1" class="sk-fyoota-0"/><circle cx="70" cy="70" r="50" stroke-width="2" pathLength="1" class="sk-fyoota-0"/><polygon points="70,34 79,58 104,58 84,73 91,98 70,83 49,98 56,73 36,58 61,58" stroke-width="5" pathLength="1" class="sk-fyoota-0"/></g></svg>

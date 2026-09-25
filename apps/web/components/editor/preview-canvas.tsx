@@ -1,15 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { applyPlayback, applyReducedMotion, injectMarkup } from "@/lib/preview";
 import { cn } from "@/lib/utils";
-import { type Playback, useEditorStore } from "@/store/editor-store";
+import { useEditorStore } from "@/store/editor-store";
 import { selectPreviewMarkup } from "@/store/selectors";
-
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-
-/** Editor chrome inside the shadow root: sizing only, never animation. */
-const HOST_CSS =
-  ":host{display:block;width:100%;height:100%}:host>svg{display:block;width:100%;height:100%;overflow:visible}";
 
 type Box = {
   id: string;
@@ -19,32 +14,6 @@ type Box = {
   width: number;
   height: number;
 };
-
-/**
- * Simulated reduced motion flips the media query of the exported stylesheet through CSSOM
- * (`all` forces the block on). The CSS text stays byte-for-byte the exported one.
- */
-function applyReducedMotion(root: ShadowRoot, forced: boolean): void {
-  const style = root.querySelector("svg > style");
-  const sheet = style instanceof SVGStyleElement ? style.sheet : null;
-  if (!sheet) return;
-  for (const rule of Array.from(sheet.cssRules)) {
-    if (!(rule instanceof CSSMediaRule)) continue;
-    const text = rule.media.mediaText;
-    if (text === REDUCED_MOTION_QUERY || text === "all") {
-      rule.media.mediaText = forced ? "all" : REDUCED_MOTION_QUERY;
-    }
-  }
-}
-
-/** Play/pause/speed act on the CSS animations already applied (Web Animations API). */
-function applyPlayback(root: ShadowRoot, playback: Playback): void {
-  for (const animation of root.getAnimations()) {
-    if (animation.playbackRate !== playback.rate) animation.updatePlaybackRate(playback.rate);
-    if (!playback.playing) animation.pause();
-    else if (animation.playState === "paused") animation.play();
-  }
-}
 
 function modeFor(event: MouseEvent): "replace" | "toggle" | "range" {
   if (event.shiftKey) return "range";
@@ -85,7 +54,7 @@ export function PreviewCanvas() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: restartToken re-injects to restart from t=0
   useLayoutEffect(() => {
     if (!root) return;
-    root.innerHTML = markup ? `<style>${HOST_CSS}</style>${markup}` : "";
+    injectMarkup(root, markup);
     setRenderCount((count) => count + 1);
   }, [root, markup, playback.restartToken]);
 
