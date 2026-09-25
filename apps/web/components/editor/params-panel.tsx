@@ -1,16 +1,10 @@
 "use client";
 
-import {
-  describeParams,
-  type EasingPreset,
-  getPreset,
-  presetIds,
-  type Timing,
-  type Track,
-} from "@strokekit/core";
+import { describeParams, getPreset, presetIds, type Timing, type Track } from "@strokekit/core";
 import { TriangleAlertIcon } from "lucide-react";
 import { useId } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -26,15 +20,8 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editor-store";
 import { selectActiveTrack, selectCompiled } from "@/store/selectors";
+import { EasingField } from "./easing-field";
 import { NumberField } from "./number-field";
-
-const EASINGS: { value: EasingPreset; label: string }[] = [
-  { value: "linear", label: "Linear" },
-  { value: "ease", label: "Suave" },
-  { value: "ease-in", label: "Acelerar" },
-  { value: "ease-out", label: "Desacelerar" },
-  { value: "ease-in-out", label: "Acelerar e desacelerar" },
-];
 
 const DIRECTIONS: { value: Timing["direction"]; label: string }[] = [
   { value: "normal", label: "Normal" },
@@ -147,7 +134,7 @@ function PresetParamsFields({ track }: { track: Track }) {
           key={field.key}
           label={field.label}
           value={String(params[field.key] ?? "")}
-          options={field.options.map((option) => ({ value: option, label: option }))}
+          options={field.options}
           onChange={(value) => updateParams(track.id, { [field.key]: value })}
         />
       );
@@ -183,7 +170,6 @@ function TimingSection() {
 
   const { timing } = track;
   const infinite = timing.iterations === "infinite";
-  const easing = typeof timing.easing === "string" ? timing.easing : "";
   const set = (patch: Partial<Timing>) => updateTiming(track.id, patch);
 
   return (
@@ -209,13 +195,7 @@ function TimingSection() {
         step={50}
         onChange={(delay) => set({ delay })}
       />
-      <SelectField
-        label="Easing"
-        value={easing}
-        placeholder="Personalizado"
-        options={EASINGS}
-        onChange={(value) => set({ easing: value })}
-      />
+      <EasingField value={timing.easing} onChange={(easing) => set({ easing })} />
       <NumberField
         label="Repetições"
         value={timing.iterations === "infinite" ? 1 : timing.iterations}
@@ -298,8 +278,15 @@ function GlobalSection() {
           <TriangleAlertIcon />
           <AlertTitle>{missing} camada(s) sem traço</AlertTitle>
           <AlertDescription>
-            O preset desenha o traço, mas essas camadas só têm preenchimento. Ative o traço
-            automático para vê-las animar.
+            O preset anima o traço, mas essas camadas só têm preenchimento.
+            <Button
+              size="xs"
+              variant="outline"
+              className="mt-2"
+              onClick={() => setAutoStroke({ enabled: true })}
+            >
+              Ativar traço automático
+            </Button>
           </AlertDescription>
         </Alert>
       )}

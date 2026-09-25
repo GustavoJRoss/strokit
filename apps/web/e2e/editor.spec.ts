@@ -111,3 +111,86 @@ test("selecting a layer outlines it on the canvas", async ({ page }) => {
   await expect(layer).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("Aplica às 1 camada(s) selecionada(s).")).toBeVisible();
 });
+
+/** Pauses every preview animation at `time` and reads computed styles of one element. */
+async function sample(page: Page, id: string, time: number) {
+  return page.evaluate(
+    ({ id, time }) => {
+      const root = document.querySelector('[data-testid="preview"]')?.shadowRoot;
+      for (const animation of root?.getAnimations() ?? []) {
+        animation.pause();
+        animation.currentTime = time;
+      }
+      const element = root?.querySelector(`[data-sk-id="${id}"]`);
+      if (!element) return null;
+      const style = getComputedStyle(element);
+      return {
+        dashoffset: Number.parseFloat(style.strokeDashoffset),
+        dasharray: style.strokeDasharray,
+        fillOpacity: Number(style.fillOpacity),
+        stroke: style.stroke,
+      };
+    },
+    { id, time },
+  );
+}
+
+test.describe("fill-only logo (acceptance, phase 3)", () => {
+  test("draw-fill draws the auto-stroke outline, then fills", async ({ page }) => {
+    await page.goto("/editor");
+    await loadExample(page, "Pico");
+    await page.getByRole("button", { name: /Desenhar e preencher/ }).click();
+    await expect(page.getByTestId("export-code")).toContainText("fill-opacity");
+    await expect(page.getByText(/camada\(s\) sem traço/)).toHaveCount(0);
+
+    const start = await sample(page, "sk-1", 0);
+    expect(start?.dashoffset).toBeCloseTo(1);
+    expect(start?.fillOpacity).toBe(0);
+    expect(start?.stroke).not.toBe("none");
+
+    const outlined = await sample(page, "sk-1", 1200);
+    expect(outlined?.dashoffset).toBeCloseTo(0);
+    expect(outlined?.fillOpacity).toBe(0);
+
+    const end = await sample(page, "sk-1", 2000);
+    expect(end?.fillOpacity).toBe(1);
+  });
+
+  test("yoyo runs a visible dash over a ghosted fill", async ({ page }) => {
+    await page.goto("/editor");
+    await loadExample(page, "Pico");
+    await page.getByRole("button", { name: /Vai e vem/ }).click();
+    await expect(page.getByTestId("export-code")).toContainText("infinite alternate");
+
+    const mid = await sample(page, "sk-1", 600);
+    expect(mid?.fillOpacity).toBeCloseTo(0.2);
+    expect(mid?.dasharray).toMatch(/^0\.25(px)?,? 1(px)?$/);
+    expect(mid?.dashoffset).toBeLessThan(0);
+  });
+
+  test("warns and offers auto-stroke when it is off", async ({ page }) => {
+    await page.goto("/editor");
+    await loadExample(page, "Pico");
+    await page.getByRole("switch", { name: "Traço automático" }).click();
+    await expect(page.getByText("5 camada(s) sem traço")).toBeVisible();
+    await page.getByRole("button", { name: "Ativar traço automático" }).click();
+    await expect(page.getByText(/camada\(s\) sem traço/)).toHaveCount(0);
+  });
+});
+
+test("custom easing: the curve editor writes cubic-bezier()", async ({ page }) => {
+  await page.goto("/editor");
+  await loadExample(page, "Órbita");
+  await page.getByRole("combobox", { name: "Easing" }).click();
+  await page.getByRole("option", { name: "Personalizado" }).click();
+  const code = page.getByTestId("export-code");
+  await expect(code).toContainText("cubic-bezier(0.42, 0, 0.58, 1)");
+
+  const handle = page.getByRole("slider", { name: "Ponto de controle 1" });
+  await handle.focus();
+  await page.keyboard.press("Shift+ArrowUp");
+  await expect(code).toContainText("cubic-bezier(0.42, 0.1, 0.58, 1)");
+
+  await page.getByLabel("y2").fill("1.4");
+  await expect(code).toContainText("cubic-bezier(0.42, 0.1, 0.58, 1.4)");
+});

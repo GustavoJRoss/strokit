@@ -117,8 +117,8 @@ export function LayersPanel() {
                     )}
                   >
                     <Swatch element={element} />
-                    <span className="truncate">{TAG_LABELS[element.tag]}</span>
-                    <span className="text-muted-foreground text-xs">{element.id}</span>
+                    <span className="min-w-0 truncate">{TAG_LABELS[element.tag]}</span>
+                    <span className="shrink-0 text-muted-foreground text-xs">{element.id}</span>
                     {missingStroke.has(element.id) && (
                       <TriangleAlertIcon
                         className="size-3.5 shrink-0 text-amber-600"
@@ -126,7 +126,11 @@ export function LayersPanel() {
                       />
                     )}
                     {preset && (
-                      <Badge variant="secondary" className="ml-auto">
+                      <Badge
+                        variant="secondary"
+                        className="ml-auto block min-w-0 max-w-[50%] shrink truncate"
+                        title={preset}
+                      >
                         {preset}
                       </Badge>
                     )}
