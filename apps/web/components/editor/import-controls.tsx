@@ -34,7 +34,7 @@ export function FilePickerButton({ variant = "outline" }: { variant?: "outline" 
       <input
         ref={inputRef}
         type="file"
-        accept=".svg,image/svg+xml"
+        accept=".svg,image/svg+xml,.json,application/json"
         className="sr-only"
         tabIndex={-1}
         aria-hidden

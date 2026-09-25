@@ -17,6 +17,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { type Background, useEditorStore } from "@/store/editor-store";
 import { ExamplesMenu, FilePickerButton, PasteDialogButton } from "./import-controls";
+import { ShareMenu } from "./share-menu";
 
 const RATES = [0.25, 0.5, 1, 1.5, 2];
 
@@ -44,6 +45,7 @@ export function Toolbar() {
       <FilePickerButton />
       <PasteDialogButton />
       <ExamplesMenu />
+      <ShareMenu />
       {fileName && (
         <span className="ml-1 truncate text-muted-foreground text-sm" title={fileName}>
           {fileName}

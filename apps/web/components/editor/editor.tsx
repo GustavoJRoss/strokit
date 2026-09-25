@@ -11,6 +11,7 @@ import { ParamsPanel } from "./params-panel";
 import { PreviewCanvas } from "./preview-canvas";
 import { Toolbar } from "./toolbar";
 import { useImporter } from "./use-importer";
+import { useShareSync } from "./use-share-sync";
 
 function isEditable(target: EventTarget | null): boolean {
   return (
@@ -23,6 +24,7 @@ export function Editor() {
   const hasDoc = useEditorStore((state) => state.doc !== null);
   const { importFile, importMarkup } = useImporter();
   const [dragging, setDragging] = useState(false);
+  useShareSync();
 
   useEffect(() => {
     const onPaste = (event: ClipboardEvent) => {
@@ -79,7 +81,7 @@ export function Editor() {
         <ExportPanel />
         {dragging && (
           <div className="pointer-events-none absolute inset-2 z-50 flex items-center justify-center rounded-xl border-2 border-primary border-dashed bg-background/80 font-medium">
-            Solte o SVG para importar
+            Solte o SVG ou o projeto para importar
           </div>
         )}
         <Toaster richColors position="bottom-right" />

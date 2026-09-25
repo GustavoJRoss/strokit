@@ -1,8 +1,14 @@
-import { type ImportWarning, SvgImportError } from "@strokekit/core";
+import { type ImportWarning, ShareError, SvgImportError } from "@strokekit/core";
 import { FileReadError } from "./svg-file";
 
 export function importErrorMessage(error: unknown): string {
-  if (error instanceof SvgImportError || error instanceof FileReadError) return error.message;
+  if (
+    error instanceof SvgImportError ||
+    error instanceof FileReadError ||
+    error instanceof ShareError
+  ) {
+    return error.message;
+  }
   if (error instanceof Error && error.message) return error.message;
   return "Não foi possível importar o SVG.";
 }

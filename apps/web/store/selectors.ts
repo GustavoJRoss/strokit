@@ -6,6 +6,7 @@ import {
   findTrackForElement,
   type SvgDocument,
   type Track,
+  toComponentName,
 } from "@strokekit/core";
 import { memoizeLast } from "@/lib/memoize";
 import type { EditorState } from "./editor-store";
@@ -16,6 +17,12 @@ import type { EditorState } from "./editor-store";
  */
 const compileMemo = memoizeLast((doc: SvgDocument, spec: AnimationSpec) => compile(doc, spec));
 const cssMemo = memoizeLast((compiled: CompiledAnimation) => exporters.css(compiled));
+const reactMemo = memoizeLast((compiled: CompiledAnimation, componentName: string) =>
+  exporters.react(compiled, { componentName }),
+);
+const motionMemo = memoizeLast((compiled: CompiledAnimation, componentName: string) =>
+  exporters.motion(compiled, { componentName }),
+);
 const previewMemo = memoizeLast((compiled: CompiledAnimation) =>
   exporters.css(compiled, { includeElementIds: true }),
 );
@@ -27,6 +34,17 @@ export const selectCompiled = (state: EditorState): CompiledAnimation | null =>
 export const selectCssExport = (state: EditorState): string | null => {
   const compiled = selectCompiled(state);
   return compiled ? cssMemo(compiled) : null;
+};
+
+export const selectComponentName = (state: EditorState): string => toComponentName(state.spec.name);
+
+/** Code for the active export tab. */
+export const selectExportCode = (state: EditorState): string | null => {
+  const compiled = selectCompiled(state);
+  if (!compiled) return null;
+  if (state.exportTab === "react") return reactMemo(compiled, selectComponentName(state));
+  if (state.exportTab === "motion") return motionMemo(compiled, selectComponentName(state));
+  return cssMemo(compiled);
 };
 
 /** What the preview renders: the same CSS, plus `data-sk-id` for hover and selection. */

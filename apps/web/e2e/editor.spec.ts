@@ -187,7 +187,12 @@ test("custom easing: the curve editor writes cubic-bezier()", async ({ page }) =
   await expect(code).toContainText("cubic-bezier(0.42, 0, 0.58, 1)");
 
   const handle = page.getByRole("slider", { name: "Ponto de controle 1" });
-  await handle.focus();
+  // Radix returns focus to the combobox when the listbox finishes closing; wait for that first.
+  await expect(page.getByRole("listbox")).toBeHidden();
+  await expect(async () => {
+    await handle.focus();
+    await expect(handle).toBeFocused({ timeout: 200 });
+  }).toPass();
   await page.keyboard.press("Shift+ArrowUp");
   await expect(code).toContainText("cubic-bezier(0.42, 0.1, 0.58, 1)");
 

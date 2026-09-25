@@ -5,6 +5,7 @@ import {
   type ImportWarning,
   importSvg,
   type PresetId,
+  type SharedAnimation,
   type SvgDocument,
   type Timing,
   updateTrackParams,
@@ -37,11 +38,15 @@ export type EditorState = {
   playback: Playback;
   exportTab: ExportTab;
   exportOpen: boolean;
+  /** The encoded link would pass SHARE_URL_LIMIT: offer `.strokekit.json` instead. */
+  shareTooLarge: boolean;
 };
 
 export type EditorActions = {
   /** Throws `SvgImportError` when the markup cannot be used. */
   loadSvg: (markup: string, fileName: string) => void;
+  /** Restores a shared link or project file. Throws `SvgImportError` for a bad SVG. */
+  loadShared: (shared: SharedAnimation) => void;
   reset: () => void;
   select: (id: string, mode?: SelectMode) => void;
   selectAll: () => void;
@@ -79,6 +84,7 @@ export function getInitialState(): EditorState {
     },
     exportTab: "css",
     exportOpen: true,
+    shareTooLarge: false,
   };
 }
 
@@ -97,6 +103,20 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
       fileName,
       importWarnings: warnings,
       spec: applyPreset(base, ids, "draw"),
+      selection: [],
+      selectionAnchor: null,
+      hovered: null,
+      playback: { ...state.playback, playing: true, restartToken: state.playback.restartToken + 1 },
+    }));
+  },
+
+  loadShared: (shared) => {
+    const { document, warnings } = importSvg(shared.svg, { parser: new DOMParser() });
+    set((state) => ({
+      doc: document,
+      fileName: shared.spec.name,
+      importWarnings: warnings,
+      spec: shared.spec,
       selection: [],
       selectionAnchor: null,
       hovered: null,

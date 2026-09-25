@@ -13,6 +13,7 @@
       "!**/public/r",
       "!**/test/fixtures",
       "!**/public/examples",
+      "!**/exemplos/generated",
       "!**/__snapshots__"
     ]
   },
