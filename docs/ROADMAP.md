@@ -18,15 +18,16 @@ Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm 
 
 ## Fase 1 — Core: import e o primeiro preset
 
-- [ ] Schema Zod da `AnimationSpec` (v1) + `migrate()` stub
-- [ ] `sanitizeSvg()` com allowlist + fixtures maliciosas (script, `onload`, `javascript:` href, `foreignObject`, `image` externa)
-- [ ] `parseSvg()` / `normalizeSvg()` → `SvgDocument` (ids estáveis, detecção de fill/stroke, viewBox)
-- [ ] Contrato `Preset` + registry de presets
-- [ ] Preset `draw`
-- [ ] `compile()` → `CompiledAnimation`
-- [ ] `exporters.css()` com prefixo único, variáveis CSS e bloco reduced motion
-- [ ] Snapshot: `draw` × 2 fixtures
-- [ ] **Spike:** página HTML estática com o CSS exportado, testada em Chrome, Firefox e **Safari**. Registrar em ARCHITECTURE §12 se `pathLength` funciona em `rect`/`circle`; se não, implementar conversão de formas básicas para `<path>`
+- [x] Schema Zod da `AnimationSpec` (v1) + `migrate()` stub
+- [x] `sanitizeSvg()` com allowlist + fixtures maliciosas (script, `onload`, `javascript:` href, `foreignObject`, `image` externa)
+- [x] `parseSvg()` / `normalizeSvg()` → `SvgDocument` (ids estáveis, detecção de fill/stroke, viewBox)
+- [x] Contrato `Preset` + registry de presets
+- [x] Preset `draw`
+- [x] `compile()` → `CompiledAnimation`
+- [x] `exporters.css()` com prefixo único, variáveis CSS e bloco reduced motion
+- [x] Snapshot: `draw` × 2 fixtures
+- [x] **Spike:** página HTML estática com o CSS exportado, testada em Chrome, Firefox e **Safari**. Registrar em ARCHITECTURE §12 se `pathLength` funciona em `rect`/`circle`; se não, implementar conversão de formas básicas para `<path>`
+  - Resultado: automatizado em `apps/web/e2e/path-length.spec.ts`, verde em Chromium/Firefox/WebKit; conversão desnecessária. Confirmação manual no Safari real: pendente
 
 **Aceite:** um SVG de fixture vira um SVG animado que se desenha, aberto direto no navegador, nos três navegadores; cobertura do core > 80%.
 

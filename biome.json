@@ -7,7 +7,13 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!**/components/ui", "!**/public/r"]
+    "includes": [
+      "**",
+      "!**/components/ui",
+      "!**/public/r",
+      "!**/test/fixtures",
+      "!**/__snapshots__"
+    ]
   },
   "formatter": {
     "enabled": true,

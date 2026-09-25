@@ -58,8 +58,12 @@ type SvgDocument = {
   width?: number;
   height?: number;
   elements: DrawableElement[];
-  raw: string;               // markup sanitizado e normalizado, com data-sk-id
+  root: SvgElementNode;      // árvore JSON sanitizada e normalizada, drawables com data-sk-id
+  raw: string;               // root serializado (serializador próprio, determinístico)
 };
+
+type SvgElementNode = { type: "element"; name: string; attrs: Record<string, string>; children: SvgNode[] };
+type SvgNode = SvgElementNode | { type: "text"; value: string };
 
 type DrawableElement = {
   id: string;                // "sk-0", "sk-1"… estável pela ordem no documento
@@ -109,15 +113,16 @@ Todo schema tem `version`. A decodificação de URL e de `.strokekit.json` passa
 
 ```
 SVG string
-  → sanitizeSvg()        remove conteúdo perigoso
-  → parseSvg()           DOMParser (browser) / linkedom (testes)
-  → normalizeSvg()       ids estáveis, detecta drawables, lê fill/stroke
+  → parseSvg()           DOMParser injetado (browser) / linkedom (testes) → árvore JSON inerte
+  → inlineStyles()       <style> e style="" viram atributos de apresentação
+  → sanitizeTree()       allowlist de elementos/atributos (sanitizeSvg() = tudo isso + serialize)
+  → normalizeSvg()       ids estáveis, detecta drawables, lê fill/stroke herdados, garante viewBox
   → measure() [opcional] getTotalLength, só no browser
-  = SvgDocument
+  = SvgDocument          (importSvg() executa o pipeline inteiro)
 
 SvgDocument + AnimationSpec
   → compile()            aplica presets → CompiledAnimation
-     { keyframes: Keyframe[], rules: ElementRule[], svg: string }
+     { id: "sk-<hash>", root: SvgElementNode, keyframes, rules, a11y, warnings }
   → exporters.css()      string CSS + SVG com <style> embutido
   → exporters.react()    string TSX
   → exporters.motion()   string TSX usando motion/react
@@ -166,7 +171,9 @@ Definir `pathLength="1"` em cada elemento animado faz `stroke-dasharray` e `stro
 - torna o CSS exportado **independente de escala e responsivo**;
 - deixa os presets triviais (`draw`: `dasharray: 1 1; dashoffset 1 → 0`).
 
-**Risco:** historicamente o Safari teve inconsistências com `pathLength` em alguns elementos básicos (`rect`, `circle`). Na Fase 1, validar em Safari real. Plano B: converter formas básicas em `<path>` na normalização e/ou usar `length` medido para emitir valores absolutos. O `DrawableElement.length` já existe para isso.
+**Resultado do spike (Fase 1):** `e2e/path-length.spec.ts` mede a "tinta" de `rect`, `circle`, `ellipse`, `line`, `polyline`, `polygon` e `path` em t=0, 50% e 100% do `draw`. Passa em Chromium, Firefox e WebKit (Playwright). O mesmo teste falha se o `pathLength` for removido, ou seja, ele detecta o problema. **Não é preciso converter formas em `<path>`.** Falta só a confirmação manual no Safari real (galeria em `apps/web/e2e/.spike/index.html`).
+
+**Risco (original):** historicamente o Safari teve inconsistências com `pathLength` em alguns elementos básicos (`rect`, `circle`). Na Fase 1, validar em Safari real. Plano B: converter formas básicas em `<path>` na normalização e/ou usar `length` medido para emitir valores absolutos. O `DrawableElement.length` já existe para isso.
 
 ## 7. Exportadores
 
@@ -241,6 +248,14 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-25 | `packages/core` é consumido como fonte TS (`exports: ./src/index.ts` + `transpilePackages`) | Sem etapa de build intermediária no monorepo |
 | 2026-09-25 | E2E roda contra o static export (`next build` + `serve out`) em Chromium, Firefox e WebKit | Testa o artefato que vai para produção; WebKit cobre o risco do Safari |
 | 2026-09-25 | Dependências extras de dev: `@vitest/coverage-v8` (meta de 80%), `serve` (servidor estático do e2e), `jsdom` + Testing Library (testes do web) | Necessárias para os critérios de aceite |
+| 2026-09-25 | O `DOMParser` injetado só faz o parse; o resultado vira uma árvore JSON pura (`SvgElementNode`). Inline de estilos, sanitização, normalização, compile e serialização trabalham sobre ela | `XMLSerializer` e linkedom serializam diferente; com serializador próprio, preview, export e snapshots são idênticos em Node e browser |
+| 2026-09-25 | `SvgDocument` ganha `root` (árvore) além de `raw`; `CompiledAnimation` carrega `root` em vez de `svg: string` | O compile aplica atributos (`pathLength`) sem precisar de DOM, e os exportadores React/Motion vão percorrer a árvore |
+| 2026-09-25 | Ordem do pipeline: parse → inlineStyles → sanitize → normalize | A sanitização roda por último sobre o que o inline de estilos produziu, então nada que venha do CSS escapa da allowlist |
+| 2026-09-25 | DOCTYPE/ENTITY rejeitados antes do parse; `xlink:href` reescrito como `href`; `<a>` e `<switch>` desembrulhados (filhos mantidos); `x`/`y`/`version` removidos da raiz | Segurança (entity expansion) e export mais limpo |
+| 2026-09-25 | `Preset.defaults.timing` é um `Timing` completo (não `Partial`) | Não existe timing global para completar; cada preset define o seu |
+| 2026-09-25 | Cor animada via `stroke: var(--sk-stroke, <cor original>)` é aplicada pelo `compile()`, não pelo preset; auto-stroke usa a cor do fill | Presets ficam sem lógica de cor; RF4 e regra 7 em um só lugar |
+| 2026-09-25 | Export CSS agrupa elementos com regra idêntica em uma classe `sk-<hash>-N`; `data-sk-id` é removido do export (mantido com `includeElementIds` para o preview, sem mudar o CSS) | CSS curto; o preview continua usando exatamente o mesmo CSS |
+| 2026-09-25 | Spike do `pathLength` virou teste e2e permanente nos 3 motores | Garante que regressões de navegador sejam detectadas |
 
 ### Pendências abertas (decidir até a fase indicada)
 
