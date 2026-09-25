@@ -124,6 +124,11 @@ SvgDocument + AnimationSpec
   → exporters.css()      string CSS + SVG com <style> embutido
   → exporters.react()    string TSX
   → exporters.motion()   string TSX usando motion/react
+
+CompiledAnimation + t (ms)
+  → sampleAnimation()    estado de cada elemento no instante t (modelo de tempo do CSS)
+  → renderFrame()        SVG estático do quadro (sem <style>, estilos inline)
+  → (web) canvas → WebCodecs VP9 + alfa → Mediabunny → .webm
 ```
 
 `CompiledAnimation` é uma representação intermediária neutra: os três exportadores leem dela e nenhum deles conhece presets. Assim, adicionar um preset nunca exige tocar nos exportadores, e adicionar um exportador nunca exige tocar nos presets.
@@ -305,6 +310,9 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-25 | Seções da barra de parâmetros recolhíveis (Radix Collapsible) com resumo quando fechadas e aviso de "sem traço" visível; Preset aberta por padrão | Menos rolagem; o essencial continua visível sem abrir |
 | 2026-09-25 | Layout e seções abertas lembrados em `localStorage` com prefixo `strokit:ui:` (via `onLayoutChanged` e `usePersistentState`); "Restaurar layout" limpa só esse prefixo. `exportOpen` saiu do store | Estado de interface, por visitante, fora da AnimationSpec (regra 1) |
 | 2026-09-25 | Ids dos painéis com prefixo `panel-` | A lib usa o `id` como `data-testid`; `preview` colidia com o host do Shadow DOM |
+| 2026-09-25 | Export de vídeo transparente (`.webm` VP9 com alfa) entra no escopo (RF12), a pedido do autor | MP4 não tem canal alfa; WebM/VP9 é o formato transparente que o navegador consegue gerar sozinho |
+| 2026-09-25 | Quadros gerados por `sampleAnimation()`/`renderFrame()` no core (delay, iterações, direção, fill e easing por intervalo de keyframe, com solver de cubic-bezier próprio), não por gravação de tela | Determinístico, independente de FPS da máquina e testável em Node; um e2e confere que os valores batem com o CSS do preview nos 3 motores |
+| 2026-09-25 | Codificação no navegador com WebCodecs + `mediabunny` (MPL-2.0), importado sob demanda | Sem servidor: o SVG continua sem sair do navegador. Detecção por `canEncodeVideo("vp9", { alpha: "keep" })`; sem suporte, só um aviso |
 
 ### Pendências abertas (decidir até a fase indicada)
 

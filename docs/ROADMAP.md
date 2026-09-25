@@ -88,6 +88,16 @@ Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm 
 
 ---
 
+## Fase 5b — Export de vídeo transparente (incluída a pedido do autor)
+
+- [x] `core/render`: amostragem determinística da IR no instante *t* (modelo de tempo do CSS) e `renderFrame()` → SVG estático por quadro
+- [x] Editor: "Vídeo" no painel de código → `.webm` VP9 com alfa via WebCodecs + Mediabunny; aviso onde não houver suporte
+- [x] Testes: paridade quadro × CSS do preview nos 3 motores; `.webm` com `AlphaMode` e alfa real conferido com ffmpeg
+
+**Aceite:** um SVG importado e animado vira um `.webm` com fundo transparente cujos quadros batem com o preview.
+
+---
+
 ## Fase 6 — Polimento (opcional antes do lançamento)
 
 - [ ] Undo/redo (`zundo`) com atalhos
@@ -98,4 +108,4 @@ Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm 
 
 ## Depois (pós-MVP, não implementar sem pedido)
 
-Morphing de paths · export GIF/vídeo · export Lottie · timeline de keyframes livres · animação disparada por scroll/hover · plugin do Figma · MCP server para agentes gerarem loaders · galeria da comunidade.
+Morphing de paths · export GIF / MP4 · export Lottie · timeline de keyframes livres · animação disparada por scroll/hover · plugin do Figma · MCP server para agentes gerarem loaders · galeria da comunidade.

@@ -52,6 +52,7 @@ Parâmetros específicos: `comet.length` (0–1), `stagger.step` (ms), `stagger.
 - **RF9 Compartilhar:** a `AnimationSpec` e o SVG comprimidos na URL (hash). Abrir a URL reconstrói o estado. Se o tamanho passar do limite seguro, avisar e oferecer download de um `.strokit.json`.
 - **RF10 Import de projeto:** carregar um `.strokit.json`.
 - **RF11 Exemplos:** 3–4 logos de exemplo originais (não usar marcas reais) para o usuário testar sem ter um SVG.
+- **RF12 Vídeo transparente:** exportar a animação como `.webm` (VP9 com canal alfa), gerado quadro a quadro no navegador, com largura, duração, FPS (30/60) e cor do traço configuráveis. Onde o navegador não conseguir gravar VP9 com transparência, mostrar um aviso (sem formato alternativo). *(Incluído em 2026-09-25 a pedido do autor.)*
 
 ## 6. Requisitos não funcionais
 
@@ -64,7 +65,7 @@ Parâmetros específicos: `comet.length` (0–1), `stagger.step` (ms), `stagger.
 
 ## 7. Fora de escopo no MVP
 
-Morphing entre formas, export Lottie/GIF/vídeo, timeline com keyframes livres, contas e salvamento em nuvem, colaboração, animações disparadas por scroll, IA gerando animação, i18n.
+Morphing entre formas, export Lottie/GIF, vídeo opaco (MP4), timeline com keyframes livres, contas e salvamento em nuvem, colaboração, animações disparadas por scroll, IA gerando animação, i18n.
 
 Esses itens ficam registrados como candidatos pós-MVP em ROADMAP §Depois.
 
