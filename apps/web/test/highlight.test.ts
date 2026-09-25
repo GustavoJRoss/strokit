@@ -26,6 +26,10 @@ describe("highlight", () => {
     const fill = [...container.querySelectorAll("span[style]")].find(
       (span) => span.textContent === "fill",
     );
-    expect(fill?.getAttribute("style")).not.toBe("color:#24292E");
+    // Both themes travel as variables; CSS properties are not colored like plain text.
+    const style = fill?.getAttribute("style") ?? "";
+    expect(style).toMatch(/--shiki-light:#[0-9A-Fa-f]{6}/);
+    expect(style).toMatch(/--shiki-dark:#[0-9A-Fa-f]{6}/);
+    expect(style).not.toContain("--shiki-light:#24292E");
   });
 });

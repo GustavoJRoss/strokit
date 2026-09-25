@@ -4,7 +4,7 @@ export type CodeLanguage = "html" | "tsx";
 
 type Segment = { text: string; lang: "html" | "css" | "tsx" };
 
-const THEME = "github-light";
+const THEMES = { light: "github-light", dark: "github-dark" } as const;
 
 let highlighter: Promise<HighlighterCore> | null = null;
 
@@ -16,7 +16,7 @@ function getHighlighter(): Promise<HighlighterCore> {
       import("shiki/engine/javascript"),
     ]);
     return createHighlighterCore({
-      themes: [import("shiki/themes/github-light.mjs")],
+      themes: [import("shiki/themes/github-light.mjs"), import("shiki/themes/github-dark.mjs")],
       langs: [
         import("shiki/langs/css.mjs"),
         import("shiki/langs/html.mjs"),
@@ -44,35 +44,48 @@ export function splitSegments(code: string, lang: CodeLanguage): Segment[] {
 }
 
 function escapeHtml(value: string): string {
-  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
-function renderLines(lines: ThemedToken[][], background: string): string {
+/** Tokens carry `--shiki-light` and `--shiki-dark`; globals.css picks one per theme. */
+function tokenStyle(token: ThemedToken): string {
+  return Object.entries(token.htmlStyle ?? {})
+    .map(([property, value]) => `${property}:${value}`)
+    .join(";");
+}
+
+function renderLines(lines: ThemedToken[][]): string {
   const body = lines
     .map(
       (line) =>
         `<span class="line">${line
           .map(
             (token) =>
-              `<span style="color:${token.color ?? "inherit"}">${escapeHtml(token.content)}</span>`,
+              `<span style="${escapeHtml(tokenStyle(token))}">${escapeHtml(token.content)}</span>`,
           )
           .join("")}</span>`,
     )
     .join("\n");
-  return `<pre class="shiki" style="background-color:${background}"><code>${body}</code></pre>`;
+  return `<pre class="shiki"><code>${body}</code></pre>`;
 }
 
 export async function highlight(code: string, lang: CodeLanguage): Promise<string> {
   const instance = await getHighlighter();
   const lines: ThemedToken[][] = [[]];
-  let background = "transparent";
   for (const segment of splitSegments(code, lang)) {
-    const result = instance.codeToTokens(segment.text, { lang: segment.lang, theme: THEME });
-    background = result.bg ?? background;
+    const result = instance.codeToTokens(segment.text, {
+      lang: segment.lang,
+      themes: THEMES,
+      defaultColor: false,
+    });
     result.tokens.forEach((line, index) => {
       if (index > 0) lines.push([]);
       lines[lines.length - 1]?.push(...line);
     });
   }
-  return renderLines(lines, background);
+  return renderLines(lines);
 }

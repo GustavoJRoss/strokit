@@ -2,6 +2,7 @@
 
 import { PauseIcon, PlayIcon, RotateCcwIcon } from "lucide-react";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -128,6 +129,9 @@ export function Toolbar() {
             Simular reduced motion
           </Label>
         </div>
+
+        <Separator orientation="vertical" className="h-6" />
+        <ThemeToggle />
       </div>
     </header>
   );

@@ -3,7 +3,7 @@
 import { ChevronDownIcon, ChevronUpIcon, CopyIcon, DownloadIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { slug } from "@/lib/project";
 import { downloadText } from "@/lib/svg-file";
 import { type ExportTab, useEditorStore } from "@/store/editor-store";
@@ -43,49 +43,60 @@ export function ExportPanel() {
   };
 
   return (
-    <section aria-label="Exportar" className="flex flex-col border-t">
-      <div className="flex flex-wrap items-center gap-2 px-3 py-2">
-        <h2 className="font-medium text-sm">Exportar</h2>
-        <Tabs value={tab} onValueChange={(value) => setTab(value as ExportTab)}>
+    <section aria-label="Exportar" className="border-t">
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(value as ExportTab)}
+        className="flex flex-col gap-0"
+      >
+        <div className="flex flex-wrap items-center gap-2 px-3 py-2">
+          <h2 className="font-medium text-sm">Exportar</h2>
           <TabsList>
             <TabsTrigger value="css">CSS</TabsTrigger>
             <TabsTrigger value="react">React</TabsTrigger>
             <TabsTrigger value="motion">Motion</TabsTrigger>
           </TabsList>
-        </Tabs>
-        <p className="hidden text-muted-foreground text-xs lg:block">{HINTS[tab]}</p>
-        <div className="ml-auto flex gap-2">
-          <Button variant="outline" size="sm" disabled={!code} onClick={copy}>
-            <CopyIcon data-icon="inline-start" />
-            Copiar
-          </Button>
-          <Button variant="outline" size="sm" disabled={!code} onClick={download}>
-            <DownloadIcon data-icon="inline-start" />
-            {tab === "css" ? "Baixar .svg" : "Baixar .tsx"}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-expanded={open}
-            aria-controls="export-code-region"
-            aria-label={open ? "Recolher código" : "Mostrar código"}
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <ChevronDownIcon /> : <ChevronUpIcon />}
-          </Button>
+          <p className="hidden text-muted-foreground text-xs lg:block">{HINTS[tab]}</p>
+          <div className="ml-auto flex gap-2">
+            <Button variant="outline" size="sm" disabled={!code} onClick={copy}>
+              <CopyIcon data-icon="inline-start" />
+              Copiar
+            </Button>
+            <Button variant="outline" size="sm" disabled={!code} onClick={download}>
+              <DownloadIcon data-icon="inline-start" />
+              {tab === "css" ? "Baixar .svg" : "Baixar .tsx"}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-expanded={open}
+              aria-controls="export-code-region"
+              aria-label={open ? "Recolher código" : "Mostrar código"}
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <ChevronDownIcon /> : <ChevronUpIcon />}
+            </Button>
+          </div>
         </div>
-      </div>
-      {open && (
-        <div id="export-code-region" className="h-64 overflow-auto border-t bg-muted/30">
-          {code ? (
-            <CodeBlock code={code} lang={tab === "css" ? "html" : "tsx"} />
-          ) : (
-            <p className="p-4 text-muted-foreground text-sm">
-              O código aparece aqui assim que você importar um SVG.
-            </p>
-          )}
-        </div>
-      )}
+        {(["css", "react", "motion"] as const).map((value) => (
+          <TabsContent key={value} value={value}>
+            {/* Kept in the DOM when collapsed so the toggle's aria-controls always resolves. */}
+            <div
+              id="export-code-region"
+              hidden={!open}
+              className="h-64 overflow-auto border-t bg-muted/30"
+            >
+              {code ? (
+                <CodeBlock code={code} lang={tab === "css" ? "html" : "tsx"} />
+              ) : (
+                <p className="p-4 text-muted-foreground text-sm">
+                  O código aparece aqui assim que você importar um SVG.
+                </p>
+              )}
+            </div>
+          </TabsContent>
+        ))}
+      </Tabs>
     </section>
   );
 }
