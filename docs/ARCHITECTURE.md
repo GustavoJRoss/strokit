@@ -137,6 +137,7 @@ interface Preset<P> {
   paramsSchema: z.ZodType<P>;
   defaults: { params: P; timing: Partial<Track["timing"]> };
   requiresStroke: boolean;   // se true e o elemento só tem fill → usa autoStroke ou avisa
+  autoStrokeFill?: "keep" | "ghost"; // "ghost": fill a 0.2 quando o traço vem do autoStroke
   compile(ctx: {
     element: DrawableElement;
     index: number;           // posição dentro do track (para stagger)
@@ -276,9 +277,16 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-25 | shadcn `slider.tsx` alterado para repassar `aria-label` ao thumb | O Radix nomeia o thumb, não o root; sem isso os sliders ficam sem nome acessível |
 | 2026-09-25 | Ao importar, todas as camadas recebem `draw`; o auto-stroke é ligado quando alguma camada só tem preenchimento | O usuário vê a animação imediatamente, inclusive em logos só com fill (RF4) |
 | 2026-09-25 | ParamsPanel gera os controles dos params via `describeParams()` (core), lendo `z.number/enum/boolean` e `.meta({ label, step, unit })` | Adicionar preset não exige tocar na UI |
+| 2026-09-25 | `yoyo` usa `dasharray: L 1` e `dashoffset: 0 → L-1` com `alternate`, em vez de `comet` + `alternate` | O padrão `L (1-L)` repete e "dá a volta" em paths abertos; `L 1` mantém o risco dentro do contorno, que é o efeito "vai e volta" pedido |
+| 2026-09-25 | `stagger-draw`: `animation-delay` quando `iterations = 1`; com repetição, keyframes por elemento dentro de um ciclo comum `duration + (n-1)·step` | `animation-delay` só atrasa a 1ª iteração e o loop dessincroniza (pendência da Fase 1 resolvida) |
+| 2026-09-25 | Ordem aleatória do stagger: permutação Fisher–Yates com mulberry32 semeado (`util/random.ts`) | Determinística em qualquer ambiente; o mesmo link sempre gera o mesmo código |
+| 2026-09-25 | `march` reescala traço/espaço para caber um número inteiro de repetições em `pathLength = 1` | Emenda invisível em formas fechadas |
+| 2026-09-25 | Presets que animam `transform` (`pulse`): o `compile()` move o `transform` SVG do elemento para um `<g>` pai | `transform` em CSS substitui o atributo em vez de compor; sem isso a logo "pula" |
+| 2026-09-25 | `comet`, `yoyo` e `march` declaram `autoStrokeFill: "ghost"`: com traço automático, o fill fica a 0.2 (1 em reduced motion) | O traço automático tem a cor do fill; sem esmaecer, o risco em movimento fica invisível sobre o próprio preenchimento |
+| 2026-09-25 | Exportador CSS omite regras vazias no bloco de reduced motion | `march` mantém o tracejado estático e não precisa de propriedades extras |
+| 2026-09-25 | Editor de easing: presets CSS + "Personalizado" com curva arrastável (mouse e setas; Shift = passo 0.1), y em [-0.5, 1.5] para overshoot | SPEC: cubic-bezier customizado com curva visual |
 
 ### Pendências abertas (decidir até a fase indicada)
 
-- **Fase 3:** `stagger-draw` com `iterations: infinite` embute o atraso nos keyframes (ciclo `duration + (n-1)*step`), porque `animation-delay` só vale na 1ª iteração.
 - **Fase 4:** o export Motion aproxima o CSS (usa o `pathLength` do Motion); o WYSIWYG só vale para o CSS. Isso precisa aparecer na aba.
 - **Fase 5:** com static export a OG image é gerada no build; não há OG por animação compartilhada (o hash não chega ao servidor).

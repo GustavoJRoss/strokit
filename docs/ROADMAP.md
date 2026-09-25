@@ -51,11 +51,11 @@ Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm 
 
 ## Fase 3 — Presets completos e auto-stroke
 
-- [ ] `comet`, `yoyo`, `stagger-draw`, `draw-fill`, `pulse`, `march`
-- [ ] Auto-stroke para elementos só com fill (RF4), com aviso na UI quando um preset exige stroke
-- [ ] Easing: presets + editor de cubic-bezier com curva visual
-- [ ] `stagger.order` com seed determinística
-- [ ] Snapshots: todos os presets × 2 fixtures
+- [x] `comet`, `yoyo`, `stagger-draw`, `draw-fill`, `pulse`, `march`
+- [x] Auto-stroke para elementos só com fill (RF4), com aviso na UI quando um preset exige stroke
+- [x] Easing: presets + editor de cubic-bezier com curva visual
+- [x] `stagger.order` com seed determinística
+- [x] Snapshots: todos os presets × 2 fixtures
 
 **Aceite:** a logo de exemplo "só preenchimento" funciona com `draw-fill` e `yoyo` sem editar o SVG.
 
