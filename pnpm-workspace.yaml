@@ -9,6 +9,7 @@ minimumReleaseAgeExclude:
   - motion-dom@13.4.4
   - motion@13.4.4
   - '@vitest/coverage-v8@5.0.2'
+  - mediabunny@1.60.0
 
 allowBuilds:
   sharp: false
