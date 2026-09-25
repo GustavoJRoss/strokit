@@ -9,6 +9,7 @@ export type {
   KeyframesDef,
 } from "./compile/types";
 export * as exporters from "./exporters";
+export { toComponentName } from "./exporters/jsx";
 export { getPreset, presetIds, presets } from "./presets";
 export { describeParams, type ParamField, type ParamMeta } from "./presets/fields";
 export type { Preset, PresetContext, PresetOutput } from "./presets/types";

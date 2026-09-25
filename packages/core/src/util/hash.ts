@@ -7,3 +7,12 @@ export function hashString(value: string): string {
   }
   return (hash >>> 0).toString(36);
 }
+
+/** JSON with object keys sorted at every level: equal data always gives equal text. */
+export function canonicalJson(value: unknown): string {
+  return JSON.stringify(value, (_key, item: unknown) =>
+    item && typeof item === "object" && !Array.isArray(item)
+      ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)))
+      : item,
+  );
+}

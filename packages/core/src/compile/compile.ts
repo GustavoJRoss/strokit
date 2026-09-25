@@ -3,7 +3,7 @@ import type { PresetOutput } from "../presets/types";
 import type { AnimationSpec, PresetId } from "../spec/schema";
 import { cloneNode, type SvgElementNode, walkElements } from "../svg/tree";
 import type { DrawableElement, SvgDocument } from "../svg/types";
-import { hashString } from "../util/hash";
+import { canonicalJson, hashString } from "../util/hash";
 import type { CompiledAnimation, CompileWarning, ElementRule, KeyframesDef } from "./types";
 
 function runPreset<K extends PresetId>(
@@ -76,7 +76,8 @@ function strokeProps(
 
 /** AnimationSpec + SvgDocument → CompiledAnimation (neutral IR for every exporter). */
 export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAnimation {
-  const id = `sk-${hashString(`${document.raw}\n${JSON.stringify(spec)}`)}`;
+  // Canonical JSON: a spec restored from a link (keys in schema order) hashes like the original.
+  const id = `sk-${hashString(`${document.raw}\n${canonicalJson(spec)}`)}`;
   const elementsById = new Map(document.elements.map((element) => [element.id, element]));
   const keyframes = new Map<string, KeyframesDef>();
   const rules: ElementRule[] = [];

@@ -163,6 +163,7 @@ describe("JSX helpers", () => {
         0,
       ),
     ).toBe('<g>\n  <title>{"<a> & {b}"}</title>\n  <desc />\n</g>');
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: testing that `${` gets escaped
     expect(templateLiteral("a`b${c}\\")).toBe("`a\\`b\\${c}\\\\`");
   });
 

@@ -67,6 +67,30 @@ describe("compile", () => {
   });
 });
 
+describe("canonical hashing", () => {
+  it("does not depend on key order", async () => {
+    const { canonicalJson } = await import("../src/util/hash");
+    expect(canonicalJson({ b: 1, a: { d: [3, { f: 1, e: 2 }], c: 2 } })).toBe(
+      '{"a":{"c":2,"d":[3,{"e":2,"f":1}]},"b":1}',
+    );
+    const document = load("simple-stroke.svg");
+    const spec = applyPreset(createEmptySpec(), ["sk-0"], "draw");
+    const reverseKeys = (value: unknown): unknown =>
+      Array.isArray(value)
+        ? value.map(reverseKeys)
+        : value && typeof value === "object"
+          ? Object.fromEntries(
+              Object.entries(value)
+                .reverse()
+                .map(([key, item]) => [key, reverseKeys(item)]),
+            )
+          : value;
+    const reordered = reverseKeys(spec) as typeof spec;
+    expect(JSON.stringify(reordered)).not.toBe(JSON.stringify(spec));
+    expect(compile(document, reordered).id).toBe(compile(document, spec).id);
+  });
+});
+
 describe("hashString", () => {
   it("is stable FNV-1a in base36", () => {
     expect(hashString("")).toBe((0x811c9dc5).toString(36));

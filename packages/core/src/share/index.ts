@@ -1,4 +1,5 @@
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
+// lz-string is CommonJS: the default import is the one form Node ESM and bundlers agree on.
+import LZString from "lz-string";
 import { parseSpec } from "../spec/migrate";
 import type { AnimationSpec } from "../spec/schema";
 
@@ -40,7 +41,9 @@ function fromPayload(payload: unknown): SharedAnimation {
 
 /** SVG + spec → value for the URL hash (without the `#s=` prefix). Never sent to a server. */
 export function encodeShare(shared: SharedAnimation): string {
-  return compressToEncodedURIComponent(JSON.stringify({ svg: shared.svg, spec: shared.spec }));
+  return LZString.compressToEncodedURIComponent(
+    JSON.stringify({ svg: shared.svg, spec: shared.spec }),
+  );
 }
 
 /** Accepts the value with or without `#s=`. Runs `migrate()` + validation on the spec. */
@@ -48,7 +51,7 @@ export function decodeShare(value: string): SharedAnimation {
   const encoded = value.startsWith(SHARE_HASH_PREFIX)
     ? value.slice(SHARE_HASH_PREFIX.length)
     : value;
-  const json = decompressFromEncodedURIComponent(encoded);
+  const json = LZString.decompressFromEncodedURIComponent(encoded);
   if (!json) throw new ShareError("O link está incompleto ou corrompido.");
   try {
     return fromPayload(JSON.parse(json));

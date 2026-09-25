@@ -1,22 +1,22 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`exporters.css × draw > illustrator-classes.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-1xdki2l" role="img" aria-label="Logo"><style>
-.sk-1xdki2l-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-5c3z5x" role="img" aria-label="Logo"><style>
+.sk-5c3z5x-0 {
   stroke-dasharray: 1 1;
-  animation: sk-1xdki2l-t0-draw 1500ms ease-in-out 0ms 1 normal both;
+  animation: sk-5c3z5x-t0-draw 1500ms ease-in-out 0ms 1 normal both;
 }
-.sk-1xdki2l-1 {
+.sk-5c3z5x-1 {
   stroke: var(--sk-stroke, #1D1D1B);
   stroke-dasharray: 1 1;
-  animation: sk-1xdki2l-t0-draw 1500ms ease-in-out 0ms 1 normal both;
+  animation: sk-5c3z5x-t0-draw 1500ms ease-in-out 0ms 1 normal both;
 }
-.sk-1xdki2l-2 {
+.sk-5c3z5x-2 {
   stroke: var(--sk-stroke, #10b981);
   stroke-dasharray: 1 1;
-  animation: sk-1xdki2l-t0-draw 1500ms ease-in-out 0ms 1 normal both;
+  animation: sk-5c3z5x-t0-draw 1500ms ease-in-out 0ms 1 normal both;
 }
-@keyframes sk-1xdki2l-t0-draw {
+@keyframes sk-5c3z5x-t0-draw {
   0% {
     stroke-dashoffset: 1;
   }
@@ -25,31 +25,31 @@ exports[`exporters.css × draw > illustrator-classes.svg 1`] = `
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-1xdki2l * {
+  .sk-5c3z5x * {
     animation: none;
   }
-  .sk-1xdki2l-0 {
+  .sk-5c3z5x-0 {
     stroke-dashoffset: 0;
   }
-  .sk-1xdki2l-1 {
+  .sk-5c3z5x-1 {
     stroke-dashoffset: 0;
   }
-  .sk-1xdki2l-2 {
+  .sk-5c3z5x-2 {
     stroke-dashoffset: 0;
   }
 }
-</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-1xdki2l-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1xdki2l-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-1xdki2l-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-1xdki2l-0"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1xdki2l-2"/></svg>
+</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-5c3z5x-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-5c3z5x-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-5c3z5x-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-5c3z5x-0"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-5c3z5x-2"/></svg>
 "
 `;
 
 exports[`exporters.css × draw > simple-stroke.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-yp1tak" role="img" aria-label="Logo"><style>
-.sk-yp1tak-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-v3qky6" role="img" aria-label="Logo"><style>
+.sk-v3qky6-0 {
   stroke: var(--sk-stroke, #1d4ed8);
   stroke-dasharray: 1 1;
-  animation: sk-yp1tak-t0-draw 1500ms ease-in-out 0ms 1 normal both;
+  animation: sk-v3qky6-t0-draw 1500ms ease-in-out 0ms 1 normal both;
 }
-@keyframes sk-yp1tak-t0-draw {
+@keyframes sk-v3qky6-t0-draw {
   0% {
     stroke-dashoffset: 1;
   }
@@ -58,44 +58,44 @@ exports[`exporters.css × draw > simple-stroke.svg 1`] = `
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-yp1tak * {
+  .sk-v3qky6 * {
     animation: none;
   }
-  .sk-yp1tak-0 {
+  .sk-v3qky6-0 {
     stroke-dashoffset: 0;
   }
 }
-</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-yp1tak-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-yp1tak-0"/></g></svg>
+</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-v3qky6-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-v3qky6-0"/></g></svg>
 "
 `;
 
 exports[`exporters.css × every preset > comet × illustrator-classes.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-hs9h04" role="img" aria-label="Logo"><style>
-.sk-hs9h04-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-1d0hoyi" role="img" aria-label="Logo"><style>
+.sk-1d0hoyi-0 {
   stroke: var(--sk-stroke, #E30613);
   stroke-width: 2;
   fill-opacity: 0.2;
   stroke-dasharray: 0.2 0.8;
-  animation: sk-hs9h04-t0-comet 1600ms linear 0ms infinite normal both;
+  animation: sk-1d0hoyi-t0-comet 1600ms linear 0ms infinite normal both;
 }
-.sk-hs9h04-1 {
+.sk-1d0hoyi-1 {
   stroke: var(--sk-stroke, #1D1D1B);
   stroke-dasharray: 0.2 0.8;
-  animation: sk-hs9h04-t0-comet 1600ms linear 0ms infinite normal both;
+  animation: sk-1d0hoyi-t0-comet 1600ms linear 0ms infinite normal both;
 }
-.sk-hs9h04-2 {
+.sk-1d0hoyi-2 {
   stroke: var(--sk-stroke, #2563eb);
   stroke-width: 2;
   fill-opacity: 0.2;
   stroke-dasharray: 0.2 0.8;
-  animation: sk-hs9h04-t0-comet 1600ms linear 0ms infinite normal both;
+  animation: sk-1d0hoyi-t0-comet 1600ms linear 0ms infinite normal both;
 }
-.sk-hs9h04-3 {
+.sk-1d0hoyi-3 {
   stroke: var(--sk-stroke, #10b981);
   stroke-dasharray: 0.2 0.8;
-  animation: sk-hs9h04-t0-comet 1600ms linear 0ms infinite normal both;
+  animation: sk-1d0hoyi-t0-comet 1600ms linear 0ms infinite normal both;
 }
-@keyframes sk-hs9h04-t0-comet {
+@keyframes sk-1d0hoyi-t0-comet {
   0% {
     stroke-dashoffset: 1;
   }
@@ -104,36 +104,36 @@ exports[`exporters.css × every preset > comet × illustrator-classes.svg 1`] = 
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-hs9h04 * {
+  .sk-1d0hoyi * {
     animation: none;
   }
-  .sk-hs9h04-0 {
+  .sk-1d0hoyi-0 {
     stroke-dasharray: none;
     fill-opacity: 1;
   }
-  .sk-hs9h04-1 {
+  .sk-1d0hoyi-1 {
     stroke-dasharray: none;
   }
-  .sk-hs9h04-2 {
+  .sk-1d0hoyi-2 {
     stroke-dasharray: none;
     fill-opacity: 1;
   }
-  .sk-hs9h04-3 {
+  .sk-1d0hoyi-3 {
     stroke-dasharray: none;
   }
 }
-</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-hs9h04-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-hs9h04-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-hs9h04-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-hs9h04-2"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-hs9h04-3"/></svg>
+</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-1d0hoyi-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1d0hoyi-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-1d0hoyi-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-1d0hoyi-2"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1d0hoyi-3"/></svg>
 "
 `;
 
 exports[`exporters.css × every preset > comet × simple-stroke.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-zky9fr" role="img" aria-label="Logo"><style>
-.sk-zky9fr-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-fd5v37" role="img" aria-label="Logo"><style>
+.sk-fd5v37-0 {
   stroke: var(--sk-stroke, #1d4ed8);
   stroke-dasharray: 0.2 0.8;
-  animation: sk-zky9fr-t0-comet 1600ms linear 0ms infinite normal both;
+  animation: sk-fd5v37-t0-comet 1600ms linear 0ms infinite normal both;
 }
-@keyframes sk-zky9fr-t0-comet {
+@keyframes sk-fd5v37-t0-comet {
   0% {
     stroke-dashoffset: 1;
   }
@@ -142,42 +142,42 @@ exports[`exporters.css × every preset > comet × simple-stroke.svg 1`] = `
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-zky9fr * {
+  .sk-fd5v37 * {
     animation: none;
   }
-  .sk-zky9fr-0 {
+  .sk-fd5v37-0 {
     stroke-dasharray: none;
   }
 }
-</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-zky9fr-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-zky9fr-0"/></g></svg>
+</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-fd5v37-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-fd5v37-0"/></g></svg>
 "
 `;
 
 exports[`exporters.css × every preset > draw-fill × illustrator-classes.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-a4pjse" role="img" aria-label="Logo"><style>
-.sk-a4pjse-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-2vod6w" role="img" aria-label="Logo"><style>
+.sk-2vod6w-0 {
   stroke: var(--sk-stroke, #E30613);
   stroke-width: 2;
   stroke-dasharray: 1 1;
-  animation: sk-a4pjse-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
+  animation: sk-2vod6w-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
 }
-.sk-a4pjse-1 {
+.sk-2vod6w-1 {
   stroke: var(--sk-stroke, #1D1D1B);
   stroke-dasharray: 1 1;
-  animation: sk-a4pjse-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
+  animation: sk-2vod6w-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
 }
-.sk-a4pjse-2 {
+.sk-2vod6w-2 {
   stroke: var(--sk-stroke, #2563eb);
   stroke-width: 2;
   stroke-dasharray: 1 1;
-  animation: sk-a4pjse-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
+  animation: sk-2vod6w-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
 }
-.sk-a4pjse-3 {
+.sk-2vod6w-3 {
   stroke: var(--sk-stroke, #10b981);
   stroke-dasharray: 1 1;
-  animation: sk-a4pjse-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
+  animation: sk-2vod6w-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
 }
-@keyframes sk-a4pjse-t0-draw-fill {
+@keyframes sk-2vod6w-t0-draw-fill {
   0% {
     stroke-dashoffset: 1;
     fill-opacity: 0;
@@ -192,38 +192,38 @@ exports[`exporters.css × every preset > draw-fill × illustrator-classes.svg 1`
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-a4pjse * {
+  .sk-2vod6w * {
     animation: none;
   }
-  .sk-a4pjse-0 {
+  .sk-2vod6w-0 {
     stroke-dashoffset: 0;
     fill-opacity: 1;
   }
-  .sk-a4pjse-1 {
+  .sk-2vod6w-1 {
     stroke-dashoffset: 0;
     fill-opacity: 1;
   }
-  .sk-a4pjse-2 {
+  .sk-2vod6w-2 {
     stroke-dashoffset: 0;
     fill-opacity: 1;
   }
-  .sk-a4pjse-3 {
+  .sk-2vod6w-3 {
     stroke-dashoffset: 0;
     fill-opacity: 1;
   }
 }
-</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-a4pjse-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-a4pjse-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-a4pjse-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-a4pjse-2"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-a4pjse-3"/></svg>
+</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-2vod6w-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-2vod6w-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-2vod6w-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-2vod6w-2"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-2vod6w-3"/></svg>
 "
 `;
 
 exports[`exporters.css × every preset > draw-fill × simple-stroke.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-159tjnt" role="img" aria-label="Logo"><style>
-.sk-159tjnt-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-1kk6it" role="img" aria-label="Logo"><style>
+.sk-1kk6it-0 {
   stroke: var(--sk-stroke, #1d4ed8);
   stroke-dasharray: 1 1;
-  animation: sk-159tjnt-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
+  animation: sk-1kk6it-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
 }
-@keyframes sk-159tjnt-t0-draw-fill {
+@keyframes sk-1kk6it-t0-draw-fill {
   0% {
     stroke-dashoffset: 1;
     fill-opacity: 0;
@@ -238,45 +238,45 @@ exports[`exporters.css × every preset > draw-fill × simple-stroke.svg 1`] = `
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-159tjnt * {
+  .sk-1kk6it * {
     animation: none;
   }
-  .sk-159tjnt-0 {
+  .sk-1kk6it-0 {
     stroke-dashoffset: 0;
     fill-opacity: 1;
   }
 }
-</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-159tjnt-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-159tjnt-0"/></g></svg>
+</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-1kk6it-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-1kk6it-0"/></g></svg>
 "
 `;
 
 exports[`exporters.css × every preset > march × illustrator-classes.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-1n27b5f" role="img" aria-label="Logo"><style>
-.sk-1n27b5f-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-1m4q023" role="img" aria-label="Logo"><style>
+.sk-1m4q023-0 {
   stroke: var(--sk-stroke, #E30613);
   stroke-width: 2;
   fill-opacity: 0.2;
   stroke-dasharray: 0.0408 0.0306;
-  animation: sk-1n27b5f-t0-march 800ms linear 0ms infinite normal both;
+  animation: sk-1m4q023-t0-march 800ms linear 0ms infinite normal both;
 }
-.sk-1n27b5f-1 {
+.sk-1m4q023-1 {
   stroke: var(--sk-stroke, #1D1D1B);
   stroke-dasharray: 0.0408 0.0306;
-  animation: sk-1n27b5f-t0-march 800ms linear 0ms infinite normal both;
+  animation: sk-1m4q023-t0-march 800ms linear 0ms infinite normal both;
 }
-.sk-1n27b5f-2 {
+.sk-1m4q023-2 {
   stroke: var(--sk-stroke, #2563eb);
   stroke-width: 2;
   fill-opacity: 0.2;
   stroke-dasharray: 0.0408 0.0306;
-  animation: sk-1n27b5f-t0-march 800ms linear 0ms infinite normal both;
+  animation: sk-1m4q023-t0-march 800ms linear 0ms infinite normal both;
 }
-.sk-1n27b5f-3 {
+.sk-1m4q023-3 {
   stroke: var(--sk-stroke, #10b981);
   stroke-dasharray: 0.0408 0.0306;
-  animation: sk-1n27b5f-t0-march 800ms linear 0ms infinite normal both;
+  animation: sk-1m4q023-t0-march 800ms linear 0ms infinite normal both;
 }
-@keyframes sk-1n27b5f-t0-march {
+@keyframes sk-1m4q023-t0-march {
   0% {
     stroke-dashoffset: 0;
   }
@@ -285,28 +285,28 @@ exports[`exporters.css × every preset > march × illustrator-classes.svg 1`] = 
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-1n27b5f * {
+  .sk-1m4q023 * {
     animation: none;
   }
-  .sk-1n27b5f-0 {
+  .sk-1m4q023-0 {
     fill-opacity: 1;
   }
-  .sk-1n27b5f-2 {
+  .sk-1m4q023-2 {
     fill-opacity: 1;
   }
 }
-</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-1n27b5f-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1n27b5f-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-1n27b5f-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-1n27b5f-2"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1n27b5f-3"/></svg>
+</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-1m4q023-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1m4q023-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-1m4q023-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-1m4q023-2"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1m4q023-3"/></svg>
 "
 `;
 
 exports[`exporters.css × every preset > march × simple-stroke.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-4quvq4" role="img" aria-label="Logo"><style>
-.sk-4quvq4-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-cjkjvo" role="img" aria-label="Logo"><style>
+.sk-cjkjvo-0 {
   stroke: var(--sk-stroke, #1d4ed8);
   stroke-dasharray: 0.0408 0.0306;
-  animation: sk-4quvq4-t0-march 800ms linear 0ms infinite normal both;
+  animation: sk-cjkjvo-t0-march 800ms linear 0ms infinite normal both;
 }
-@keyframes sk-4quvq4-t0-march {
+@keyframes sk-cjkjvo-t0-march {
   0% {
     stroke-dashoffset: 0;
   }
@@ -315,22 +315,22 @@ exports[`exporters.css × every preset > march × simple-stroke.svg 1`] = `
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-4quvq4 * {
+  .sk-cjkjvo * {
     animation: none;
   }
 }
-</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-4quvq4-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-4quvq4-0"/></g></svg>
+</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-cjkjvo-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-cjkjvo-0"/></g></svg>
 "
 `;
 
 exports[`exporters.css × every preset > pulse × illustrator-classes.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-1djgz4m" role="img" aria-label="Logo"><style>
-.sk-1djgz4m-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-1dlywms" role="img" aria-label="Logo"><style>
+.sk-1dlywms-0 {
   transform-box: fill-box;
   transform-origin: center;
-  animation: sk-1djgz4m-t0-pulse 1400ms ease-in-out 0ms infinite normal both;
+  animation: sk-1dlywms-t0-pulse 1400ms ease-in-out 0ms infinite normal both;
 }
-@keyframes sk-1djgz4m-t0-pulse {
+@keyframes sk-1dlywms-t0-pulse {
   0% {
     opacity: 1;
     transform: scale(1);
@@ -345,26 +345,26 @@ exports[`exporters.css × every preset > pulse × illustrator-classes.svg 1`] = 
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-1djgz4m * {
+  .sk-1dlywms * {
     animation: none;
   }
-  .sk-1djgz4m-0 {
+  .sk-1dlywms-0 {
     opacity: 1;
     transform: none;
   }
 }
-</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" class="sk-1djgz4m-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" class="sk-1djgz4m-0"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" class="sk-1djgz4m-0"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" class="sk-1djgz4m-0"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" class="sk-1djgz4m-0"/></svg>
+</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" class="sk-1dlywms-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" class="sk-1dlywms-0"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" class="sk-1dlywms-0"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" class="sk-1dlywms-0"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" class="sk-1dlywms-0"/></svg>
 "
 `;
 
 exports[`exporters.css × every preset > pulse × simple-stroke.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-18asr03" role="img" aria-label="Logo"><style>
-.sk-18asr03-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-qlcd7t" role="img" aria-label="Logo"><style>
+.sk-qlcd7t-0 {
   transform-box: fill-box;
   transform-origin: center;
-  animation: sk-18asr03-t0-pulse 1400ms ease-in-out 0ms infinite normal both;
+  animation: sk-qlcd7t-t0-pulse 1400ms ease-in-out 0ms infinite normal both;
 }
-@keyframes sk-18asr03-t0-pulse {
+@keyframes sk-qlcd7t-t0-pulse {
   0% {
     opacity: 1;
     transform: scale(1);
@@ -379,48 +379,48 @@ exports[`exporters.css × every preset > pulse × simple-stroke.svg 1`] = `
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-18asr03 * {
+  .sk-qlcd7t * {
     animation: none;
   }
-  .sk-18asr03-0 {
+  .sk-qlcd7t-0 {
     opacity: 1;
     transform: none;
   }
 }
-</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" class="sk-18asr03-0"/><path d="M36 64 L56 84 L88 40" class="sk-18asr03-0"/></g></svg>
+</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" class="sk-qlcd7t-0"/><path d="M36 64 L56 84 L88 40" class="sk-qlcd7t-0"/></g></svg>
 "
 `;
 
 exports[`exporters.css × every preset > stagger-draw × illustrator-classes.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-1oe5b5q" role="img" aria-label="Logo"><style>
-.sk-1oe5b5q-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-l0nhtc" role="img" aria-label="Logo"><style>
+.sk-l0nhtc-0 {
   stroke: var(--sk-stroke, #E30613);
   stroke-width: 2;
   stroke-dasharray: 1 1;
-  animation: sk-1oe5b5q-t0-stagger-draw 900ms ease-in-out 0ms 1 normal both;
+  animation: sk-l0nhtc-t0-stagger-draw 900ms ease-in-out 0ms 1 normal both;
 }
-.sk-1oe5b5q-1 {
+.sk-l0nhtc-1 {
   stroke: var(--sk-stroke, #1D1D1B);
   stroke-dasharray: 1 1;
-  animation: sk-1oe5b5q-t0-stagger-draw 900ms ease-in-out 150ms 1 normal both;
+  animation: sk-l0nhtc-t0-stagger-draw 900ms ease-in-out 150ms 1 normal both;
 }
-.sk-1oe5b5q-2 {
+.sk-l0nhtc-2 {
   stroke: var(--sk-stroke, #1D1D1B);
   stroke-dasharray: 1 1;
-  animation: sk-1oe5b5q-t0-stagger-draw 900ms ease-in-out 300ms 1 normal both;
+  animation: sk-l0nhtc-t0-stagger-draw 900ms ease-in-out 300ms 1 normal both;
 }
-.sk-1oe5b5q-3 {
+.sk-l0nhtc-3 {
   stroke: var(--sk-stroke, #2563eb);
   stroke-width: 2;
   stroke-dasharray: 1 1;
-  animation: sk-1oe5b5q-t0-stagger-draw 900ms ease-in-out 450ms 1 normal both;
+  animation: sk-l0nhtc-t0-stagger-draw 900ms ease-in-out 450ms 1 normal both;
 }
-.sk-1oe5b5q-4 {
+.sk-l0nhtc-4 {
   stroke: var(--sk-stroke, #10b981);
   stroke-dasharray: 1 1;
-  animation: sk-1oe5b5q-t0-stagger-draw 900ms ease-in-out 600ms 1 normal both;
+  animation: sk-l0nhtc-t0-stagger-draw 900ms ease-in-out 600ms 1 normal both;
 }
-@keyframes sk-1oe5b5q-t0-stagger-draw {
+@keyframes sk-l0nhtc-t0-stagger-draw {
   0% {
     stroke-dashoffset: 1;
   }
@@ -429,42 +429,42 @@ exports[`exporters.css × every preset > stagger-draw × illustrator-classes.svg
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-1oe5b5q * {
+  .sk-l0nhtc * {
     animation: none;
   }
-  .sk-1oe5b5q-0 {
+  .sk-l0nhtc-0 {
     stroke-dashoffset: 0;
   }
-  .sk-1oe5b5q-1 {
+  .sk-l0nhtc-1 {
     stroke-dashoffset: 0;
   }
-  .sk-1oe5b5q-2 {
+  .sk-l0nhtc-2 {
     stroke-dashoffset: 0;
   }
-  .sk-1oe5b5q-3 {
+  .sk-l0nhtc-3 {
     stroke-dashoffset: 0;
   }
-  .sk-1oe5b5q-4 {
+  .sk-l0nhtc-4 {
     stroke-dashoffset: 0;
   }
 }
-</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-1oe5b5q-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1oe5b5q-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-1oe5b5q-2"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-1oe5b5q-3"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1oe5b5q-4"/></svg>
+</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-l0nhtc-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-l0nhtc-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-l0nhtc-2"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-l0nhtc-3"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-l0nhtc-4"/></svg>
 "
 `;
 
 exports[`exporters.css × every preset > stagger-draw × simple-stroke.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-1sybw6l" role="img" aria-label="Logo"><style>
-.sk-1sybw6l-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-1o37z" role="img" aria-label="Logo"><style>
+.sk-1o37z-0 {
   stroke: var(--sk-stroke, #1d4ed8);
   stroke-dasharray: 1 1;
-  animation: sk-1sybw6l-t0-stagger-draw 900ms ease-in-out 0ms 1 normal both;
+  animation: sk-1o37z-t0-stagger-draw 900ms ease-in-out 0ms 1 normal both;
 }
-.sk-1sybw6l-1 {
+.sk-1o37z-1 {
   stroke: var(--sk-stroke, #1d4ed8);
   stroke-dasharray: 1 1;
-  animation: sk-1sybw6l-t0-stagger-draw 900ms ease-in-out 150ms 1 normal both;
+  animation: sk-1o37z-t0-stagger-draw 900ms ease-in-out 150ms 1 normal both;
 }
-@keyframes sk-1sybw6l-t0-stagger-draw {
+@keyframes sk-1o37z-t0-stagger-draw {
   0% {
     stroke-dashoffset: 1;
   }
@@ -473,47 +473,47 @@ exports[`exporters.css × every preset > stagger-draw × simple-stroke.svg 1`] =
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-1sybw6l * {
+  .sk-1o37z * {
     animation: none;
   }
-  .sk-1sybw6l-0 {
+  .sk-1o37z-0 {
     stroke-dashoffset: 0;
   }
-  .sk-1sybw6l-1 {
+  .sk-1o37z-1 {
     stroke-dashoffset: 0;
   }
 }
-</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-1sybw6l-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-1sybw6l-1"/></g></svg>
+</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-1o37z-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-1o37z-1"/></g></svg>
 "
 `;
 
 exports[`exporters.css × every preset > yoyo × illustrator-classes.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-1747lde" role="img" aria-label="Logo"><style>
-.sk-1747lde-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-1xkr75m" role="img" aria-label="Logo"><style>
+.sk-1xkr75m-0 {
   stroke: var(--sk-stroke, #E30613);
   stroke-width: 2;
   fill-opacity: 0.2;
   stroke-dasharray: 0.25 1;
-  animation: sk-1747lde-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
+  animation: sk-1xkr75m-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
 }
-.sk-1747lde-1 {
+.sk-1xkr75m-1 {
   stroke: var(--sk-stroke, #1D1D1B);
   stroke-dasharray: 0.25 1;
-  animation: sk-1747lde-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
+  animation: sk-1xkr75m-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
 }
-.sk-1747lde-2 {
+.sk-1xkr75m-2 {
   stroke: var(--sk-stroke, #2563eb);
   stroke-width: 2;
   fill-opacity: 0.2;
   stroke-dasharray: 0.25 1;
-  animation: sk-1747lde-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
+  animation: sk-1xkr75m-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
 }
-.sk-1747lde-3 {
+.sk-1xkr75m-3 {
   stroke: var(--sk-stroke, #10b981);
   stroke-dasharray: 0.25 1;
-  animation: sk-1747lde-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
+  animation: sk-1xkr75m-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
 }
-@keyframes sk-1747lde-t0-yoyo {
+@keyframes sk-1xkr75m-t0-yoyo {
   0% {
     stroke-dashoffset: 0;
   }
@@ -522,36 +522,36 @@ exports[`exporters.css × every preset > yoyo × illustrator-classes.svg 1`] = `
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-1747lde * {
+  .sk-1xkr75m * {
     animation: none;
   }
-  .sk-1747lde-0 {
+  .sk-1xkr75m-0 {
     stroke-dasharray: none;
     fill-opacity: 1;
   }
-  .sk-1747lde-1 {
+  .sk-1xkr75m-1 {
     stroke-dasharray: none;
   }
-  .sk-1747lde-2 {
+  .sk-1xkr75m-2 {
     stroke-dasharray: none;
     fill-opacity: 1;
   }
-  .sk-1747lde-3 {
+  .sk-1xkr75m-3 {
     stroke-dasharray: none;
   }
 }
-</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-1747lde-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1747lde-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-1747lde-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-1747lde-2"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1747lde-3"/></svg>
+</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-1xkr75m-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1xkr75m-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-1xkr75m-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-1xkr75m-2"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1xkr75m-3"/></svg>
 "
 `;
 
 exports[`exporters.css × every preset > yoyo × simple-stroke.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-1xwti19" role="img" aria-label="Logo"><style>
-.sk-1xwti19-0 {
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-1b7jnm9" role="img" aria-label="Logo"><style>
+.sk-1b7jnm9-0 {
   stroke: var(--sk-stroke, #1d4ed8);
   stroke-dasharray: 0.25 1;
-  animation: sk-1xwti19-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
+  animation: sk-1b7jnm9-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
 }
-@keyframes sk-1xwti19-t0-yoyo {
+@keyframes sk-1b7jnm9-t0-yoyo {
   0% {
     stroke-dashoffset: 0;
   }
@@ -560,13 +560,13 @@ exports[`exporters.css × every preset > yoyo × simple-stroke.svg 1`] = `
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-1xwti19 * {
+  .sk-1b7jnm9 * {
     animation: none;
   }
-  .sk-1xwti19-0 {
+  .sk-1b7jnm9-0 {
     stroke-dasharray: none;
   }
 }
-</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-1xwti19-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-1xwti19-0"/></g></svg>
+</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-1b7jnm9-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-1b7jnm9-0"/></g></svg>
 "
 `;

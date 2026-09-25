@@ -1,4 +1,4 @@
-import { compressToEncodedURIComponent } from "lz-string";
+import LZString from "lz-string";
 import { describe, expect, it } from "vitest";
 import {
   decodeShare,
@@ -48,7 +48,7 @@ describe("share links", () => {
     const encode = (payload: unknown) => encodeShare(payload as Parameters<typeof encodeShare>[0]);
     expect(() => decodeShare(encode({ spec: value.spec, svg: " " }))).toThrow(/SVG está faltando/);
     expect(() => decodeShare(encode({ svg: value.svg, spec: { version: 9 } }))).toThrow(/inválida/);
-    expect(() => decodeShare(compressToEncodedURIComponent("null"))).toThrow(ShareError);
+    expect(() => decodeShare(LZString.compressToEncodedURIComponent("null"))).toThrow(ShareError);
   });
 });
 
