@@ -23,6 +23,7 @@
     "radix-ui": "^1.6.7",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "react-resizable-panels": "^4.13.3",
     "shadcn": "^4.21.0",
     "shiki": "4.4.3",
     "sonner": "^2.0.8",

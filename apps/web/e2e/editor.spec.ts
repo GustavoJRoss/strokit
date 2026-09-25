@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { expect, type Page, test } from "@playwright/test";
+import { loadExample, openSection } from "./helpers";
 
 const maliciousDir = join(
   import.meta.dirname,
@@ -13,12 +14,6 @@ const maliciousDir = join(
   "fixtures",
   "malicious",
 );
-
-async function loadExample(page: Page, name: string) {
-  await page.getByRole("button", { name: "Exemplos" }).first().click();
-  await page.getByRole("menuitem", { name: new RegExp(name) }).click();
-  await expect(page.getByRole("button", { name: /sk-0/ })).toBeVisible();
-}
 
 /** Text of the `<style>` in the preview's shadow root and in the export panel. */
 async function styles(page: Page) {
@@ -43,6 +38,7 @@ test("example → change duration → CSS changes → copy; preview equals expor
   const code = page.getByTestId("export-code");
   await expect(code).toContainText("1500ms");
 
+  await openSection(page, "Animação");
   await page.getByRole("spinbutton", { name: "Duração" }).fill("2400");
   await expect(code).toContainText("2400ms");
   await expect(code).not.toContainText("1500ms");
@@ -171,6 +167,7 @@ test.describe("fill-only logo (acceptance, phase 3)", () => {
   test("warns and offers auto-stroke when it is off", async ({ page }) => {
     await page.goto("/editor");
     await loadExample(page, "Pico");
+    await openSection(page, "Geral");
     await page.getByRole("switch", { name: "Traço automático" }).click();
     await expect(page.getByText("5 camada(s) sem traço")).toBeVisible();
     await page.getByRole("button", { name: "Ativar traço automático" }).click();
@@ -181,6 +178,7 @@ test.describe("fill-only logo (acceptance, phase 3)", () => {
 test("custom easing: the curve editor writes cubic-bezier()", async ({ page }) => {
   await page.goto("/editor");
   await loadExample(page, "Órbita");
+  await openSection(page, "Animação");
   await page.getByRole("combobox", { name: "Easing" }).click();
   await page.getByRole("option", { name: "Personalizado" }).click();
   const code = page.getByTestId("export-code");

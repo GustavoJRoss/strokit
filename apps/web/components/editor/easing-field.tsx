@@ -36,6 +36,12 @@ const toY = (y: number) => PAD + ((Y_MAX - y) / (Y_MAX - Y_MIN)) * (H - 2 * PAD)
 const round2 = (value: number) => Math.round(value * 100) / 100;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
+/** Short UI label for summaries ("Acelerar e desacelerar", "Personalizado"). */
+export function easingLabel(easing: Easing): string {
+  if (typeof easing !== "string") return "Personalizado";
+  return PRESETS.find((preset) => preset.value === easing)?.label ?? easing;
+}
+
 export function curveOf(easing: Easing): Bezier {
   if (typeof easing !== "string") return easing.cubicBezier;
   return PRESETS.find((preset) => preset.value === easing)?.curve ?? [0.25, 0.1, 0.25, 1];

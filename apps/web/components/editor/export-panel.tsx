@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { slug } from "@/lib/project";
 import { downloadText } from "@/lib/svg-file";
+import { cn } from "@/lib/utils";
 import { type ExportTab, useEditorStore } from "@/store/editor-store";
 import { selectComponentName, selectExportCode } from "@/store/selectors";
 import { CodeBlock } from "./code-block";
@@ -17,14 +18,22 @@ const HINTS: Record<ExportTab, string> = {
     "Requer motion. Reproduz a mesma animação via useAnimate; o preview ao lado mostra a versão CSS.",
 };
 
-export function ExportPanel() {
+type ExportPanelProps = {
+  collapsed: boolean;
+  onToggleCollapsed: () => void;
+  /** Fill the height of a resizable panel instead of using a fixed height. */
+  fill?: boolean;
+};
+
+/** Height of the header row: also the size of the panel when collapsed. */
+export const EXPORT_HEADER_HEIGHT = 44;
+
+export function ExportPanel({ collapsed, onToggleCollapsed, fill = false }: ExportPanelProps) {
   const code = useEditorStore(selectExportCode);
   const componentName = useEditorStore(selectComponentName);
   const name = useEditorStore((state) => state.spec.name);
   const tab = useEditorStore((state) => state.exportTab);
-  const open = useEditorStore((state) => state.exportOpen);
   const setTab = useEditorStore((state) => state.setExportTab);
-  const setOpen = useEditorStore((state) => state.setExportOpen);
 
   const copy = async () => {
     if (!code) return;
@@ -43,13 +52,16 @@ export function ExportPanel() {
   };
 
   return (
-    <section aria-label="Exportar" className="border-t">
+    <section aria-label="Exportar" className={cn("flex flex-col", fill ? "h-full" : "border-t")}>
       <Tabs
         value={tab}
         onValueChange={(value) => setTab(value as ExportTab)}
-        className="flex flex-col gap-0"
+        className="flex min-h-0 flex-1 flex-col gap-0"
       >
-        <div className="flex flex-wrap items-center gap-2 px-3 py-2">
+        <div
+          className="flex shrink-0 items-center gap-2 overflow-hidden px-3"
+          style={{ height: EXPORT_HEADER_HEIGHT }}
+        >
           <h2 className="font-medium text-sm">Exportar</h2>
           <TabsList>
             <TabsTrigger value="css">CSS</TabsTrigger>
@@ -69,22 +81,22 @@ export function ExportPanel() {
             <Button
               variant="ghost"
               size="icon-sm"
-              aria-expanded={open}
+              aria-expanded={!collapsed}
               aria-controls="export-code-region"
-              aria-label={open ? "Recolher código" : "Mostrar código"}
-              onClick={() => setOpen(!open)}
+              aria-label={collapsed ? "Mostrar código" : "Recolher código"}
+              onClick={onToggleCollapsed}
             >
-              {open ? <ChevronDownIcon /> : <ChevronUpIcon />}
+              {collapsed ? <ChevronUpIcon /> : <ChevronDownIcon />}
             </Button>
           </div>
         </div>
         {(["css", "react", "motion"] as const).map((value) => (
-          <TabsContent key={value} value={value}>
+          <TabsContent key={value} value={value} className="min-h-0 flex-1">
             {/* Kept in the DOM when collapsed so the toggle's aria-controls always resolves. */}
             <div
               id="export-code-region"
-              hidden={!open}
-              className="h-64 overflow-auto border-t bg-muted/30"
+              hidden={collapsed}
+              className={cn("overflow-auto border-t bg-muted/30", fill ? "h-full" : "h-64")}
             >
               {code ? (
                 <CodeBlock code={code} lang={tab === "css" ? "html" : "tsx"} />

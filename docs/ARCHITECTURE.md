@@ -301,6 +301,10 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-25 | Destaque de sintaxe com `github-light` e `github-dark` em variáveis (`--shiki-light`/`--shiki-dark`); na home o código é destacado no build | Acompanha o tema sem `!important`; zero Shiki no cliente da home |
 | 2026-09-25 | O xadrez do preview do editor fica sempre claro, mesmo no tema escuro | O fundo representa onde a logo vai ficar; logos escuras sumiriam num xadrez escuro |
 | 2026-09-25 | Botão de doação inerte (`site.donationUrl = null`) até o método ser escolhido | Pedido do autor |
+| 2026-09-25 | Editor com painéis redimensionáveis e recolhíveis via `react-resizable-panels` v4 (componente `resizable` do shadcn): camadas \| preview \| parâmetros sobre o código; laterais recolhem para uma faixa de 36 px, o código recolhe até o cabeçalho | Pedido do autor; a lib é a base do `resizable` do shadcn, com teclado, limites e colapso prontos. Abaixo de `md` o layout empilhado continua (modo mobile é da Fase 6) |
+| 2026-09-25 | Seções da barra de parâmetros recolhíveis (Radix Collapsible) com resumo quando fechadas e aviso de "sem traço" visível; Preset aberta por padrão | Menos rolagem; o essencial continua visível sem abrir |
+| 2026-09-25 | Layout e seções abertas lembrados em `localStorage` com prefixo `strokit:ui:` (via `onLayoutChanged` e `usePersistentState`); "Restaurar layout" limpa só esse prefixo. `exportOpen` saiu do store | Estado de interface, por visitante, fora da AnimationSpec (regra 1) |
+| 2026-09-25 | Ids dos painéis com prefixo `panel-` | A lib usa o `id` como `data-testid`; `preview` colidia com o host do Shadow DOM |
 
 ### Pendências abertas (decidir até a fase indicada)
 

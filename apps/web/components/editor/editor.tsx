@@ -4,10 +4,8 @@ import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEditorStore } from "@/store/editor-store";
+import { EditorLayout } from "./editor-layout";
 import { EmptyState } from "./empty-state";
-import { ExportPanel } from "./export-panel";
-import { LayersPanel } from "./layers-panel";
-import { ParamsPanel } from "./params-panel";
 import { PreviewCanvas } from "./preview-canvas";
 import { Toolbar } from "./toolbar";
 import { useImporter } from "./use-importer";
@@ -65,20 +63,19 @@ export function Editor() {
           if (file) void importFile(file);
         }}
       >
-        <Toolbar />
-        <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[240px_minmax(0,1fr)_300px]">
-          <LayersPanel />
-          <main className="relative min-h-72" aria-label="Preview">
-            <PreviewCanvas />
-            {!hasDoc && (
-              <div className="absolute inset-0">
-                <EmptyState />
-              </div>
-            )}
-          </main>
-          <ParamsPanel />
-        </div>
-        <ExportPanel />
+        <EditorLayout
+          toolbar={<Toolbar />}
+          preview={
+            <main className="relative size-full" aria-label="Preview">
+              <PreviewCanvas />
+              {!hasDoc && (
+                <div className="absolute inset-0 overflow-auto">
+                  <EmptyState />
+                </div>
+              )}
+            </main>
+          }
+        />
         {dragging && (
           <div className="pointer-events-none absolute inset-2 z-50 flex items-center justify-center rounded-xl border-2 border-primary border-dashed bg-background/80 font-medium">
             Solte o SVG ou o projeto para importar

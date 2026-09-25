@@ -1,7 +1,7 @@
 "use client";
 
 import { type DrawableElement, getPreset } from "@strokit/core";
-import { TriangleAlertIcon } from "lucide-react";
+import { PanelLeftCloseIcon, TriangleAlertIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -40,7 +40,7 @@ function Swatch({ element }: { element: DrawableElement }) {
   );
 }
 
-export function LayersPanel() {
+export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
   const doc = useEditorStore((state) => state.doc);
   const spec = useEditorStore((state) => state.spec);
   const selection = useEditorStore((state) => state.selection);
@@ -62,7 +62,7 @@ export function LayersPanel() {
   };
 
   return (
-    <aside aria-label="Camadas" className="flex min-h-0 flex-col border-r">
+    <aside aria-label="Camadas" className="flex h-full min-h-0 flex-col">
       <div className="flex items-center justify-between gap-2 border-b px-3 py-2">
         <h2 className="font-medium text-sm">
           Camadas
@@ -80,6 +80,17 @@ export function LayersPanel() {
           >
             Nenhuma
           </Button>
+          {onCollapse ? (
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              onClick={onCollapse}
+              aria-label="Esconder camadas"
+              title="Esconder camadas"
+            >
+              <PanelLeftCloseIcon />
+            </Button>
+          ) : null}
         </div>
       </div>
       <ScrollArea className="min-h-0 flex-1">

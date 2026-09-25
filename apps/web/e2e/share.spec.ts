@@ -1,12 +1,7 @@
 import { readFileSync } from "node:fs";
 import { expect, type Page, test } from "@playwright/test";
 import { decodeShare } from "@strokit/core";
-
-async function loadExample(page: Page, name: string) {
-  await page.getByRole("button", { name: "Exemplos" }).first().click();
-  await page.getByRole("menuitem", { name: new RegExp(name) }).click();
-  await expect(page.getByRole("button", { name: /sk-0/ })).toBeVisible();
-}
+import { loadExample, openSection } from "./helpers";
 
 async function exportedCss(page: Page) {
   await page.getByRole("tab", { name: "CSS" }).click();
@@ -20,6 +15,7 @@ test("share link: create → copy link → open in a new tab → identical state
   await page.goto("/editor");
   await loadExample(page, "Onda");
   await page.getByRole("button", { name: /Vai e vem/ }).click();
+  await openSection(page, "Animação");
   await page.getByRole("spinbutton", { name: "Duração" }).fill("2400");
   await expect(page.getByTestId("export-code")).toContainText("2400ms");
   // The hash follows edits with a 300ms debounce: wait until it carries the last one.

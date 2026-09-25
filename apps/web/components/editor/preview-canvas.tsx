@@ -132,7 +132,7 @@ export function PreviewCanvas() {
         playback.background === "checker" && "sk-checker",
       )}
     >
-      <div ref={wrapperRef} className="absolute inset-8">
+      <div ref={wrapperRef} className="absolute inset-[clamp(0.5rem,4%,2rem)]">
         <div
           ref={hostRef}
           className="size-full"

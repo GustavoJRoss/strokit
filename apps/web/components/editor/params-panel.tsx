@@ -1,7 +1,7 @@
 "use client";
 
 import { describeParams, getPreset, presetIds, type Timing, type Track } from "@strokit/core";
-import { TriangleAlertIcon } from "lucide-react";
+import { PanelRightCloseIcon, TriangleAlertIcon } from "lucide-react";
 import { useId } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -15,12 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editor-store";
 import { selectActiveTrack, selectCompiled } from "@/store/selectors";
-import { EasingField } from "./easing-field";
+import { CollapsibleSection } from "./collapsible-section";
+import { EasingField, easingLabel } from "./easing-field";
 import { NumberField } from "./number-field";
 
 const DIRECTIONS: { value: Timing["direction"]; label: string }[] = [
@@ -29,15 +29,6 @@ const DIRECTIONS: { value: Timing["direction"]; label: string }[] = [
   { value: "alternate", label: "Vai e volta" },
   { value: "alternate-reverse", label: "Volta e vai" },
 ];
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="flex flex-col gap-4 p-4">
-      <h2 className="font-medium text-sm">{title}</h2>
-      {children}
-    </section>
-  );
-}
 
 function SelectField<T extends string>(props: {
   label: string;
@@ -75,7 +66,12 @@ function PresetPicker() {
   const applyPreset = useEditorStore((state) => state.applyPresetToSelection);
 
   return (
-    <Section title="Preset">
+    <CollapsibleSection
+      id="preset"
+      title="Preset"
+      defaultOpen
+      summary={activeTrack ? getPreset(activeTrack.preset).label : "Nenhum preset ativo"}
+    >
       <div className="grid gap-2">
         {presetIds.map((id) => {
           const preset = getPreset(id);
@@ -105,7 +101,7 @@ function PresetPicker() {
             : "Sem seleção: aplica a todas as camadas."}
         </p>
       )}
-    </Section>
+    </CollapsibleSection>
   );
 }
 
@@ -158,13 +154,13 @@ function TimingSection() {
 
   if (!track) {
     return (
-      <Section title="Animação">
+      <CollapsibleSection id="timing" title="Animação" summary="Nenhuma camada animada selecionada">
         <p className="text-muted-foreground text-sm">
           {hasSelection
             ? "A camada selecionada não tem preset. Escolha um acima."
             : "Selecione uma camada para editar a animação dela."}
         </p>
-      </Section>
+      </CollapsibleSection>
     );
   }
 
@@ -172,9 +168,15 @@ function TimingSection() {
   const infinite = timing.iterations === "infinite";
   const set = (patch: Partial<Timing>) => updateTiming(track.id, patch);
 
+  const repeats = infinite ? "sempre" : `${timing.iterations}x`;
+
   return (
-    <Section title="Animação">
-      <p className="-mt-2 text-muted-foreground text-xs">
+    <CollapsibleSection
+      id="timing"
+      title="Animação"
+      summary={`${timing.duration} ms · ${easingLabel(timing.easing)} · ${repeats}`}
+    >
+      <p className="-mt-1 text-muted-foreground text-xs">
         {getPreset(track.preset).label} · {track.targets.length} camada(s)
       </p>
       <NumberField
@@ -221,7 +223,7 @@ function TimingSection() {
         onChange={(direction) => set({ direction })}
       />
       <PresetParamsFields track={track} />
-    </Section>
+    </CollapsibleSection>
   );
 }
 
@@ -236,7 +238,19 @@ function GlobalSection() {
   const labelId = useId();
 
   return (
-    <Section title="Geral">
+    <CollapsibleSection
+      id="global"
+      title="Geral"
+      summary={`Traço automático ${global.autoStroke.enabled ? "ligado" : "desligado"}`}
+      alert={
+        missing > 0 ? (
+          <TriangleAlertIcon
+            className="size-4 shrink-0 text-amber-600"
+            aria-label={`${missing} camada(s) sem traço`}
+          />
+        ) : null
+      }
+    >
       <div className="flex flex-col gap-2">
         <Label htmlFor={labelId} className="text-sm">
           Rótulo acessível
@@ -290,18 +304,30 @@ function GlobalSection() {
           </AlertDescription>
         </Alert>
       )}
-    </Section>
+    </CollapsibleSection>
   );
 }
 
-export function ParamsPanel() {
+export function ParamsPanel({ onCollapse }: { onCollapse?: () => void }) {
   return (
-    <aside aria-label="Parâmetros" className="flex min-h-0 flex-col border-l">
+    <aside aria-label="Parâmetros" className="flex h-full min-h-0 flex-col">
+      <div className="flex items-center gap-2 border-b px-3 py-2">
+        {onCollapse ? (
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={onCollapse}
+            aria-label="Esconder parâmetros"
+            title="Esconder parâmetros"
+          >
+            <PanelRightCloseIcon />
+          </Button>
+        ) : null}
+        <h2 className="font-medium text-sm">Parâmetros</h2>
+      </div>
       <ScrollArea className="min-h-0 flex-1">
         <PresetPicker />
-        <Separator />
         <TimingSection />
-        <Separator />
         <GlobalSection />
       </ScrollArea>
     </aside>
