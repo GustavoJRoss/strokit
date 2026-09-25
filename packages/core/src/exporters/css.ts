@@ -72,7 +72,9 @@ export function buildCss(compiled: CompiledAnimation, groups: Iterable<RuleGroup
   }
   const reduced = [
     block(`.${prefix} *`, { animation: "none" }, 1),
-    ...unique.map(({ className, rule }) => block(`.${className}`, rule.reducedMotion, 1)),
+    ...unique
+      .filter(({ rule }) => Object.keys(rule.reducedMotion).length > 0)
+      .map(({ className, rule }) => block(`.${className}`, rule.reducedMotion, 1)),
   ];
   sections.push(`@media (prefers-reduced-motion: reduce) {\n${reduced.join("\n")}\n}`);
   return sections.join("\n");

@@ -24,13 +24,15 @@ function nextTrackId(spec: AnimationSpec): string {
 
 export function createTrack(id: string, preset: PresetId, targets: string[]): Track {
   const definition = getPreset(preset);
+  // Params come from the same preset as `preset`, but TS cannot correlate the two through
+  // the union, so the pairing is asserted here, in one place.
   return {
     id,
     preset,
     targets: [...targets],
     params: structuredCloneParams(definition.defaults.params),
     timing: { ...definition.defaults.timing },
-  };
+  } as Track;
 }
 
 function structuredCloneParams<P>(params: P): P {

@@ -1,19 +1,22 @@
 import { describe, expect, it } from "vitest";
 import { compile } from "../src/compile/compile";
 import { exportCss, formatEasing } from "../src/exporters/css";
+import { presetIds } from "../src/presets";
 import { applyPreset, createEmptySpec } from "../src/spec/defaults";
+import type { PresetId } from "../src/spec/schema";
 import { importSvg } from "../src/svg/import";
 import { fixture, parser } from "./helpers";
 
 function exportFixture(
   name: string,
   configure?: (spec: ReturnType<typeof createEmptySpec>) => void,
+  preset: PresetId = "draw",
 ) {
   const { document } = importSvg(fixture(name), { parser });
   const spec = applyPreset(
     createEmptySpec(),
     document.elements.map((element) => element.id),
-    "draw",
+    preset,
   );
   configure?.(spec);
   return exportCss(compile(document, spec));
@@ -83,5 +86,29 @@ describe("exporters.css × draw", () => {
 
   it("formats easing presets verbatim", () => {
     expect(formatEasing("linear")).toBe("linear");
+  });
+});
+
+describe("exporters.css × every preset", () => {
+  const cases = presetIds
+    .filter((id) => id !== "draw")
+    .flatMap((id) =>
+      ["simple-stroke.svg", "illustrator-classes.svg"].map((name) => [id, name] as const),
+    );
+
+  it.each(cases)("%s × %s", (preset, name) => {
+    const output = exportFixture(
+      name,
+      (spec) => {
+        spec.global.autoStroke.enabled = true;
+      },
+      preset,
+    );
+    expect(output).toMatchSnapshot();
+    const css = styleOf(output);
+    expect(css).toContain("@media (prefers-reduced-motion: reduce)");
+    const hexes = css.match(/#[0-9a-f]{3,8}\b/gi) ?? [];
+    const fallbacks = css.match(/var\(--sk-stroke, #[0-9a-f]{3,8}\)/gi) ?? [];
+    expect(hexes.length).toBe(fallbacks.length);
   });
 });

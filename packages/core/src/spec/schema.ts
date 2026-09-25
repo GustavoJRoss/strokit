@@ -1,5 +1,11 @@
 import { z } from "zod";
+import { cometParamsSchema } from "../presets/comet";
 import { drawParamsSchema } from "../presets/draw";
+import { drawFillParamsSchema } from "../presets/draw-fill";
+import { marchParamsSchema } from "../presets/march";
+import { pulseParamsSchema } from "../presets/pulse";
+import { staggerDrawParamsSchema } from "../presets/stagger-draw";
+import { yoyoParamsSchema } from "../presets/yoyo";
 import { timingSchema } from "./timing";
 
 const trackBase = z.object({
@@ -11,6 +17,12 @@ const trackBase = z.object({
 
 export const trackSchema = z.discriminatedUnion("preset", [
   trackBase.extend({ preset: z.literal("draw"), params: drawParamsSchema }),
+  trackBase.extend({ preset: z.literal("draw-fill"), params: drawFillParamsSchema }),
+  trackBase.extend({ preset: z.literal("stagger-draw"), params: staggerDrawParamsSchema }),
+  trackBase.extend({ preset: z.literal("comet"), params: cometParamsSchema }),
+  trackBase.extend({ preset: z.literal("yoyo"), params: yoyoParamsSchema }),
+  trackBase.extend({ preset: z.literal("march"), params: marchParamsSchema }),
+  trackBase.extend({ preset: z.literal("pulse"), params: pulseParamsSchema }),
 ]);
 
 export const animationSpecSchema = z

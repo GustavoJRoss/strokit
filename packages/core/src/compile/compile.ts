@@ -13,7 +13,35 @@ function runPreset<K extends PresetId>(
   total: number,
 ): PresetOutput {
   const preset = presets[track.preset];
-  return preset.compile({ element, index, total, params: track.params, timing: track.timing });
+  // `track.params` widens to the union of all params; the discriminant guarantees the match.
+  const params = track.params as TrackOf<K>["params"];
+  return preset.compile({ element, index, total, params, timing: track.timing });
+}
+
+function animatesTransform(output: PresetOutput): boolean {
+  return (
+    "transform" in output.rule.props ||
+    output.keyframes.some((definition) =>
+      definition.stops.some((stop) => "transform" in stop.props),
+    )
+  );
+}
+
+/**
+ * A CSS `transform` replaces the SVG `transform` attribute instead of composing with it.
+ * Elements whose animation sets `transform` get their original one moved to a wrapper `<g>`.
+ */
+function wrapTransformed(element: SvgElementNode, ids: ReadonlySet<string>): void {
+  element.children = element.children.map((child) => {
+    if (child.type !== "element") return child;
+    const id = child.attrs["data-sk-id"];
+    if (id !== undefined && ids.has(id) && child.attrs.transform !== undefined) {
+      const { transform, ...attrs } = child.attrs;
+      return { type: "element", name: "g", attrs: { transform }, children: [{ ...child, attrs }] };
+    }
+    wrapTransformed(child, ids);
+    return child;
+  });
 }
 
 function strokeProps(
@@ -45,6 +73,7 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
   const keyframes = new Map<string, KeyframesDef>();
   const rules: ElementRule[] = [];
   const attrsById = new Map<string, Record<string, string>>();
+  const transformed = new Set<string>();
   const warnings: CompileWarning[] = [];
 
   spec.tracks.forEach((track, trackIndex) => {
@@ -82,6 +111,7 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
         reducedMotion: output.rule.reducedMotion,
       });
       if (output.rule.attrs) attrsById.set(target, output.rule.attrs);
+      if (animatesTransform(output)) transformed.add(target);
     });
   });
 
@@ -91,6 +121,7 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
     if (attrs) Object.assign(element.attrs, attrs);
     return undefined;
   });
+  if (transformed.size > 0) wrapTransformed(root, transformed);
 
   return {
     id,

@@ -1,7 +1,13 @@
 import { z } from "zod";
 
 /** Metadata presets attach to params with `.meta()` so editors can render controls. */
-export type ParamMeta = { label?: string; step?: number; unit?: string };
+export type ParamMeta = {
+  label?: string;
+  step?: number;
+  unit?: string;
+  /** Enum value → UI label. */
+  options?: Record<string, string>;
+};
 
 export type ParamField =
   | {
@@ -13,7 +19,7 @@ export type ParamField =
       step?: number;
       unit?: string;
     }
-  | { key: string; kind: "enum"; label: string; options: string[] }
+  | { key: string; kind: "enum"; label: string; options: { value: string; label: string }[] }
   | { key: string; kind: "boolean"; label: string };
 
 function unwrap(schema: z.ZodType): z.ZodType {
@@ -43,7 +49,15 @@ export function describeParams(schema: z.ZodType): ParamField[] {
       if (meta.unit !== undefined) number.unit = meta.unit;
       fields.push(number);
     } else if (field instanceof z.ZodEnum) {
-      fields.push({ key, kind: "enum", label, options: field.options.map(String) });
+      fields.push({
+        key,
+        kind: "enum",
+        label,
+        options: field.options.map((option) => {
+          const value = String(option);
+          return { value, label: meta.options?.[value] ?? value };
+        }),
+      });
     } else if (field instanceof z.ZodBoolean) {
       fields.push({ key, kind: "boolean", label });
     }
