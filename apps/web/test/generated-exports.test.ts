@@ -84,16 +84,16 @@ const COMPONENTS: ComponentConfig[] = [
   {
     dir: HOME,
     component: "BrandMark",
-    svg: "brand/strokit.svg",
+    svg: "brand/logo-mark.svg",
     name: "strokit",
-    preset: "yoyo",
+    preset: "draw-fill",
     exporter: "react",
     configure: (spec) => {
+      // The logo is fill-only: an auto stroke draws the outline, then the fill comes in.
+      spec.global.autoStroke = { enabled: true, width: 5 };
+      loop({ direction: "alternate", duration: 2800, easing: "ease-in-out" })(spec);
       const track = spec.tracks[0];
-      if (track?.preset === "yoyo") {
-        track.params.length = 0.42;
-        track.timing.duration = 1400;
-      }
+      if (track?.preset === "draw-fill") track.params.fillAt = 0.55;
     },
   },
   {

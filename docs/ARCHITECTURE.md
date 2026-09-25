@@ -313,6 +313,8 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-25 | Export de vídeo transparente (`.webm` VP9 com alfa) entra no escopo (RF12), a pedido do autor | MP4 não tem canal alfa; WebM/VP9 é o formato transparente que o navegador consegue gerar sozinho |
 | 2026-09-25 | Quadros gerados por `sampleAnimation()`/`renderFrame()` no core (delay, iterações, direção, fill e easing por intervalo de keyframe, com solver de cubic-bezier próprio), não por gravação de tela | Determinístico, independente de FPS da máquina e testável em Node; um e2e confere que os valores batem com o CSS do preview nos 3 motores |
 | 2026-09-25 | Codificação no navegador com WebCodecs + `mediabunny` (MPL-2.0), importado sob demanda | Sem servidor: o SVG continua sem sair do navegador. Detecção por `canEncodeVideo("vp9", { alpha: "keep" })`; sem suporte, só um aviso |
+| 2026-09-25 | Logo oficial do projeto em `apps/web/public/logo.svg` (arquivo original do autor, intocado, fora do lint). A interface usa `public/brand/logo-mark.svg` e `components/home/brand.tsx`: mesmos caminhos com o `transform` da vetorização achatado nas coordenadas (diferença de 6 px em 444 mil ao renderizar) e fill em `currentColor` | O fill fixo `#111` sumiria no tema escuro, e a escala interna de 1/30 deixaria o traço automático invisível |
+| 2026-09-25 | Hero anima a logo com `draw-fill` (contorno + preenchimento, loop alternado), gerada pelo exportador React como o resto da vitrine | Apresenta a marca com o próprio strokit |
 
 ### Pendências abertas (decidir até a fase indicada)
 

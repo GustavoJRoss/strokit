@@ -17,6 +17,7 @@
       "!**/home/generated",
       "!**/public/showcase",
       "!**/public/brand",
+      "!**/public/logo.svg",
       "!**/__snapshots__"
     ]
   },

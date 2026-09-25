@@ -2,6 +2,7 @@
 
 import { PauseIcon, PlayIcon, RotateCcwIcon } from "lucide-react";
 import Link from "next/link";
+import { Wordmark } from "@/components/home/brand";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -41,8 +42,8 @@ export function Toolbar() {
 
   return (
     <header className="flex flex-wrap items-center gap-2 border-b px-3 py-2">
-      <Link href="/" className="mr-2 font-semibold tracking-tight">
-        strokit
+      <Link href="/" className="mr-2" aria-label="strokit, início">
+        <Wordmark />
       </Link>
       <FilePickerButton />
       <PasteDialogButton />
