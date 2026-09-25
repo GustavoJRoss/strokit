@@ -13,3 +13,4 @@ next-env.d.ts
 .vercel
 apps/web/e2e/.spike/
 .claude/
+packages/core/test/.tsx-check/

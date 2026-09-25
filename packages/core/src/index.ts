@@ -13,6 +13,18 @@ export { getPreset, presetIds, presets } from "./presets";
 export { describeParams, type ParamField, type ParamMeta } from "./presets/fields";
 export type { Preset, PresetContext, PresetOutput } from "./presets/types";
 export {
+  decodeShare,
+  encodeShare,
+  PROJECT_EXTENSION,
+  type ProjectFile,
+  parseProject,
+  SHARE_HASH_PREFIX,
+  SHARE_URL_LIMIT,
+  type SharedAnimation,
+  ShareError,
+  serializeProject,
+} from "./share";
+export {
   applyPreset,
   createEmptySpec,
   createTrack,
