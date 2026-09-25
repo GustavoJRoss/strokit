@@ -1,0 +1,11 @@
+packages:
+  - "packages/*"
+  - "apps/*"
+minimumReleaseAgeExclude:
+  - '@vitest/mocker@5.0.2'
+  - '@vitest/spy@5.0.2'
+  - vitest@5.0.2
+
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
