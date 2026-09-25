@@ -8,5 +8,5 @@ test("home loads", async ({ page }) => {
 
 test("editor route loads", async ({ page }) => {
   await page.goto("/editor");
-  await expect(page.getByRole("heading", { name: "Editor" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Arraste a sua logo SVG para cá" })).toBeVisible();
 });
