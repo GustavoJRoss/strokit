@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 140" width="200" height="140">
+  <title>Pico</title>
+  <circle cx="150" cy="38" r="18" fill="#f97316"/>
+  <g fill="#0f766e">
+    <polygon points="10,128 78,26 146,128"/>
+    <polygon points="92,128 140,58 190,128" fill="#14b8a6"/>
+  </g>
+  <path d="M58 56 L78 26 L98 56 L86 50 L78 60 L70 50 Z" fill="#f0fdfa"/>
+  <rect x="10" y="126" width="180" height="6" rx="3" fill="#134e4a"/>
+</svg>

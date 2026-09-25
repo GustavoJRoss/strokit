@@ -127,3 +127,9 @@
     @apply font-sans;
   }
 }
+
+.sk-checker {
+  background-color: #ffffff;
+  background-image: conic-gradient(#e7e5e4 25%, transparent 0 50%, #e7e5e4 0 75%, transparent 0);
+  background-size: 20px 20px;
+}

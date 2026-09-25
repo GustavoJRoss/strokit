@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Exemplo no formato exportado por editores vetoriais: cores definidas por classe. -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 220 120" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#0ea5e9;stroke-width:7;stroke-linecap:round;}
+	.st1{fill:none;stroke:#38bdf8;stroke-width:5;stroke-linecap:round;}
+	.st2{fill:none;stroke:#7dd3fc;stroke-width:3;stroke-linecap:round;}
+	.st3{fill:#0369a1;}
+</style>
+<path class="st0" d="M14 72 C 44 36, 74 36, 104 72 S 164 108, 206 60"/>
+<path class="st1" d="M14 90 C 44 58, 74 58, 104 90 S 164 118, 206 80"/>
+<path class="st2" d="M14 106 C 44 80, 74 80, 104 106 S 164 124, 206 98"/>
+<circle class="st3" cx="190" cy="30" r="10"/>
+</svg>

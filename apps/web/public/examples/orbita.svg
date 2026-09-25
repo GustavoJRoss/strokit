@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <title>Órbita</title>
+  <g fill="none" stroke="#4f46e5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="80" cy="80" r="58"/>
+    <ellipse cx="80" cy="80" rx="72" ry="26" transform="rotate(-28 80 80)" stroke="#a5b4fc" stroke-width="4"/>
+    <path d="M58 92 C 62 70, 76 60, 98 62"/>
+    <circle cx="126" cy="46" r="9" stroke="#f59e0b"/>
+  </g>
+</svg>
