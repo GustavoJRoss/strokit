@@ -1,5 +1,5 @@
 {
-  "name": "strokekit",
+  "name": "strokit",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@12.6.0",
@@ -7,10 +7,10 @@
     "node": ">=24"
   },
   "scripts": {
-    "dev": "pnpm --filter @strokekit/web dev",
+    "dev": "pnpm --filter @strokit/web dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "test:e2e": "pnpm --filter @strokekit/web test:e2e",
+    "test:e2e": "pnpm --filter @strokit/web test:e2e",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "typecheck": "pnpm -r typecheck"

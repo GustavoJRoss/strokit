@@ -3,13 +3,13 @@ import LZString from "lz-string";
 import { parseSpec } from "../spec/migrate";
 import type { AnimationSpec } from "../spec/schema";
 
-/** Practical limit for the `#s=` hash (ARCHITECTURE §9). Above it, offer `.strokekit.json`. */
+/** Practical limit for the `#s=` hash (ARCHITECTURE §9). Above it, offer `.strokit.json`. */
 export const SHARE_URL_LIMIT = 8000;
 
 export const SHARE_HASH_PREFIX = "#s=";
 
-export const PROJECT_FORMAT = "strokekit";
-export const PROJECT_EXTENSION = ".strokekit.json";
+export const PROJECT_FORMAT = "strokit";
+export const PROJECT_EXTENSION = ".strokit.json";
 
 /** What a link or project file carries: the sanitized SVG and the spec. */
 export type SharedAnimation = { svg: string; spec: AnimationSpec };
@@ -79,7 +79,7 @@ export function parseProject(text: string): SharedAnimation {
     throw new ShareError("O arquivo não é um JSON válido.");
   }
   if ((data as { format?: unknown } | null)?.format !== PROJECT_FORMAT) {
-    throw new ShareError("O arquivo não é um projeto do strokekit.");
+    throw new ShareError("O arquivo não é um projeto do strokit.");
   }
   return fromPayload(data);
 }

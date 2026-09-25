@@ -52,17 +52,17 @@ describe("share links", () => {
   });
 });
 
-describe(".strokekit.json", () => {
+describe(".strokit.json", () => {
   it("round-trips a project file", () => {
     const { value } = shared();
     const text = serializeProject(value);
-    expect(JSON.parse(text)).toMatchObject({ format: "strokekit", version: 1 });
+    expect(JSON.parse(text)).toMatchObject({ format: "strokit", version: 1 });
     expect(parseProject(text)).toEqual(value);
   });
 
   it("rejects other files", () => {
     expect(() => parseProject("{")).toThrow(/JSON válido/);
-    expect(() => parseProject('{"format":"lottie"}')).toThrow(/projeto do strokekit/);
-    expect(() => parseProject("null")).toThrow(/projeto do strokekit/);
+    expect(() => parseProject('{"format":"lottie"}')).toThrow(/projeto do strokit/);
+    expect(() => parseProject("null")).toThrow(/projeto do strokit/);
   });
 });

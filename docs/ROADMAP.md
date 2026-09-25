@@ -1,4 +1,4 @@
-# ROADMAP — strokekit
+# ROADMAP — strokit
 
 Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm test`, marque os itens e **pare para revisão**.
 
@@ -68,7 +68,7 @@ Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm 
 - [x] Teste: o TSX exportado **compila** (typecheck em um arquivo temporário com tsc) — além do snapshot
 - [x] Abas React e Motion no ExportPanel; download `.tsx`
 - [x] `share.encode/decode` + sync com hash da URL (debounce) + botão "Copiar link"
-- [x] Fallback de tamanho: export/import de `.strokekit.json`
+- [x] Fallback de tamanho: export/import de `.strokit.json`
 
 **Aceite:** e2e — criar animação → copiar link → abrir em aba nova → estado idêntico. O TSX exportado roda num app Next de exemplo.
 
@@ -76,7 +76,7 @@ Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm 
 
 ## Fase 5 — Vitrine
 
-- [ ] Landing: headline com o problema, demo ao vivo no hero (a própria logo do strokekit animada com `yoyo`), "como funciona" em 3 passos, comparação honesta com SVGator/GSAP/Lottie, CTA para o editor
+- [ ] Landing: headline com o problema, demo ao vivo no hero (a própria logo do strokit animada com `yoyo`), "como funciona" em 3 passos, comparação honesta com SVGator/GSAP/Lottie, CTA para o editor
 - [ ] OG image dinâmica
 - [ ] Registry do shadcn: `stroke-draw`, `stroke-comet`, `logo-loader` + página de docs com instalação
 - [ ] README: GIF de 10 s, porquê, features, instalação via registry, arquitetura resumida (diagrama do pipeline), como contribuir

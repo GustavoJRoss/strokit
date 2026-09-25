@@ -1,6 +1,6 @@
 "use client";
 
-import { parseProject, type SharedAnimation } from "@strokekit/core";
+import { parseProject, type SharedAnimation } from "@strokit/core";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import { type Example, fetchExample } from "@/lib/examples";

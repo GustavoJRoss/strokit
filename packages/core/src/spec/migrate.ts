@@ -11,7 +11,7 @@ export class SpecVersionError extends Error {
 
 /**
  * Upgrades any older spec shape to the current version. Runs before validation, so old
- * share links and `.strokekit.json` files keep working. v1 is the first version: passthrough.
+ * share links and `.strokit.json` files keep working. v1 is the first version: passthrough.
  */
 export function migrate(input: unknown): unknown {
   if (typeof input !== "object" || input === null) {

@@ -8,12 +8,12 @@ import {
   exporters,
   importSvg,
   type PresetId,
-} from "@strokekit/core";
+} from "@strokit/core";
 import { describe, expect, it } from "vitest";
 
 /**
  * `app/exemplos/generated/*.tsx` are real exporter outputs, compiled by `next build` and
- * exercised by e2e. Regenerate with: UPDATE_GENERATED=1 pnpm --filter @strokekit/web test
+ * exercised by e2e. Regenerate with: UPDATE_GENERATED=1 pnpm --filter @strokit/web test
  */
 type Config = {
   component: string;

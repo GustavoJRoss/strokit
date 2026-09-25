@@ -1,4 +1,4 @@
-import { type ImportWarning, ShareError, SvgImportError } from "@strokekit/core";
+import { type ImportWarning, ShareError, SvgImportError } from "@strokit/core";
 import { FileReadError } from "./svg-file";
 
 export function importErrorMessage(error: unknown): string {

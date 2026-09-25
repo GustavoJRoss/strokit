@@ -1,6 +1,6 @@
 "use client";
 
-import { describeParams, getPreset, presetIds, type Timing, type Track } from "@strokekit/core";
+import { describeParams, getPreset, presetIds, type Timing, type Track } from "@strokit/core";
 import { TriangleAlertIcon } from "lucide-react";
 import { useId } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

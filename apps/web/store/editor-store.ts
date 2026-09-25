@@ -10,7 +10,7 @@ import {
   type Timing,
   updateTrackParams,
   updateTrackTiming,
-} from "@strokekit/core";
+} from "@strokit/core";
 import { create } from "zustand";
 
 export type Background = "light" | "dark" | "checker";
@@ -38,7 +38,7 @@ export type EditorState = {
   playback: Playback;
   exportTab: ExportTab;
   exportOpen: boolean;
-  /** The encoded link would pass SHARE_URL_LIMIT: offer `.strokekit.json` instead. */
+  /** The encoded link would pass SHARE_URL_LIMIT: offer `.strokit.json` instead. */
   shareTooLarge: boolean;
 };
 

@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 test("home loads", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle("strokekit");
-  await expect(page.getByRole("heading", { name: "strokekit" })).toBeVisible();
+  await expect(page).toHaveTitle("strokit");
+  await expect(page.getByRole("heading", { name: "strokit" })).toBeVisible();
 });
 
 test("editor route loads", async ({ page }) => {

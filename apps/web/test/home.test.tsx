@@ -5,7 +5,7 @@ import Home from "@/app/page";
 describe("Home", () => {
   it("renders the product name and a link to the editor", () => {
     render(<Home />);
-    expect(screen.getByRole("heading", { name: "strokekit" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "strokit" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Abrir o editor" })).toHaveAttribute("href", "/editor");
   });
 });

@@ -1,4 +1,4 @@
-# SPEC — strokekit
+# SPEC — strokit
 
 ## 1. Problema
 
@@ -49,8 +49,8 @@ Parâmetros específicos: `comet.length` (0–1), `stagger.step` (ms), `stagger.
 - **RF6 Parâmetros:** painel com sliders e inputs numéricos sincronizados; mudanças refletem no preview em menos de 50 ms.
 - **RF7 Controles de preview:** play, pause, restart, velocidade (0.25x–2x), fundo claro/escuro/xadrez e toggle "simular reduced motion".
 - **RF8 Export:** abas CSS, React e Motion com syntax highlight, botão copiar e download (`.svg` animado, `.tsx`).
-- **RF9 Compartilhar:** a `AnimationSpec` e o SVG comprimidos na URL (hash). Abrir a URL reconstrói o estado. Se o tamanho passar do limite seguro, avisar e oferecer download de um `.strokekit.json`.
-- **RF10 Import de projeto:** carregar um `.strokekit.json`.
+- **RF9 Compartilhar:** a `AnimationSpec` e o SVG comprimidos na URL (hash). Abrir a URL reconstrói o estado. Se o tamanho passar do limite seguro, avisar e oferecer download de um `.strokit.json`.
+- **RF10 Import de projeto:** carregar um `.strokit.json`.
 - **RF11 Exemplos:** 3–4 logos de exemplo originais (não usar marcas reais) para o usuário testar sem ter um SVG.
 
 ## 6. Requisitos não funcionais

@@ -1,6 +1,6 @@
 "use client";
 
-import { decodeShare, SHARE_HASH_PREFIX } from "@strokekit/core";
+import { decodeShare, SHARE_HASH_PREFIX } from "@strokit/core";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { importErrorMessage } from "@/lib/messages";

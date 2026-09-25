@@ -1,4 +1,4 @@
-# ARCHITECTURE — strokekit
+# ARCHITECTURE — strokit
 
 ## 1. Por que Next.js (e não Vite/Astro)
 
@@ -13,7 +13,7 @@ O editor roda como Client Component (`"use client"`) carregado com `dynamic(...,
 ## 2. Estrutura do monorepo
 
 ```
-strokekit/
+strokit/
 ├─ CLAUDE.md
 ├─ docs/
 ├─ package.json            # scripts raiz
@@ -105,7 +105,7 @@ type Track = {
 };
 ```
 
-Todo schema tem `version`. A decodificação de URL e de `.strokekit.json` passa por `migrate()` antes da validação, para que links antigos continuem funcionando.
+Todo schema tem `version`. A decodificação de URL e de `.strokit.json` passa por `migrate()` antes da validação, para que links antigos continuem funcionando.
 
 ## 4. Pipeline
 
@@ -226,7 +226,7 @@ Derivados (`selectCompiled`, `selectCssExport`, `selectPreviewMarkup`, `selectAc
 
 ## 9. Compartilhamento por URL
 
-`encodeShare({ svg, spec })` → JSON → compressão (`lz-string` `compressToEncodedURIComponent`) → hash `#s=...`. O `svg` é o `SvgDocument.raw` (já sanitizado); ao abrir, ele passa de novo por `importSvg()` e a spec por `migrate()` + Zod. O editor sincroniza o hash com debounce de 300 ms (`history.replaceState`). Limite prático de 8000 caracteres (`SHARE_URL_LIMIT`); acima disso, "Copiar link" oferece baixar o `.strokekit.json` (`{ format: "strokekit", version: 1, svg, spec }`). O hash não é enviado ao servidor, o que mantém a privacidade.
+`encodeShare({ svg, spec })` → JSON → compressão (`lz-string` `compressToEncodedURIComponent`) → hash `#s=...`. O `svg` é o `SvgDocument.raw` (já sanitizado); ao abrir, ele passa de novo por `importSvg()` e a spec por `migrate()` + Zod. O editor sincroniza o hash com debounce de 300 ms (`history.replaceState`). Limite prático de 8000 caracteres (`SHARE_URL_LIMIT`); acima disso, "Copiar link" oferece baixar o `.strokit.json` (`{ format: "strokit", version: 1, svg, spec }`). O hash não é enviado ao servidor, o que mantém a privacidade.
 
 ## 10. Registry do shadcn
 
@@ -292,6 +292,7 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-25 | Página `/exemplos` com 4 componentes gerados pelos exportadores; um teste falha se eles ficarem desatualizados (`UPDATE_GENERATED=1` regenera) | Prova que o TSX roda num app Next (compilado pelo `next build`, verificado por e2e) |
 | 2026-09-25 | `lz-string` importado como default | É CommonJS; o default import é a forma aceita tanto pelo Node ESM (Playwright) quanto pelos bundlers |
 | 2026-09-25 | Projetos são reconhecidos pela extensão `.json` ou por conteúdo começando com `{` | Downloads podem perder a extensão |
+| 2026-09-25 | Nome definitivo do projeto: **strokit** (pacotes `@strokit/core` e `@strokit/web`, arquivo de projeto `.strokit.json`, `format: "strokit"`) | Decisão do autor. O prefixo `sk-` das classes e as variáveis `--sk-*` ficam: continuam sendo a sigla do nome e mudá-los quebraria o CSS de quem já exportou |
 
 ### Pendências abertas (decidir até a fase indicada)
 

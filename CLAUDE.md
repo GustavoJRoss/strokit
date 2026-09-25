@@ -1,6 +1,4 @@
-# CLAUDE.md — strokekit
-
-> Nome provisório. Troque "strokekit" em todos os arquivos quando definir o nome final.
+# CLAUDE.md — strokit
 
 ## O que é
 

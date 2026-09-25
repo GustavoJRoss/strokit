@@ -1,6 +1,6 @@
 "use client";
 
-import { PROJECT_EXTENSION } from "@strokekit/core";
+import { PROJECT_EXTENSION } from "@strokit/core";
 import { ChevronDownIcon, DownloadIcon, FolderOpenIcon, LinkIcon, Share2Icon } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "sonner";

@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { expect, type Page, test } from "@playwright/test";
-import { applyPreset, compile, createEmptySpec, exporters, importSvg } from "@strokekit/core";
+import { applyPreset, compile, createEmptySpec, exporters, importSvg } from "@strokit/core";
 import { DOMParser } from "linkedom";
 
 /**

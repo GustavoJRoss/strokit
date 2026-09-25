@@ -6,8 +6,8 @@ import { OrbitaMotionLogo } from "./generated/OrbitaMotionLogo";
 import { PicoLoader } from "./generated/PicoLoader";
 
 export const metadata: Metadata = {
-  title: "Componentes exportados · strokekit",
-  description: "Componentes React e Motion gerados pelo strokekit, rodando neste site.",
+  title: "Componentes exportados · strokit",
+  description: "Componentes React e Motion gerados pelo strokit, rodando neste site.",
 };
 
 const CARDS = [
@@ -43,8 +43,8 @@ export default function ExamplesPage() {
       <header className="flex flex-col gap-2">
         <h1 className="font-semibold text-3xl tracking-tight">Componentes exportados</h1>
         <p className="text-muted-foreground">
-          Estes componentes saíram direto dos exportadores do strokekit e são compilados pelo
-          próprio Next.js deste site. Nenhuma linha foi editada à mão.
+          Estes componentes saíram direto dos exportadores do strokit e são compilados pelo próprio
+          Next.js deste site. Nenhuma linha foi editada à mão.
         </p>
         <Link className="w-fit underline underline-offset-4" href="/editor">
           Criar o seu no editor

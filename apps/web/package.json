@@ -1,5 +1,5 @@
 {
-  "name": "@strokekit/web",
+  "name": "@strokit/web",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@strokekit/core": "workspace:*",
+    "@strokit/core": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "lucide-react": "^1.48.0",

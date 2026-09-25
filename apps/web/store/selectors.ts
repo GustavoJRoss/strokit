@@ -7,7 +7,7 @@ import {
   type SvgDocument,
   type Track,
   toComponentName,
-} from "@strokekit/core";
+} from "@strokit/core";
 import { memoizeLast } from "@/lib/memoize";
 import type { EditorState } from "./editor-store";
 

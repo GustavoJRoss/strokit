@@ -8,6 +8,7 @@ minimumReleaseAgeExclude:
   - framer-motion@13.4.4
   - motion-dom@13.4.4
   - motion@13.4.4
+  - '@vitest/coverage-v8@5.0.2'
 
 allowBuilds:
   sharp: false

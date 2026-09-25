@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "export",
-  transpilePackages: ["@strokekit/core"],
+  transpilePackages: ["@strokit/core"],
   images: { unoptimized: true },
 };
 

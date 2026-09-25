@@ -1,6 +1,6 @@
 "use client";
 
-import type { Easing, EasingPreset } from "@strokekit/core";
+import type { Easing, EasingPreset } from "@strokit/core";
 import { useId, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

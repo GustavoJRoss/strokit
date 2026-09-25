@@ -1,6 +1,6 @@
 "use client";
 
-import { type DrawableElement, getPreset } from "@strokekit/core";
+import { type DrawableElement, getPreset } from "@strokit/core";
 import { TriangleAlertIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { expect, type Page, test } from "@playwright/test";
-import { decodeShare } from "@strokekit/core";
+import { decodeShare } from "@strokit/core";
 
 async function loadExample(page: Page, name: string) {
   await page.getByRole("button", { name: "Exemplos" }).first().click();
@@ -45,7 +45,7 @@ test("a broken link shows a friendly error and an empty editor", async ({ page }
   await expect(page.getByRole("heading", { name: "Arraste a sua logo SVG para cá" })).toBeVisible();
 });
 
-test("project file: download .strokekit.json and open it again", async ({ page, browser }) => {
+test("project file: download .strokit.json and open it again", async ({ page, browser }) => {
   await page.goto("/editor");
   await loadExample(page, "Pico");
   await page.getByRole("button", { name: /Desenhar e preencher/ }).click();
@@ -55,7 +55,7 @@ test("project file: download .strokekit.json and open it again", async ({ page, 
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("menuitem", { name: /Baixar projeto/ }).click();
   const download = await downloadPromise;
-  expect(download.suggestedFilename()).toBe("pico.strokekit.json");
+  expect(download.suggestedFilename()).toBe("pico.strokit.json");
   const buffer = readFileSync(await download.path());
 
   const fresh = await (await browser.newContext()).newPage();
@@ -109,7 +109,7 @@ test("a project file without extension is still recognized by its content", asyn
   await expect.poll(() => new URL(page.url()).hash).toMatch(/^#s=/);
   const project = new URL(page.url()).hash;
   const { svg, spec } = decodeShare(project);
-  const buffer = Buffer.from(JSON.stringify({ format: "strokekit", version: 1, svg, spec }));
+  const buffer = Buffer.from(JSON.stringify({ format: "strokit", version: 1, svg, spec }));
   await page.goto("/editor");
   await page
     .getByTestId("file-input")

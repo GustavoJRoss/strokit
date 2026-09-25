@@ -5,7 +5,7 @@ import {
   SHARE_URL_LIMIT,
   type SharedAnimation,
   serializeProject,
-} from "@strokekit/core";
+} from "@strokit/core";
 import { downloadText } from "./svg-file";
 
 export function isProjectFile(file: File): boolean {

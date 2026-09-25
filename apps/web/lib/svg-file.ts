@@ -1,4 +1,4 @@
-import { MAX_SVG_BYTES } from "@strokekit/core";
+import { MAX_SVG_BYTES } from "@strokit/core";
 
 export class FileReadError extends Error {}
 
