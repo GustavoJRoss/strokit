@@ -63,12 +63,12 @@ Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm 
 
 ## Fase 4 — Exportadores React e Motion, compartilhamento
 
-- [ ] `exporters.react()` com o contrato de props (ARCHITECTURE §7), sem dependências
-- [ ] `exporters.motion()` com `motion/react`
-- [ ] Teste: o TSX exportado **compila** (typecheck em um arquivo temporário com tsc) — além do snapshot
-- [ ] Abas React e Motion no ExportPanel; download `.tsx`
-- [ ] `share.encode/decode` + sync com hash da URL (debounce) + botão "Copiar link"
-- [ ] Fallback de tamanho: export/import de `.strokekit.json`
+- [x] `exporters.react()` com o contrato de props (ARCHITECTURE §7), sem dependências
+- [x] `exporters.motion()` com `motion/react`
+- [x] Teste: o TSX exportado **compila** (typecheck em um arquivo temporário com tsc) — além do snapshot
+- [x] Abas React e Motion no ExportPanel; download `.tsx`
+- [x] `share.encode/decode` + sync com hash da URL (debounce) + botão "Copiar link"
+- [x] Fallback de tamanho: export/import de `.strokekit.json`
 
 **Aceite:** e2e — criar animação → copiar link → abrir em aba nova → estado idêntico. O TSX exportado roda num app Next de exemplo.
 

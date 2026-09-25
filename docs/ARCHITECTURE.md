@@ -195,9 +195,9 @@ type Props = {
 };
 ```
 
-Sem dependências; CSS em `<style>` escopado pelo prefixo ou em CSS module opcional. `speed` e `paused` via CSS custom properties (`--sk-speed`, `animation-play-state`), sem re-render.
+Sem dependências; CSS em `<style>` escopado pelo prefixo. O CSS é o mesmo do export CSS, mas o timing lê custom properties: duração e atraso viram `calc(Xms / var(--sk-speed, 1))`, as repetições `var(--sk-iterations, N)` e `animation-play-state: var(--sk-play-state, running)`. Assim `speed`, `loop` e `paused` mudam a reprodução sem re-render do SVG. Com `a11y.mode = "status"`, o SVG fica `aria-hidden` dentro de um `<span role="status">` com texto visualmente oculto.
 
-**Motion:** o mesmo contrato de props usando `motion/react` (`motion.path` com `pathLength`, que é nativo no Motion). Útil para quem já tem Motion no projeto e quer controlar a animação programaticamente.
+**Motion:** o mesmo contrato de props e o mesmo markup (elementos SVG comuns com classes), animados por `useAnimate()` do `motion/react`. Os keyframes da IR viram arrays de valores + `times` (com `ease`, `repeat` e `repeatType` equivalentes); o CSS guarda as propriedades estáticas, o **primeiro keyframe** (nada pisca antes da hidratação) e o bloco de reduced motion; `useReducedMotion()` desliga as animações. `speed` e `paused` usam os controles de playback (`control.speed`, `pause()`/`play()`), sem reiniciar. Útil para quem já tem Motion no projeto. O preview do editor continua sendo a versão CSS (a aba avisa).
 
 ## 8. Estado do editor (Zustand)
 
@@ -226,7 +226,7 @@ Derivados (`selectCompiled`, `selectCssExport`, `selectPreviewMarkup`, `selectAc
 
 ## 9. Compartilhamento por URL
 
-`share.encode(svg, spec)` → JSON → compressão (`lz-string` `compressToEncodedURIComponent`) → hash `#s=...`. Limite prático de cerca de 8 KB; acima disso, a UI oferece download do `.strokekit.json`. O hash não é enviado ao servidor, o que mantém a privacidade.
+`encodeShare({ svg, spec })` → JSON → compressão (`lz-string` `compressToEncodedURIComponent`) → hash `#s=...`. O `svg` é o `SvgDocument.raw` (já sanitizado); ao abrir, ele passa de novo por `importSvg()` e a spec por `migrate()` + Zod. O editor sincroniza o hash com debounce de 300 ms (`history.replaceState`). Limite prático de 8000 caracteres (`SHARE_URL_LIMIT`); acima disso, "Copiar link" oferece baixar o `.strokekit.json` (`{ format: "strokekit", version: 1, svg, spec }`). O hash não é enviado ao servidor, o que mantém a privacidade.
 
 ## 10. Registry do shadcn
 
@@ -285,8 +285,14 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-25 | `comet`, `yoyo` e `march` declaram `autoStrokeFill: "ghost"`: com traço automático, o fill fica a 0.2 (1 em reduced motion) | O traço automático tem a cor do fill; sem esmaecer, o risco em movimento fica invisível sobre o próprio preenchimento |
 | 2026-09-25 | Exportador CSS omite regras vazias no bloco de reduced motion | `march` mantém o tracejado estático e não precisa de propriedades extras |
 | 2026-09-25 | Editor de easing: presets CSS + "Personalizado" com curva arrastável (mouse e setas; Shift = passo 0.1), y em [-0.5, 1.5] para overshoot | SPEC: cubic-bezier customizado com curva visual |
+| 2026-09-25 | Export Motion com `useAnimate()` sobre o mesmo markup do React, em vez de `motion.path` com `pathLength` animado | Mantém "exportadores não conhecem presets": os keyframes da IR são traduzidos genericamente; `pathLength` do Motion exigiria mapear cada preset |
+| 2026-09-25 | Export React: timing via `--sk-speed`, `--sk-iterations`, `--sk-play-state` | Props mudam a reprodução sem re-render (ARCHITECTURE §7) |
+| 2026-09-25 | O hash `sk-<hash>` usa JSON canônico (chaves ordenadas) da spec | Uma spec restaurada de link/arquivo volta com as chaves na ordem do schema; sem isso o prefixo mudava e o código exportado deixava de ser idêntico |
+| 2026-09-25 | Teste que roda `tsc` (strict, `exactOptionalPropertyTypes`) em 56 arquivos gerados; `react`, `@types/react` e `motion` são devDependencies do core só para ele | Critério da Fase 4: o TSX exportado compila com os tipos reais |
+| 2026-09-25 | Página `/exemplos` com 4 componentes gerados pelos exportadores; um teste falha se eles ficarem desatualizados (`UPDATE_GENERATED=1` regenera) | Prova que o TSX roda num app Next (compilado pelo `next build`, verificado por e2e) |
+| 2026-09-25 | `lz-string` importado como default | É CommonJS; o default import é a forma aceita tanto pelo Node ESM (Playwright) quanto pelos bundlers |
+| 2026-09-25 | Projetos são reconhecidos pela extensão `.json` ou por conteúdo começando com `{` | Downloads podem perder a extensão |
 
 ### Pendências abertas (decidir até a fase indicada)
 
-- **Fase 4:** o export Motion aproxima o CSS (usa o `pathLength` do Motion); o WYSIWYG só vale para o CSS. Isso precisa aparecer na aba.
 - **Fase 5:** com static export a OG image é gerada no build; não há OG por animação compartilhada (o hash não chega ao servidor).
