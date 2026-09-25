@@ -1,13 +1,12 @@
 import { getPreset } from "../presets";
 import type { AnimationSpec, PresetId, Track } from "./schema";
+import type { Timing } from "./timing";
 
 export function createEmptySpec(name = "Minha animação"): AnimationSpec {
   return {
     version: 1,
     name,
     global: {
-      playbackRate: 1,
-      background: "checker",
       autoStroke: { enabled: false, width: 2 },
       a11y: { label: "Logo", mode: "img" },
     },
@@ -54,4 +53,36 @@ export function applyPreset(
     .filter((track) => track.targets.length > 0);
   const track = createTrack(nextTrackId(spec), preset, unique);
   return { ...spec, tracks: [...remaining, track] };
+}
+
+export function findTrackForElement(spec: AnimationSpec, elementId: string): Track | undefined {
+  return spec.tracks.find((track) => track.targets.includes(elementId));
+}
+
+export function updateTrackTiming(
+  spec: AnimationSpec,
+  trackId: string,
+  patch: Partial<Timing>,
+): AnimationSpec {
+  return {
+    ...spec,
+    tracks: spec.tracks.map((track) =>
+      track.id === trackId ? { ...track, timing: { ...track.timing, ...patch } } : track,
+    ),
+  };
+}
+
+export function updateTrackParams(
+  spec: AnimationSpec,
+  trackId: string,
+  params: Record<string, unknown>,
+): AnimationSpec {
+  return {
+    ...spec,
+    tracks: spec.tracks.map((track) =>
+      track.id === trackId
+        ? ({ ...track, params: { ...track.params, ...params } } as Track)
+        : track,
+    ),
+  };
 }

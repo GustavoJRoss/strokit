@@ -18,8 +18,6 @@ export const animationSpecSchema = z
     version: z.literal(1),
     name: z.string().max(120),
     global: z.object({
-      playbackRate: z.number().min(0.25).max(2),
-      background: z.enum(["light", "dark", "checker"]),
       /** SPEC RF4 */
       autoStroke: z.object({ enabled: z.boolean(), width: z.number().positive().max(100) }),
       a11y: z.object({ label: z.string().max(200), mode: z.enum(["img", "status"]) }),

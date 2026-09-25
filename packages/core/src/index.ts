@@ -10,8 +10,16 @@ export type {
 } from "./compile/types";
 export * as exporters from "./exporters";
 export { getPreset, presetIds, presets } from "./presets";
+export { describeParams, type ParamField, type ParamMeta } from "./presets/fields";
 export type { Preset, PresetContext, PresetOutput } from "./presets/types";
-export { applyPreset, createEmptySpec, createTrack } from "./spec/defaults";
+export {
+  applyPreset,
+  createEmptySpec,
+  createTrack,
+  findTrackForElement,
+  updateTrackParams,
+  updateTrackTiming,
+} from "./spec/defaults";
 export { CURRENT_SPEC_VERSION, migrate, parseSpec, SpecVersionError } from "./spec/migrate";
 export {
   type AnimationSpec,
@@ -20,7 +28,7 @@ export {
   type Track,
   trackSchema,
 } from "./spec/schema";
-export type { Easing, EasingPreset, Timing } from "./spec/timing";
+export { type Easing, type EasingPreset, easingPresetSchema, type Timing } from "./spec/timing";
 export { type ImportWarning, SvgImportError, type SvgImportErrorCode } from "./svg/errors";
 export { type ImportOptions, type ImportResult, importSvg, sanitizeSvg } from "./svg/import";
 export { normalizeSvg } from "./svg/normalize";

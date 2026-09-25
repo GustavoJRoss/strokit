@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { ZodError } from "zod";
-import { applyPreset, createEmptySpec } from "../src/spec/defaults";
+import {
+  applyPreset,
+  createEmptySpec,
+  findTrackForElement,
+  updateTrackParams,
+  updateTrackTiming,
+} from "../src/spec/defaults";
 import { migrate, parseSpec, SpecVersionError } from "../src/spec/migrate";
 import { animationSpecSchema } from "../src/spec/schema";
 
@@ -98,5 +104,28 @@ describe("applyPreset", () => {
     const first = applyPreset(empty, ["sk-0"], "draw");
     applyPreset(first, ["sk-0"], "draw");
     expect(first.tracks[0]?.targets).toEqual(["sk-0"]);
+  });
+});
+
+describe("track updates", () => {
+  const base = applyPreset(applyPreset(createEmptySpec(), ["sk-0"], "draw"), ["sk-1"], "draw");
+
+  it("finds the track that animates an element", () => {
+    expect(findTrackForElement(base, "sk-1")?.id).toBe("track-1");
+    expect(findTrackForElement(base, "sk-9")).toBeUndefined();
+  });
+
+  it("patches timing of one track immutably", () => {
+    const next = updateTrackTiming(base, "track-1", { duration: 900 });
+    expect(next.tracks[1]?.timing.duration).toBe(900);
+    expect(next.tracks[0]?.timing.duration).toBe(1500);
+    expect(base.tracks[1]?.timing.duration).toBe(1500);
+  });
+
+  it("merges params of one track immutably", () => {
+    const next = updateTrackParams(base, "track-0", {});
+    expect(next.tracks[0]).toEqual(base.tracks[0]);
+    expect(next.tracks[0]).not.toBe(base.tracks[0]);
+    expect(next.tracks[1]).toBe(base.tracks[1]);
   });
 });
