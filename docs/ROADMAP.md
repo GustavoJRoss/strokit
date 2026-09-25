@@ -1,0 +1,99 @@
+# ROADMAP — strokekit
+
+Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm test`, marque os itens e **pare para revisão**.
+
+---
+
+## Fase 0 — Fundação
+
+- [x] Monorepo pnpm (`packages/core`, `apps/web`), `tsconfig.base.json` strict
+- [x] Biome configurado; scripts raiz `dev`, `build`, `test`, `test:e2e`, `lint`, `typecheck`
+- [x] `apps/web`: Next.js App Router, Tailwind v4, shadcn/ui inicializado, static export
+- [x] Vitest em `core` e `web`; Playwright em `web` com 1 teste smoke (home carrega)
+- [x] CI (GitHub Actions): lint, typecheck, test em PR
+
+**Aceite:** `pnpm install && pnpm build && pnpm test` passam do zero; CI verde.
+
+---
+
+## Fase 1 — Core: import e o primeiro preset
+
+- [ ] Schema Zod da `AnimationSpec` (v1) + `migrate()` stub
+- [ ] `sanitizeSvg()` com allowlist + fixtures maliciosas (script, `onload`, `javascript:` href, `foreignObject`, `image` externa)
+- [ ] `parseSvg()` / `normalizeSvg()` → `SvgDocument` (ids estáveis, detecção de fill/stroke, viewBox)
+- [ ] Contrato `Preset` + registry de presets
+- [ ] Preset `draw`
+- [ ] `compile()` → `CompiledAnimation`
+- [ ] `exporters.css()` com prefixo único, variáveis CSS e bloco reduced motion
+- [ ] Snapshot: `draw` × 2 fixtures
+- [ ] **Spike:** página HTML estática com o CSS exportado, testada em Chrome, Firefox e **Safari**. Registrar em ARCHITECTURE §12 se `pathLength` funciona em `rect`/`circle`; se não, implementar conversão de formas básicas para `<path>`
+
+**Aceite:** um SVG de fixture vira um SVG animado que se desenha, aberto direto no navegador, nos três navegadores; cobertura do core > 80%.
+
+---
+
+## Fase 2 — Editor MVP
+
+- [ ] Store Zustand (ARCHITECTURE §8) com seletores memoizados
+- [ ] Layout: toolbar superior, canvas central, painel de camadas à esquerda, painel de parâmetros à direita, painel de export embaixo (colapsável)
+- [ ] Import por drag-and-drop, file picker e colar markup; erros amigáveis (arquivo inválido, grande demais, sem elementos desenháveis)
+- [ ] Canvas: preview isolado (Shadow DOM) renderizando a saída do `exporters.css()`
+- [ ] Camadas: lista, hover destaca, seleção múltipla, "selecionar tudo"
+- [ ] PresetPicker (por enquanto só `draw`) e ParamsPanel gerado a partir do `paramsSchema` + `timing`
+- [ ] Controles: play/pause/restart, velocidade, fundo, simular reduced motion (Web Animations API)
+- [ ] ExportPanel: aba CSS com highlight (Shiki), copiar, baixar `.svg`
+- [ ] 3 logos de exemplo originais em `apps/web/public/examples/`
+
+**Aceite:** e2e — carregar exemplo → mudar duração → ver o CSS mudar → copiar. Preview e export idênticos.
+
+---
+
+## Fase 3 — Presets completos e auto-stroke
+
+- [ ] `comet`, `yoyo`, `stagger-draw`, `draw-fill`, `pulse`, `march`
+- [ ] Auto-stroke para elementos só com fill (RF4), com aviso na UI quando um preset exige stroke
+- [ ] Easing: presets + editor de cubic-bezier com curva visual
+- [ ] `stagger.order` com seed determinística
+- [ ] Snapshots: todos os presets × 2 fixtures
+
+**Aceite:** a logo de exemplo "só preenchimento" funciona com `draw-fill` e `yoyo` sem editar o SVG.
+
+---
+
+## Fase 4 — Exportadores React e Motion, compartilhamento
+
+- [ ] `exporters.react()` com o contrato de props (ARCHITECTURE §7), sem dependências
+- [ ] `exporters.motion()` com `motion/react`
+- [ ] Teste: o TSX exportado **compila** (typecheck em um arquivo temporário com tsc) — além do snapshot
+- [ ] Abas React e Motion no ExportPanel; download `.tsx`
+- [ ] `share.encode/decode` + sync com hash da URL (debounce) + botão "Copiar link"
+- [ ] Fallback de tamanho: export/import de `.strokekit.json`
+
+**Aceite:** e2e — criar animação → copiar link → abrir em aba nova → estado idêntico. O TSX exportado roda num app Next de exemplo.
+
+---
+
+## Fase 5 — Vitrine
+
+- [ ] Landing: headline com o problema, demo ao vivo no hero (a própria logo do strokekit animada com `yoyo`), "como funciona" em 3 passos, comparação honesta com SVGator/GSAP/Lottie, CTA para o editor
+- [ ] OG image dinâmica
+- [ ] Registry do shadcn: `stroke-draw`, `stroke-comet`, `logo-loader` + página de docs com instalação
+- [ ] README: GIF de 10 s, porquê, features, instalação via registry, arquitetura resumida (diagrama do pipeline), como contribuir
+- [ ] Acessibilidade do editor: navegação por teclado, foco visível, labels
+- [ ] Deploy (Vercel ou VPS como estático)
+
+**Aceite:** URL pública, Lighthouse > 90 na landing, README pronto para o post.
+
+---
+
+## Fase 6 — Polimento (opcional antes do lançamento)
+
+- [ ] Undo/redo (`zundo`) com atalhos
+- [ ] Atalhos de teclado (espaço = play/pause, R = restart)
+- [ ] Mobile: editor em modo "somente visualizar + exportar"
+
+---
+
+## Depois (pós-MVP, não implementar sem pedido)
+
+Morphing de paths · export GIF/vídeo · export Lottie · timeline de keyframes livres · animação disparada por scroll/hover · plugin do Figma · MCP server para agentes gerarem loaders · galeria da comunidade.
