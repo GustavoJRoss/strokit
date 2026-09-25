@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><g><defs><script>alert(1)</script></defs><animate attributeName="href" to="javascript:alert(2)"/><set attributeName="onmouseover" to="alert(3)"/><svg:script xmlns:svg="http://www.w3.org/2000/svg">alert(4)</svg:script><path d="M0 0 L10 10" stroke="red"/></g></svg>

@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><script>alert(1)</script><script type="text/javascript"><![CDATA[alert(2)]]></script><path d="M0 0 L10 10" stroke="red"/></svg>

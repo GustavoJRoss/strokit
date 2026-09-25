@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 200 100" style="enable-background:new 0 0 200 100;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#E30613;}
+	.st1{fill:none;stroke:#1D1D1B;stroke-width:4;stroke-miterlimit:10;}
+	path.st1{stroke-width:5 !important;}
+	#accent{fill:#2563eb}
+	g > .st0{fill:red}
+	@media print { .st0 { fill: black; } }
+</style>
+<path class="st0" d="M10 90 L40 10 L70 90 Z"/>
+<polyline class="st1" points="80,90 110,10 140,90"/>
+<path class="st1" d="M150 90 L190 10"/>
+<ellipse id="accent" cx="170" cy="70" rx="12" ry="8"/>
+<line class="st1" x1="10" y1="95" x2="190" y2="95" style="stroke:#10b981"/>
+</svg>

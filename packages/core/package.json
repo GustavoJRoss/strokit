@@ -10,11 +10,16 @@
     "build": "tsc -p tsconfig.json",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json && tsc -p test/tsconfig.json"
   },
   "devDependencies": {
+    "@types/node": "^24.13.6",
     "@vitest/coverage-v8": "^5.0.1",
+    "linkedom": "0.18.13",
     "typescript": "7.0.2",
     "vitest": "5.0.2"
+  },
+  "dependencies": {
+    "zod": "4.6.5"
   }
 }

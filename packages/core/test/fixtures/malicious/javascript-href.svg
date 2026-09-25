@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 10 10"><a href="javascript:alert(1)"><path d="M0 0 L10 10" stroke="red"/></a><a xlink:href="javascript:alert(2)"><circle cx="5" cy="5" r="2" fill="blue"/></a><use href="javascript:alert(3)"/><use xlink:href="  JaVaScRiPt:alert(4)"/></svg>

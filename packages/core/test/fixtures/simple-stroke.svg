@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <title>Anel e seta</title>
+  <g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round">
+    <circle cx="60" cy="60" r="44"/>
+    <path d="M36 64 L56 84 L88 40"/>
+  </g>
+</svg>

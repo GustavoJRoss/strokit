@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">
+  <g fill="none" stroke="#111827" stroke-width="4">
+    <rect x="10" y="10" width="80" height="60" rx="8"/>
+    <circle cx="150" cy="40" r="30"/>
+    <ellipse cx="245" cy="40" rx="45" ry="25"/>
+    <line x1="10" y1="120" x2="90" y2="180"/>
+    <polyline points="110,180 150,110 190,180"/>
+    <polygon points="210,180 250,110 290,180"/>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+/** Presentation properties that may be carried from CSS into attributes. */
+export const PRESENTATION_PROPERTIES: ReadonlySet<string> = new Set([
+  "fill",
+  "fill-opacity",
+  "fill-rule",
+  "stroke",
+  "stroke-width",
+  "stroke-opacity",
+  "stroke-linecap",
+  "stroke-linejoin",
+  "stroke-miterlimit",
+  "stroke-dasharray",
+  "stroke-dashoffset",
+  "opacity",
+  "clip-path",
+  "clip-rule",
+  "mask",
+  "display",
+  "visibility",
+  "stop-color",
+  "stop-opacity",
+  "vector-effect",
+]);
