@@ -76,7 +76,8 @@ Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm 
 
 ## Fase 5 — Vitrine
 
-- [ ] Landing: headline com o problema, demo ao vivo no hero (a própria logo do strokit animada com `yoyo`), "como funciona" em 3 passos, comparação honesta com SVGator/GSAP/Lottie, CTA para o editor
+- [x] Landing: headline com o problema, demo ao vivo no hero (a própria logo do strokit animada com `yoyo`), "como funciona" em 3 passos, comparação honesta com SVGator/GSAP/Lottie, CTA para o editor
+  - Também: tema preto/branco no site todo, playground interativo, galeria só-SVG gerada pelos exportadores e seção de apoio (botão inerte até definir o método)
 - [ ] OG image dinâmica
 - [ ] Registry do shadcn: `stroke-draw`, `stroke-comet`, `logo-loader` + página de docs com instalação
 - [ ] README: GIF de 10 s, porquê, features, instalação via registry, arquitetura resumida (diagrama do pipeline), como contribuir

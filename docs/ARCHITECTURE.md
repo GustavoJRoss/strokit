@@ -293,6 +293,14 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-25 | `lz-string` importado como default | É CommonJS; o default import é a forma aceita tanto pelo Node ESM (Playwright) quanto pelos bundlers |
 | 2026-09-25 | Projetos são reconhecidos pela extensão `.json` ou por conteúdo começando com `{` | Downloads podem perder a extensão |
 | 2026-09-25 | Nome definitivo do projeto: **strokit** (pacotes `@strokit/core` e `@strokit/web`, arquivo de projeto `.strokit.json`, `format: "strokit"`) | Decisão do autor. O prefixo `sk-` das classes e as variáveis `--sk-*` ficam: continuam sendo a sigla do nome e mudá-los quebraria o CSS de quem já exportou |
+| 2026-09-25 | Tema do site todo em preto e branco literal (`#fff`/`#000`), cinzas só para texto secundário e linhas; segue o sistema por padrão (`next-themes`, `attribute="class"`), com seletor Sistema/Claro/Escuro na home e no editor | Pedido do autor: contraste máximo, identidade seca |
+| 2026-09-25 | Tipografia: Archivo variável expandida (`font-stretch: 125%`, peso 900) nos títulos, Geist no texto, Geist Mono em rótulos e código; tudo via `next/font` (self-hosted) | Visual "bruto" sem dependência nova |
+| 2026-09-25 | Entrada pelas laterais com `IntersectionObserver` + transição CSS; o estado escondido só existe sob `html.js` (script inline antes do paint) e some com `prefers-reduced-motion` | Sem JS nada fica invisível; sem biblioteca de animação na home |
+| 2026-09-25 | Vitrine da home gerada pelos próprios exportadores (componentes React, `.svg` em `public/showcase/`, links `#s=`), mantida por teste como `/exemplos` | A home mostra código real do strokit; nada é desenhado à mão |
+| 2026-09-25 | Playground da home usa `lib/preview.ts` (mesma injeção em Shadow DOM do editor) e só carrega o core quando se aproxima da tela | Preview = export também na home; página inicial leve |
+| 2026-09-25 | Destaque de sintaxe com `github-light` e `github-dark` em variáveis (`--shiki-light`/`--shiki-dark`); na home o código é destacado no build | Acompanha o tema sem `!important`; zero Shiki no cliente da home |
+| 2026-09-25 | O xadrez do preview do editor fica sempre claro, mesmo no tema escuro | O fundo representa onde a logo vai ficar; logos escuras sumiriam num xadrez escuro |
+| 2026-09-25 | Botão de doação inerte (`site.donationUrl = null`) até o método ser escolhido | Pedido do autor |
 
 ### Pendências abertas (decidir até a fase indicada)
 
