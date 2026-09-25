@@ -30,6 +30,7 @@ export const yoyoPreset: Preset<"yoyo", YoyoParams> = {
     },
   },
   requiresStroke: true,
+  autoStrokeFill: "ghost",
   compile: ({ params, timing }) => ({
     keyframes: [
       {

@@ -38,6 +38,7 @@ export const marchPreset: Preset<"march", MarchParams> = {
     },
   },
   requiresStroke: true,
+  autoStrokeFill: "ghost",
   compile: ({ params, timing }) => {
     const pattern = fitPattern(params.dash, params.gap);
     return {

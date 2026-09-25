@@ -74,6 +74,7 @@ exports[`exporters.css × every preset > comet × illustrator-classes.svg 1`] = 
 .sk-hs9h04-0 {
   stroke: var(--sk-stroke, #E30613);
   stroke-width: 2;
+  fill-opacity: 0.2;
   stroke-dasharray: 0.2 0.8;
   animation: sk-hs9h04-t0-comet 1600ms linear 0ms infinite normal both;
 }
@@ -85,6 +86,7 @@ exports[`exporters.css × every preset > comet × illustrator-classes.svg 1`] = 
 .sk-hs9h04-2 {
   stroke: var(--sk-stroke, #2563eb);
   stroke-width: 2;
+  fill-opacity: 0.2;
   stroke-dasharray: 0.2 0.8;
   animation: sk-hs9h04-t0-comet 1600ms linear 0ms infinite normal both;
 }
@@ -107,12 +109,14 @@ exports[`exporters.css × every preset > comet × illustrator-classes.svg 1`] = 
   }
   .sk-hs9h04-0 {
     stroke-dasharray: none;
+    fill-opacity: 1;
   }
   .sk-hs9h04-1 {
     stroke-dasharray: none;
   }
   .sk-hs9h04-2 {
     stroke-dasharray: none;
+    fill-opacity: 1;
   }
   .sk-hs9h04-3 {
     stroke-dasharray: none;
@@ -251,6 +255,7 @@ exports[`exporters.css × every preset > march × illustrator-classes.svg 1`] = 
 .sk-1n27b5f-0 {
   stroke: var(--sk-stroke, #E30613);
   stroke-width: 2;
+  fill-opacity: 0.2;
   stroke-dasharray: 0.0408 0.0306;
   animation: sk-1n27b5f-t0-march 800ms linear 0ms infinite normal both;
 }
@@ -262,6 +267,7 @@ exports[`exporters.css × every preset > march × illustrator-classes.svg 1`] = 
 .sk-1n27b5f-2 {
   stroke: var(--sk-stroke, #2563eb);
   stroke-width: 2;
+  fill-opacity: 0.2;
   stroke-dasharray: 0.0408 0.0306;
   animation: sk-1n27b5f-t0-march 800ms linear 0ms infinite normal both;
 }
@@ -281,6 +287,12 @@ exports[`exporters.css × every preset > march × illustrator-classes.svg 1`] = 
 @media (prefers-reduced-motion: reduce) {
   .sk-1n27b5f * {
     animation: none;
+  }
+  .sk-1n27b5f-0 {
+    fill-opacity: 1;
+  }
+  .sk-1n27b5f-2 {
+    fill-opacity: 1;
   }
 }
 </style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-1n27b5f-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1n27b5f-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-1n27b5f-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-1n27b5f-2"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-1n27b5f-3"/></svg>
@@ -480,6 +492,7 @@ exports[`exporters.css × every preset > yoyo × illustrator-classes.svg 1`] = `
 .sk-1747lde-0 {
   stroke: var(--sk-stroke, #E30613);
   stroke-width: 2;
+  fill-opacity: 0.2;
   stroke-dasharray: 0.25 1;
   animation: sk-1747lde-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
 }
@@ -491,6 +504,7 @@ exports[`exporters.css × every preset > yoyo × illustrator-classes.svg 1`] = `
 .sk-1747lde-2 {
   stroke: var(--sk-stroke, #2563eb);
   stroke-width: 2;
+  fill-opacity: 0.2;
   stroke-dasharray: 0.25 1;
   animation: sk-1747lde-t0-yoyo 1200ms ease-in-out 0ms infinite alternate both;
 }
@@ -513,12 +527,14 @@ exports[`exporters.css × every preset > yoyo × illustrator-classes.svg 1`] = `
   }
   .sk-1747lde-0 {
     stroke-dasharray: none;
+    fill-opacity: 1;
   }
   .sk-1747lde-1 {
     stroke-dasharray: none;
   }
   .sk-1747lde-2 {
     stroke-dasharray: none;
+    fill-opacity: 1;
   }
   .sk-1747lde-3 {
     stroke-dasharray: none;

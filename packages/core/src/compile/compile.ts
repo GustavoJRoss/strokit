@@ -44,26 +44,34 @@ function wrapTransformed(element: SvgElementNode, ids: ReadonlySet<string>): voi
   });
 }
 
+/** Fill opacity of "ghost" fills: dim enough for a same-color dash to read on top. */
+export const GHOST_FILL_OPACITY = "0.2";
+
 function strokeProps(
   element: DrawableElement,
   spec: AnimationSpec,
-): { props: Record<string, string>; missing: boolean } {
+  fill: "keep" | "ghost",
+): { props: Record<string, string>; reducedMotion: Record<string, string>; missing: boolean } {
   if (element.hasStroke) {
     return {
       props: { stroke: `var(--sk-stroke, ${element.stroke ?? "currentColor"})` },
+      reducedMotion: {},
       missing: false,
     };
   }
   if (spec.global.autoStroke.enabled) {
+    const ghost = fill === "ghost" && element.hasFill;
     return {
       props: {
         stroke: `var(--sk-stroke, ${element.fill ?? "currentColor"})`,
         "stroke-width": String(spec.global.autoStroke.width),
+        ...(ghost ? { "fill-opacity": GHOST_FILL_OPACITY } : {}),
       },
+      reducedMotion: ghost ? { "fill-opacity": "1" } : {},
       missing: false,
     };
   }
-  return { props: {}, missing: true };
+  return { props: {}, reducedMotion: {}, missing: true };
 }
 
 /** AnimationSpec + SvgDocument → CompiledAnimation (neutral IR for every exporter). */
@@ -93,12 +101,14 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
         if (!keyframes.has(name)) keyframes.set(name, { ...definition, name });
       }
       let props = output.rule.props;
+      let reducedMotion = output.rule.reducedMotion;
       if (preset.requiresStroke) {
-        const stroke = strokeProps(element, spec);
+        const stroke = strokeProps(element, spec, preset.autoStrokeFill ?? "keep");
         if (stroke.missing) {
           warnings.push({ code: "missing-stroke", trackId: track.id, elementId: target });
         }
         props = { ...stroke.props, ...props };
+        reducedMotion = { ...reducedMotion, ...stroke.reducedMotion };
       }
       rules.push({
         elementId: target,
@@ -108,7 +118,7 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
           ...animation,
           keyframes: namespace(animation.keyframes),
         })),
-        reducedMotion: output.rule.reducedMotion,
+        reducedMotion,
       });
       if (output.rule.attrs) attrsById.set(target, output.rule.attrs);
       if (animatesTransform(output)) transformed.add(target);

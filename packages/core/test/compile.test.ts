@@ -74,3 +74,26 @@ describe("hashString", () => {
     expect(hashString("a")).not.toBe(hashString("b"));
   });
 });
+
+describe("auto-stroke fill handling", () => {
+  it("ghosts the fill for trace presets so a same-color dash stays visible", () => {
+    const document = load("fill-only.svg");
+    const spec = applyPreset(createEmptySpec(), ["sk-0"], "yoyo");
+    spec.global.autoStroke.enabled = true;
+    const rule = compile(document, spec).rules[0];
+    expect(rule?.props["fill-opacity"]).toBe("0.2");
+    expect(rule?.reducedMotion["fill-opacity"]).toBe("1");
+  });
+
+  it("keeps the fill for reveal presets and for elements that already have a stroke", () => {
+    const fillOnly = load("fill-only.svg");
+    const drawFill = applyPreset(createEmptySpec(), ["sk-0"], "draw-fill");
+    drawFill.global.autoStroke.enabled = true;
+    expect(compile(fillOnly, drawFill).rules[0]?.props["fill-opacity"]).toBeUndefined();
+
+    const stroked = load("simple-stroke.svg");
+    const comet = applyPreset(createEmptySpec(), ["sk-0"], "comet");
+    comet.global.autoStroke.enabled = true;
+    expect(compile(stroked, comet).rules[0]?.props["fill-opacity"]).toBeUndefined();
+  });
+});

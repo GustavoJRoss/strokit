@@ -33,5 +33,11 @@ export interface Preset<Id extends string, P> {
   defaults: { params: P; timing: Timing };
   /** When true and the element has no stroke, compile uses autoStroke or warns. */
   requiresStroke: boolean;
+  /**
+   * What happens to the fill of an element that only gets a stroke from autoStroke.
+   * "ghost" dims it so a moving dash of the same color stays visible (comet, yoyo, march).
+   * Defaults to "keep".
+   */
+  autoStrokeFill?: "keep" | "ghost";
   compile(context: PresetContext<P>): PresetOutput;
 }
