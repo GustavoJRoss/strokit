@@ -23,6 +23,7 @@ import { type Background, useEditorStore } from "@/store/editor-store";
 import { ExamplesMenu, FilePickerButton, PasteDialogButton } from "./import-controls";
 import { LayoutMenu } from "./layout-menu";
 import { ShareMenu } from "./share-menu";
+import { SvgEditorButton } from "./svg-editor-dialog";
 
 const RATES = [0.25, 0.5, 1, 1.5, 2];
 
@@ -48,6 +49,7 @@ export function Toolbar() {
       <FilePickerButton />
       <PasteDialogButton />
       <ExamplesMenu />
+      <SvgEditorButton />
       <ShareMenu />
       {fileName && (
         <span className="ml-1 truncate text-muted-foreground text-sm" title={fileName}>
