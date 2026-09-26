@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { round } from "../util/number";
+import { hasStart, travel } from "./path-motion";
 import type { Preset } from "./types";
 
 export const yoyoParamsSchema = z
@@ -31,21 +32,26 @@ export const yoyoPreset: Preset<"yoyo", YoyoParams> = {
   },
   requiresStroke: true,
   autoStrokeFill: "ghost",
-  compile: ({ params, timing }) => ({
-    keyframes: [
-      {
-        name: "yoyo",
-        stops: [
-          { offset: 0, props: { "stroke-dashoffset": "0" } },
-          { offset: 1, props: { "stroke-dashoffset": String(round(params.length - 1)) } },
-        ],
+  compile: ({ params, timing, path }) => {
+    const offset = travel(0, params.length - 1, path);
+    // From another start point the dash has to wrap around the shape to come back to it.
+    const gap = hasStart(path) ? round(1 - params.length) : 1;
+    return {
+      keyframes: [
+        {
+          name: "yoyo",
+          stops: [
+            { offset: 0, props: { "stroke-dashoffset": offset.from } },
+            { offset: 1, props: { "stroke-dashoffset": offset.to } },
+          ],
+        },
+      ],
+      rule: {
+        attrs: { pathLength: "1" },
+        props: { "stroke-dasharray": `${round(params.length)} ${gap}` },
+        animations: [{ ...timing, keyframes: "yoyo", fillMode: "both" }],
+        reducedMotion: { "stroke-dasharray": "none" },
       },
-    ],
-    rule: {
-      attrs: { pathLength: "1" },
-      props: { "stroke-dasharray": `${round(params.length)} 1` },
-      animations: [{ ...timing, keyframes: "yoyo", fillMode: "both" }],
-      reducedMotion: { "stroke-dasharray": "none" },
-    },
-  }),
+    };
+  },
 };

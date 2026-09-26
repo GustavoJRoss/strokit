@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { round } from "../util/number";
+import { travel } from "./path-motion";
 import type { Preset } from "./types";
 
 export const cometParamsSchema = z
@@ -28,21 +29,24 @@ export const cometPreset: Preset<"comet", CometParams> = {
   },
   requiresStroke: true,
   autoStrokeFill: "ghost",
-  compile: ({ params, timing }) => ({
-    keyframes: [
-      {
-        name: "comet",
-        stops: [
-          { offset: 0, props: { "stroke-dashoffset": "1" } },
-          { offset: 1, props: { "stroke-dashoffset": "0" } },
-        ],
+  compile: ({ params, timing, path }) => {
+    const offset = travel(1, 0, path);
+    return {
+      keyframes: [
+        {
+          name: "comet",
+          stops: [
+            { offset: 0, props: { "stroke-dashoffset": offset.from } },
+            { offset: 1, props: { "stroke-dashoffset": offset.to } },
+          ],
+        },
+      ],
+      rule: {
+        attrs: { pathLength: "1" },
+        props: { "stroke-dasharray": `${round(params.length)} ${round(1 - params.length)}` },
+        animations: [{ ...timing, keyframes: "comet", fillMode: "both" }],
+        reducedMotion: { "stroke-dasharray": "none" },
       },
-    ],
-    rule: {
-      attrs: { pathLength: "1" },
-      props: { "stroke-dasharray": `${round(params.length)} ${round(1 - params.length)}` },
-      animations: [{ ...timing, keyframes: "comet", fillMode: "both" }],
-      reducedMotion: { "stroke-dasharray": "none" },
-    },
-  }),
+    };
+  },
 };

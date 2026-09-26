@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { round } from "../util/number";
+import { travel } from "./path-motion";
 import type { Preset } from "./types";
 
 export const marchParamsSchema = z
@@ -39,18 +40,16 @@ export const marchPreset: Preset<"march", MarchParams> = {
   },
   requiresStroke: true,
   autoStrokeFill: "ghost",
-  compile: ({ params, timing }) => {
+  compile: ({ params, timing, path }) => {
     const pattern = fitPattern(params.dash, params.gap);
+    const offset = travel(0, -(pattern.dash + pattern.gap), path);
     return {
       keyframes: [
         {
           name: "march",
           stops: [
-            { offset: 0, props: { "stroke-dashoffset": "0" } },
-            {
-              offset: 1,
-              props: { "stroke-dashoffset": String(round(-(pattern.dash + pattern.gap))) },
-            },
+            { offset: 0, props: { "stroke-dashoffset": offset.from } },
+            { offset: 1, props: { "stroke-dashoffset": offset.to } },
           ],
         },
       ],

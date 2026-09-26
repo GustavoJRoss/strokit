@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { reveal } from "./path-motion";
 import type { Preset } from "./types";
 
 export const drawFillParamsSchema = z
@@ -20,22 +21,25 @@ export const drawFillPreset: Preset<"draw-fill", DrawFillParams> = {
     timing: { duration: 2000, delay: 0, easing: "ease-in-out", iterations: 1, direction: "normal" },
   },
   requiresStroke: true,
-  compile: ({ params, timing }) => ({
-    keyframes: [
-      {
-        name: "draw-fill",
-        stops: [
-          { offset: 0, props: { "stroke-dashoffset": "1", "fill-opacity": "0" } },
-          { offset: params.fillAt, props: { "stroke-dashoffset": "0", "fill-opacity": "0" } },
-          { offset: 1, props: { "stroke-dashoffset": "0", "fill-opacity": "1" } },
-        ],
+  compile: ({ params, timing, path }) => {
+    const stroke = reveal(path);
+    return {
+      keyframes: [
+        {
+          name: "draw-fill",
+          stops: [
+            { offset: 0, props: { ...stroke.from, "fill-opacity": "0" } },
+            { offset: params.fillAt, props: { ...stroke.to, "fill-opacity": "0" } },
+            { offset: 1, props: { ...stroke.to, "fill-opacity": "1" } },
+          ],
+        },
+      ],
+      rule: {
+        attrs: { pathLength: "1" },
+        props: stroke.props,
+        animations: [{ ...timing, keyframes: "draw-fill", fillMode: "both" }],
+        reducedMotion: { ...stroke.reducedMotion, "fill-opacity": "1" },
       },
-    ],
-    rule: {
-      attrs: { pathLength: "1" },
-      props: { "stroke-dasharray": "1 1" },
-      animations: [{ ...timing, keyframes: "draw-fill", fillMode: "both" }],
-      reducedMotion: { "stroke-dashoffset": "0", "fill-opacity": "1" },
-    },
-  }),
+    };
+  },
 };

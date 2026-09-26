@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { AnimationDef, CssProps, KeyframesDef } from "../compile/types";
 import type { Timing } from "../spec/timing";
 import type { DrawableElement } from "../svg/types";
+import type { PathMotion } from "./path-motion";
 
 export type PresetContext<P> = {
   element: DrawableElement;
@@ -10,6 +11,8 @@ export type PresetContext<P> = {
   total: number;
   params: P;
   timing: Timing;
+  /** Start point and direction on the outline (layer editor). Defaults to `DEFAULT_PATH`. */
+  path?: PathMotion;
 };
 
 export type PresetOutput = {

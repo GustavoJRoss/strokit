@@ -1,4 +1,5 @@
 import { presets, type TrackOf } from "../presets";
+import type { PathMotion } from "../presets/path-motion";
 import type { PresetOutput } from "../presets/types";
 import { type LayerOverride, layerTokens } from "../spec/layers";
 import type { AnimationSpec, PresetId } from "../spec/schema";
@@ -12,11 +13,12 @@ function runPreset<K extends PresetId>(
   element: DrawableElement,
   index: number,
   total: number,
+  path: PathMotion,
 ): PresetOutput {
   const preset = presets[track.preset];
   // `track.params` widens to the union of all params; the discriminant guarantees the match.
   const params = track.params as TrackOf<K>["params"];
-  return preset.compile({ element, index, total, params, timing: track.timing });
+  return preset.compile({ element, index, total, params, timing: track.timing, path });
 }
 
 /** Properties the element's animations set, from its rule or its keyframes. */
@@ -175,7 +177,10 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
     targets.forEach((target, index) => {
       const element = elementsById.get(target) as DrawableElement;
       const layer = layerOf(target);
-      const output = runPreset(track, element, index, targets.length);
+      const output = runPreset(track, element, index, targets.length, {
+        start: layer.override.start ?? 0,
+        reverse: layer.override.reverse ?? false,
+      });
       for (const definition of output.keyframes) {
         const name = namespace(definition.name);
         if (!keyframes.has(name)) keyframes.set(name, { ...definition, name });

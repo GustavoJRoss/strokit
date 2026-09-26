@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { round } from "../util/number";
 import { shuffledIndices } from "../util/random";
+import { reveal } from "./path-motion";
 import type { Preset } from "./types";
 
 export const staggerDrawParamsSchema = z
@@ -37,12 +38,13 @@ export const staggerDrawPreset: Preset<"stagger-draw", StaggerDrawParams> = {
     timing: { duration: 900, delay: 0, easing: "ease-in-out", iterations: 1, direction: "normal" },
   },
   requiresStroke: true,
-  compile: ({ index, total, params, timing }) => {
+  compile: ({ index, total, params, timing, path }) => {
     const offset = position(index, total, params) * params.step;
+    const stroke = reveal(path);
     const rule = {
       attrs: { pathLength: "1" },
-      props: { "stroke-dasharray": "1 1" },
-      reducedMotion: { "stroke-dashoffset": "0" },
+      props: stroke.props,
+      reducedMotion: stroke.reducedMotion,
     };
 
     if (timing.iterations === 1) {
@@ -51,8 +53,8 @@ export const staggerDrawPreset: Preset<"stagger-draw", StaggerDrawParams> = {
           {
             name: "stagger-draw",
             stops: [
-              { offset: 0, props: { "stroke-dashoffset": "1" } },
-              { offset: 1, props: { "stroke-dashoffset": "0" } },
+              { offset: 0, props: stroke.from },
+              { offset: 1, props: stroke.to },
             ],
           },
         ],
@@ -74,10 +76,10 @@ export const staggerDrawPreset: Preset<"stagger-draw", StaggerDrawParams> = {
     const start = round(offset / cycle);
     const end = round((offset + timing.duration) / cycle);
     const name = `stagger-draw-${offset}`;
-    const stops = [{ offset: 0, props: { "stroke-dashoffset": "1" } }];
-    if (start > 0) stops.push({ offset: start, props: { "stroke-dashoffset": "1" } });
-    stops.push({ offset: end, props: { "stroke-dashoffset": "0" } });
-    if (end < 1) stops.push({ offset: 1, props: { "stroke-dashoffset": "0" } });
+    const stops = [{ offset: 0, props: stroke.from }];
+    if (start > 0) stops.push({ offset: start, props: stroke.from });
+    stops.push({ offset: end, props: stroke.to });
+    if (end < 1) stops.push({ offset: 1, props: stroke.to });
     return {
       keyframes: [{ name, stops }],
       rule: {
