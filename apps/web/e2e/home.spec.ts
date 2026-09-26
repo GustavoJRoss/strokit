@@ -147,7 +147,7 @@ test.describe("gallery", () => {
     expect(speed).toBe("2");
 
     await page.getByRole("link", { name: /Abrir Vai e vem \(Onda\) no editor/ }).click();
-    await expect(page).toHaveURL(/\/editor#s=/);
+    await expect(page).toHaveURL(/\/editor/);
     await expect(page.getByRole("button", { name: /sk-0, Vai e vem/ })).toBeVisible();
   });
 });

@@ -37,8 +37,6 @@ export type EditorState = {
   hovered: string | null;
   playback: Playback;
   exportTab: ExportTab;
-  /** The encoded link would pass SHARE_URL_LIMIT: offer `.strokit.json` instead. */
-  shareTooLarge: boolean;
 };
 
 export type EditorActions = {
@@ -81,7 +79,6 @@ export function getInitialState(): EditorState {
       restartToken: 0,
     },
     exportTab: "css",
-    shareTooLarge: false,
   };
 }
 

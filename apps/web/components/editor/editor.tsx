@@ -8,8 +8,8 @@ import { EditorLayout } from "./editor-layout";
 import { EmptyState } from "./empty-state";
 import { PreviewCanvas } from "./preview-canvas";
 import { Toolbar } from "./toolbar";
+import { useDraft } from "./use-draft";
 import { useImporter } from "./use-importer";
-import { useShareSync } from "./use-share-sync";
 
 function isEditable(target: EventTarget | null): boolean {
   return (
@@ -22,7 +22,7 @@ export function Editor() {
   const hasDoc = useEditorStore((state) => state.doc !== null);
   const { importFile, importMarkup } = useImporter();
   const [dragging, setDragging] = useState(false);
-  useShareSync();
+  useDraft();
 
   useEffect(() => {
     const onPaste = (event: ClipboardEvent) => {

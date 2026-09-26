@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 import { expect, type Page, test } from "@playwright/test";
-import { decodeShare } from "@strokit/core";
-import { loadExample, openSection } from "./helpers";
+import { captureClipboard, copiedText, loadExample, openSection, readDraft } from "./helpers";
 
 async function exportedCss(page: Page) {
   await page.getByRole("tab", { name: "CSS" }).click();
@@ -12,27 +11,33 @@ test("share link: create → copy link → open in a new tab → identical state
   page,
   context,
 }) => {
+  await captureClipboard(page);
   await page.goto("/editor");
   await loadExample(page, "Onda");
   await page.getByRole("button", { name: /Vai e vem/ }).click();
   await openSection(page, "Animação");
   await page.getByRole("spinbutton", { name: "Duração" }).fill("2400");
   await expect(page.getByTestId("export-code")).toContainText("2400ms");
-  // The hash follows edits with a 300ms debounce: wait until it carries the last one.
+  // Edits are saved as a local draft (debounced); the address bar stays clean.
   await expect
-    .poll(() => {
-      const { hash } = new URL(page.url());
-      return hash ? decodeShare(hash).spec.tracks[0]?.timing.duration : null;
-    })
+    .poll(async () => (await readDraft(page))?.spec.tracks[0]?.timing.duration)
     .toBe(2400);
+  expect(new URL(page.url()).hash).toBe("");
   const before = await exportedCss(page);
 
-  const url = page.url();
+  await page.getByRole("button", { name: "Compartilhar" }).click();
+  await page.getByRole("menuitem", { name: "Copiar link" }).click();
+  await expect(page.getByText("Link copiado")).toBeVisible();
+  const url = await copiedText(page);
+  expect(url).toMatch(/\/editor#s=/);
+  expect(new URL(page.url()).hash).toBe("");
+
   const other = await context.newPage();
-  await other.goto(url);
-  await expect(other.getByRole("button", { name: /sk-0/ })).toBeVisible();
-  expect(await exportedCss(other)).toBe(before);
+  await other.goto(url ?? "");
   await expect(other.getByRole("button", { name: /sk-0, Vai e vem/ })).toBeVisible();
+  expect(await exportedCss(other)).toBe(before);
+  // Opening a link loads it and cleans the address bar.
+  await expect.poll(() => new URL(other.url()).hash).toBe("");
 });
 
 test("a broken link shows a friendly error and an empty editor", async ({ page }) => {
@@ -102,11 +107,15 @@ test("exported components run in this Next app (acceptance)", async ({ page }) =
 test("a project file without extension is still recognized by its content", async ({ page }) => {
   await page.goto("/editor");
   await loadExample(page, "Onda");
-  await expect.poll(() => new URL(page.url()).hash).toMatch(/^#s=/);
-  const project = new URL(page.url()).hash;
-  const { svg, spec } = decodeShare(project);
-  const buffer = Buffer.from(JSON.stringify({ format: "strokit", version: 1, svg, spec }));
+  await expect.poll(() => readDraft(page)).not.toBeNull();
+  const draft = await readDraft(page);
+  const buffer = Buffer.from(
+    JSON.stringify({ format: "strokit", version: 1, svg: draft?.svg, spec: draft?.spec }),
+  );
+  // Start from an empty editor so the import below is what brings the animation back.
+  await page.evaluate(() => window.localStorage.clear());
   await page.goto("/editor");
+  await expect(page.getByRole("heading", { name: "Arraste a sua logo SVG para cá" })).toBeVisible();
   await page
     .getByTestId("file-input")
     .first()

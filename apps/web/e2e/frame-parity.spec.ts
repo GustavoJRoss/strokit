@@ -1,7 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
-import { compile, decodeShare, importSvg, sampleAnimation } from "@strokit/core";
+import { compile, importSvg, parseSpec, sampleAnimation } from "@strokit/core";
 import { DOMParser } from "linkedom";
-import { loadExample } from "./helpers";
+import { loadExample, readDraft } from "./helpers";
 
 /**
  * Video frames come from `sampleAnimation()`, the preview from the browser's CSS engine.
@@ -10,10 +10,12 @@ import { loadExample } from "./helpers";
 const parser = new DOMParser() as unknown as Parameters<typeof importSvg>[1]["parser"];
 const TIMES = [0, 137, 480, 905, 1333, 2100, 3777];
 
-async function compiledFromUrl(page: Page) {
-  await expect.poll(() => new URL(page.url()).hash).toMatch(/^#s=/);
-  const { svg, spec } = decodeShare(new URL(page.url()).hash);
-  return compile(importSvg(svg, { parser }).document, spec);
+/** Rebuilds the editor's animation from its local draft, once the draft carries `presetId`. */
+async function compiledFromDraft(page: Page, presetId: string) {
+  await expect.poll(async () => (await readDraft(page))?.spec.tracks[0]?.preset).toBe(presetId);
+  const draft = await readDraft(page);
+  if (!draft) throw new Error("no draft");
+  return compile(importSvg(draft.svg, { parser }).document, parseSpec(draft.spec));
 }
 
 async function browserState(page: Page, time: number) {
@@ -39,25 +41,23 @@ async function browserState(page: Page, time: number) {
 }
 
 const PRESETS = [
-  "Desenhar",
-  "Desenhar e preencher",
-  "Desenhar em sequência",
-  "Cometa",
-  "Vai e vem",
-  "Formigas marchando",
-  "Pulsar",
-];
+  ["Desenhar", "draw"],
+  ["Desenhar e preencher", "draw-fill"],
+  ["Desenhar em sequência", "stagger-draw"],
+  ["Cometa", "comet"],
+  ["Vai e vem", "yoyo"],
+  ["Formigas marchando", "march"],
+  ["Pulsar", "pulse"],
+] as const;
 
-for (const preset of PRESETS) {
+for (const [preset, presetId] of PRESETS) {
   test(`video frames match the CSS preview: ${preset}`, async ({ page }) => {
     await page.goto("/editor");
     await loadExample(page, "Órbita");
     // Preset cards are named "<label> <description>"; descriptions start with a capital letter,
     // which tells "Desenhar" apart from "Desenhar e preencher".
     await page.getByRole("button", { name: new RegExp(`^${preset} [A-ZÀ-Ú]`) }).click();
-    // Let the debounced share hash catch up with the preset change.
-    await page.waitForTimeout(450);
-    const compiled = await compiledFromUrl(page);
+    const compiled = await compiledFromDraft(page, presetId);
 
     for (const time of TIMES) {
       const browser = await browserState(page, time);

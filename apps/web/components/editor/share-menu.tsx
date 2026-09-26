@@ -36,13 +36,13 @@ export function ShareMenu() {
       });
       return;
     }
+    // Built on demand: the address bar stays clean.
     const url = `${window.location.origin}${window.location.pathname}${hash}`;
-    window.history.replaceState(window.history.state, "", url);
     try {
       await navigator.clipboard.writeText(url);
       toast.success("Link copiado", { description: "A animação e o SVG vão no próprio link." });
     } catch {
-      toast.error("Não foi possível copiar. Copie o endereço da barra do navegador.");
+      window.prompt("Não foi possível copiar automaticamente. Copie o link:", url);
     }
   };
 
