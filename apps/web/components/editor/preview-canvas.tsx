@@ -1,6 +1,8 @@
 "use client";
 
+import { pickPathFraction, pointAtFraction } from "@strokit/core";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useI18n } from "@/lib/i18n/provider";
 import { applyPlayback, applyReducedMotion, injectMarkup } from "@/lib/preview";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editor-store";
@@ -21,13 +23,17 @@ function modeFor(event: MouseEvent): "replace" | "toggle" | "range" {
   return "replace";
 }
 
-function elementIdAt(event: Event): string | null {
+type Marker = { id: string; x: number; y: number };
+
+function layerAt(event: Event): Element | null {
   for (const target of event.composedPath()) {
-    if (target instanceof Element && target.hasAttribute("data-sk-id")) {
-      return target.getAttribute("data-sk-id");
-    }
+    if (target instanceof Element && target.hasAttribute("data-sk-id")) return target;
   }
   return null;
+}
+
+function elementIdAt(event: Event): string | null {
+  return layerAt(event)?.getAttribute("data-sk-id") ?? null;
 }
 
 export function PreviewCanvas() {
@@ -38,12 +44,18 @@ export function PreviewCanvas() {
   const select = useEditorStore((state) => state.select);
   const clearSelection = useEditorStore((state) => state.clearSelection);
   const setHovered = useEditorStore((state) => state.setHovered);
+  const tool = useEditorStore((state) => state.tool);
+  const setTool = useEditorStore((state) => state.setTool);
+  const setLayerStart = useEditorStore((state) => state.setLayerStart);
+  const layers = useEditorStore((state) => state.spec.layers);
+  const { t } = useI18n();
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const [root, setRoot] = useState<ShadowRoot | null>(null);
   const [renderCount, setRenderCount] = useState(0);
   const [boxes, setBoxes] = useState<Box[]>([]);
+  const [markers, setMarkers] = useState<Marker[]>([]);
 
   useLayoutEffect(() => {
     const host = hostRef.current;
@@ -85,7 +97,19 @@ export function PreviewCanvas() {
       });
     }
     setBoxes(next);
-  }, [root, selection, hovered]);
+
+    // Start point of the selected layers: always while picking, otherwise only when moved.
+    const points: Marker[] = [];
+    for (const id of selection) {
+      const start = layers?.[id]?.start;
+      if (tool !== "start" && start === undefined) continue;
+      const element = root.querySelector(`[data-sk-id="${CSS.escape(id)}"]`);
+      if (!(element instanceof SVGGeometryElement)) continue;
+      const point = pointAtFraction(element, start ?? 0);
+      points.push({ id, x: point.x - origin.left, y: point.y - origin.top });
+    }
+    setMarkers(points);
+  }, [root, selection, hovered, layers, tool]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: geometry changes on every injection
   useLayoutEffect(() => {
@@ -103,8 +127,17 @@ export function PreviewCanvas() {
   useEffect(() => {
     if (!root) return;
     const onClick = (event: Event) => {
+      const mouse = event as MouseEvent;
+      if (useEditorStore.getState().tool === "start") {
+        const layer = layerAt(event);
+        const id = layer?.getAttribute("data-sk-id");
+        if (id && layer instanceof SVGGeometryElement) {
+          setLayerStart(id, pickPathFraction(layer, { x: mouse.clientX, y: mouse.clientY }));
+        }
+        return;
+      }
       const id = elementIdAt(event);
-      if (id) select(id, modeFor(event as MouseEvent));
+      if (id) select(id, modeFor(mouse));
       else clearSelection();
     };
     const onMove = (event: Event) => {
@@ -121,7 +154,16 @@ export function PreviewCanvas() {
       root.removeEventListener("pointermove", onMove);
       host?.removeEventListener("pointerleave", onLeave);
     };
-  }, [root, select, clearSelection, setHovered]);
+  }, [root, select, clearSelection, setHovered, setLayerStart]);
+
+  useEffect(() => {
+    if (tool !== "start") return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setTool("select");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [tool, setTool]);
 
   return (
     <div
@@ -132,7 +174,18 @@ export function PreviewCanvas() {
         playback.background === "checker" && "sk-checker",
       )}
     >
-      <div ref={wrapperRef} className="absolute inset-[clamp(0.5rem,4%,2rem)]">
+      {tool === "start" && (
+        <p className="pointer-events-none absolute inset-x-0 top-2 z-10 mx-auto w-fit rounded-md bg-foreground px-2 py-1 text-background text-xs">
+          {t.params.layer.picking}
+        </p>
+      )}
+      <div
+        ref={wrapperRef}
+        className={cn(
+          "absolute inset-[clamp(0.5rem,4%,2rem)]",
+          tool === "start" && "cursor-crosshair",
+        )}
+      >
         <div
           ref={hostRef}
           className="size-full"
@@ -151,6 +204,16 @@ export function PreviewCanvas() {
                 : "outline-2 outline-sky-600",
             )}
             style={{ left: box.x, top: box.y, width: box.width, height: box.height }}
+          />
+        ))}
+        {markers.map((marker) => (
+          <span
+            key={`start-${marker.id}`}
+            data-testid="start-marker"
+            title={t.params.layer.startMarker}
+            aria-hidden
+            className="pointer-events-none absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-sky-600 bg-white shadow"
+            style={{ left: marker.x, top: marker.y }}
           />
         ))}
       </div>
