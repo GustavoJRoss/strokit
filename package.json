@@ -1,6 +1,7 @@
 {
   "name": "strokit",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "packageManager": "npm@11.19.0",
   "engines": {

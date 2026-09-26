@@ -81,6 +81,7 @@ Regra: uma fase por vez. Ao terminar, rode `npm run lint && npm run typecheck &&
 - [ ] OG image dinâmica
 - [ ] Registry do shadcn: `stroke-draw`, `stroke-comet`, `logo-loader` + página de docs com instalação
 - [ ] README: GIF de 10 s, porquê, features, instalação via registry, arquitetura resumida (diagrama do pipeline), como contribuir
+  - Adiantado (2026-09-26, a pedido do autor, antes de tornar o repositório público): `LICENSE` (MIT) e um `README.md` inicial com stack, comandos e a seção "open source". Faltam GIF, comparação, diagrama e o link do registry (RF ainda não publicado)
 - [ ] Acessibilidade do editor: navegação por teclado, foco visível, labels
 - [ ] Deploy (Vercel ou VPS como estático)
 
