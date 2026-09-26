@@ -25,7 +25,7 @@ strokit/
 │     ├─ src/
 │     │  ├─ spec/           # schema Zod da AnimationSpec + tipos
 │     │  ├─ svg/            # parse, sanitize, normalize (string → SvgDocument)
-│     │  ├─ dom/            # medição de paths (isolado, com fallback)
+│     │  ├─ dom/            # clique → fração do contorno (isolado, sem tipos do DOM)
 │     │  ├─ presets/        # um arquivo por preset + index
 │     │  ├─ compile/        # AnimationSpec + SvgDocument → CompiledAnimation
 │     │  ├─ exporters/      # css.ts, react.ts, motion.ts
@@ -88,6 +88,17 @@ type AnimationSpec = {
     a11y: { label: string; mode: "img" | "status" };
   };
   tracks: Track[];
+  layers?: Record<string, LayerOverride>;  // RF15; ausente quando não há edições
+};
+
+type LayerOverride = {       // tudo opcional; o SVG importado nunca muda
+  name?: string;             // UI + nome dos tokens CSS da camada
+  hidden?: boolean;          // sai do markup e da animação
+  stroke?: Color; fill?: Color;   // allowlist: #hex, rgb()/hsl()/oklch()… numéricos, nomes
+  strokeWidth?: number; opacity?: number;
+  linecap?: "butt" | "round" | "square"; linejoin?: "miter" | "round" | "bevel";
+  start?: number;            // ponto de partida no contorno (0–1)
+  reverse?: boolean;         // sentido do traço
 };
 
 type Track = {
@@ -149,9 +160,20 @@ interface Preset<P> {
     total: number;
     params: P;
     timing: Track["timing"];
+    path?: { start: number; reverse: boolean };  // RF15; padrão { 0, false }
   }): { keyframes: Keyframe[]; rule: ElementRule };
 }
 ```
+
+Os presets de traço usam `presets/path-motion.ts`: com o `path` padrão a saída é idêntica à técnica do §6; com outro ponto de partida, os presets de desenho animam um tracejado periódico (`stroke-dasharray: 0 1 → 1 0` com `stroke-dashoffset: -start`) e os de risco que anda (`comet`, `yoyo`, `march`) deslocam/invertem o `dashoffset`.
+
+### Edição por camada (RF15/RF16)
+
+O `compile()` aplica `spec.layers` por cima do documento: monta a cor do traço com token próprio (`var(--sk-<camada>-stroke, var(--sk-stroke, <cor>))`) e `fill: var(--sk-<camada>-fill, <cor>)`, grava `opacity`/`stroke-linecap`/`stroke-linejoin` como atributos, remove camadas ocultas da árvore e passa `path` aos presets. Camada editada sem track vira uma `ElementRule` sem animações. O nome do token vem de `layerTokens()` (slug do nome ou `layer-<n>`).
+
+- `svg/layers.ts` → `layerTree()`: árvore de grupos para o painel de camadas.
+- `dom/nearest-point.ts` → `pickPathFraction()`/`pickNearestOutline()`/`pointAtFraction()`: o clique no preview vira fração do contorno. Trabalha sobre qualquer objeto com a forma de `SVGGeometryElement`, testado com geometria sintética.
+- `spec/reconcile.ts` → `reconcileSpec()`: ao editar o markup (RF16), mantém tracks e edições dos ids que continuam existindo, remove os que sumiram e aplica `draw` aos novos.
 
 ### Preview
 
@@ -223,7 +245,7 @@ type EditorState = {
     restartToken: number;
   };
   exportTab: "css" | "react" | "motion";
-  exportOpen: boolean;
+  tool: "select" | "start";          // o que um clique no preview faz (RF15)
 };
 ```
 
@@ -321,6 +343,14 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-26 | Erros traduzidos por código: `ShareError` e `FileReadError` ganharam `code` (o `SvgImportError` já tinha); nomes de presets, parâmetros e exemplos vêm do dicionário por id | O core continua sem texto de UI; a mensagem em pt do core é só fallback |
 | 2026-09-26 | `<title>` renderizado pelo React 19 (hoisting) em vez do `title` dos metadados | O Next 16 injeta o título dos metadados por streaming e sobrescreveria o título traduzido |
 | 2026-09-26 | O bloco de texto do hero desliza sem fade (`<Reveal fade={false}>`) | Opacidade 0 atrasava o LCP; com o texto visível desde a primeira pintura o Lighthouse mobile foi de 89 para 95 |
+| 2026-09-26 | Edições por camada (RF15) ficam em `spec.layers`, campo **opcional e omitido quando vazio**, sem subir a versão da spec | Links, projetos, hashes `sk-<hash>` e snapshots existentes continuam idênticos; `migrate()` não precisa mudar |
+| 2026-09-26 | Cor escolhida numa camada: `var(--sk-<camada>-stroke, var(--sk-stroke, <cor>))` (e `--sk-<camada>-fill`); camadas sem edição continuam como antes | Decisão do autor: o global continua tematizando tudo e cada camada pode ser ajustada à parte (regra 7) |
+| 2026-09-26 | Cores das camadas passam por allowlist (`colorSchema`): hex, funções de cor só com números, palavras; nada de `;`, `}`, `url()`, `var()` | A cor entra no `<style>` exportado e pode vir de um link compartilhado |
+| 2026-09-26 | Ponto de partida por tracejado periódico (`0 1 → 1 0` + `dashoffset: -start`) em vez de reescrever o `d` do path | Funciona em todas as formas sem converter para `<path>`; dá a volta em formas fechadas. Em caminhos abertos o desenho segue até o fim e continua do começo (avisado na UI). Paridade vídeo × CSS verificada nos 3 motores |
+| 2026-09-26 | Com `path` padrão, todo preset gera exatamente a saída anterior | Nenhum snapshot mudou; só foram adicionados snapshots com edições |
+| 2026-09-26 | `opacity` animada (pulse) também vai para um `<g>` pai quando a camada tem opacidade própria, como já acontecia com `transform` | CSS substitui o atributo em vez de compor |
+| 2026-09-26 | O clique de ponto de partida mede o contorno mais próximo (clicado, selecionados ou todos, até 24 px) em vez de confiar no hit test | O Chromium considera o tracejado no hit test: um traço ainda não desenhado não recebe o clique |
+| 2026-09-26 | "Editar SVG" (RF16) mostra o markup normalizado, indentado e sem `data-sk-id`; aplicar reimporta pelo pipeline completo e reconcilia a spec por posição | Sanitização continua obrigatória (regra 4); ids por ordem do documento são o que o resto do sistema já usa |
 
 ### Pendências abertas (decidir até a fase indicada)
 

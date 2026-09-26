@@ -98,6 +98,21 @@ Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm 
 
 ---
 
+## Fase 5c — Edição de camadas (incluída a pedido do autor)
+
+- [x] `spec.layers` (overrides por camada) com allowlist de cor, sem mudar a versão da spec
+- [x] `compile()` aplica cor com token por camada, espessura, opacidade, pontas, cantos e ocultar
+- [x] Ponto de partida e sentido do traço em todos os presets de traço (`presets/path-motion.ts`)
+- [x] `layerTree()`, `pickPathFraction()`/`pickNearestOutline()` e `reconcileSpec()` no core
+- [x] Editor: seção "Camada" no painel de parâmetros, árvore de grupos com visibilidade no painel de camadas
+- [x] Editor: escolher o ponto de partida clicando no contorno, com marcador no preview
+- [x] Editor: diálogo "Editar SVG"
+- [x] Testes: overrides no compile, snapshots novos (CSS/React/Motion), tinta amostrada com ponto de partida/sentido, TSX com camadas editadas compila, e2e nos 3 motores (inclui paridade vídeo × CSS)
+
+**Aceite:** selecionar uma camada, mudar a cor e a espessura, clicar no contorno para escolher onde o desenho começa, e o código exportado, o vídeo e o link refletem exatamente o preview.
+
+---
+
 ## Fase 6 — Polimento (opcional antes do lançamento)
 
 - [ ] Undo/redo (`zundo`) com atalhos
