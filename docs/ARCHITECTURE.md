@@ -35,16 +35,20 @@ strokit/
 │        └─ __snapshots__/
 └─ apps/
    └─ web/
-      ├─ app/
-      │  ├─ page.tsx        # landing
-      │  ├─ editor/page.tsx # editor
-      │  └─ r/              # registry do shadcn (gerado no build)
-      ├─ components/
-      │  ├─ editor/         # Canvas, LayersPanel, PresetPicker, ParamsPanel, ExportPanel, Toolbar
-      │  └─ ui/             # shadcn
-      ├─ registry/          # fontes dos itens publicados no registry
-      ├─ store/             # Zustand
-      └─ e2e/               # Playwright
+      ├─ package.json, next.config.ts, public/, components.json  # raiz do pacote
+      ├─ src/                # diretório "src" do Next; alias @/* aponta aqui
+      │  ├─ app/
+      │  │  ├─ page.tsx        # landing
+      │  │  ├─ editor/page.tsx # editor
+      │  │  └─ r/              # registry do shadcn (gerado no build)
+      │  ├─ components/
+      │  │  ├─ editor/         # Canvas, LayersPanel, PresetPicker, ParamsPanel, ExportPanel, Toolbar
+      │  │  └─ ui/              # shadcn
+      │  ├─ lib/
+      │  └─ store/             # Zustand
+      ├─ registry/           # fontes dos itens publicados no registry
+      ├─ test/                # Vitest
+      └─ e2e/                 # Playwright
 ```
 
 ## 3. Modelo de dados
@@ -354,6 +358,7 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-26 | Gerenciador de pacotes trocado de pnpm para npm workspaces, a pedido do autor | `pnpm-workspace.yaml` sai; `package.json` raiz ganha `"workspaces"`; `workspace:*` em `apps/web` vira `"*"` (sintaxe que o npm resolve para o pacote do workspace). Estrutura de pastas não muda: `apps/web` já seguia o layout padrão do Next (`app/` na raiz do pacote, sem `src/`) |
 | 2026-09-26 | Caminhos de binário resolvidos via `require.resolve` (`typescript/package.json`, `serve/package.json`) em vez de `node_modules/.bin/…` fixo | O pnpm cria um `node_modules/.bin` por pacote; o npm eleva (hoist) os binários dos workspaces para a raiz do repo. `tsx-typecheck.test.ts` e `playwright.config.ts` dependiam do caminho antigo |
 | 2026-09-26 | `allowBuilds`/`minimumReleaseAgeExclude` do pnpm não têm equivalente direto no npm: scripts de instalação de dependências nativas (ex.: `sharp`) rodam normalmente | O npm não tem o modelo "nega por padrão" de scripts de instalação do pnpm; nenhuma dependência do projeto exige isso hoje (`next.config.ts` usa `images.unoptimized: true`), mas fica registrado como diferença de comportamento |
+| 2026-09-26 | `apps/web` passa a usar o diretório `src/` do Next (`app/`, `components/`, `lib/`, `store/` dentro de `apps/web/src/`; `package.json`, `next.config.ts`, `public/`, `e2e/` e `test/` continuam na raiz do pacote), a pedido do autor | Padrão oficial do Next para separar código-fonte de configuração/artefatos. O apontamento anterior ("estrutura de pastas não muda") ficou superado por este pedido posterior. `tsconfig.json` (`paths: "@/*": ["./src/*"]`) e `vitest.config.ts` (alias `@`) passam a apontar para `./src`; `components.json` (`css`) e `test/generated-exports.test.ts` (caminhos dos arquivos gerados) seguem junto |
 
 ### Pendências abertas (decidir até a fase indicada)
 

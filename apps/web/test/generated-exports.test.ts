@@ -16,8 +16,8 @@ import { describe, expect, it } from "vitest";
 
 /**
  * Files below are real exporter outputs, compiled by `next build` and exercised by e2e:
- * - `app/exemplos/generated/*.tsx` (React/Motion components on /exemplos);
- * - `components/home/generated/*` (home: brand mark, gallery components and data, code samples);
+ * - `src/app/exemplos/generated/*.tsx` (React/Motion components on /exemplos);
+ * - `src/components/home/generated/*` (home: brand mark, gallery components and data, code samples);
  * - `public/showcase/*.svg` (downloadable CSS exports of the gallery).
  * Regenerate with: UPDATE_GENERATED=1 npm run test --workspace=@strokit/web
  */
@@ -34,8 +34,8 @@ type ComponentConfig = Source & { component: string; exporter: "react" | "motion
 type GalleryItem = Source & { id: string; component: string };
 
 const root = join(import.meta.dirname, "..");
-const EXEMPLOS = "app/exemplos/generated";
-const HOME = "components/home/generated";
+const EXEMPLOS = "src/app/exemplos/generated";
+const HOME = "src/components/home/generated";
 
 const loop =
   (patch: Partial<AnimationSpec["tracks"][number]["timing"]> = {}) =>
