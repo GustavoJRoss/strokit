@@ -8,6 +8,14 @@ export type {
   KeyframeStop,
   KeyframesDef,
 } from "./compile/types";
+export {
+  type GeometryLike,
+  type MatrixLike,
+  nearestIndex,
+  type Point,
+  pickPathFraction,
+  pointAtFraction,
+} from "./dom/nearest-point";
 export * as exporters from "./exporters";
 export { toComponentName } from "./exporters/jsx";
 export { getPreset, presetIds, presets } from "./presets";
@@ -53,6 +61,7 @@ export {
   updateLayers,
 } from "./spec/layers";
 export { CURRENT_SPEC_VERSION, migrate, parseSpec, SpecVersionError } from "./spec/migrate";
+export { type ReconcileResult, reconcileSpec } from "./spec/reconcile";
 export {
   type AnimationSpec,
   animationSpecSchema,
@@ -63,6 +72,7 @@ export {
 export { type Easing, type EasingPreset, easingPresetSchema, type Timing } from "./spec/timing";
 export { type ImportWarning, SvgImportError, type SvgImportErrorCode } from "./svg/errors";
 export { type ImportOptions, type ImportResult, importSvg, sanitizeSvg } from "./svg/import";
+export { type LayerNode, layerTree } from "./svg/layers";
 export { normalizeSvg } from "./svg/normalize";
 export { type DomParserLike, MAX_SVG_BYTES, parseSvg } from "./svg/parse";
 export { serializeSvg } from "./svg/serialize";
