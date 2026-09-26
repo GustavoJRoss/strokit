@@ -21,21 +21,38 @@ export type ProjectFile = {
   spec: AnimationSpec;
 };
 
+export type ShareErrorCode =
+  | "invalid-content"
+  | "missing-svg"
+  | "invalid-spec"
+  | "corrupt-link"
+  | "invalid-json"
+  | "not-project";
+
+/** `code` is what UIs translate; `message` is a Portuguese fallback. */
 export class ShareError extends Error {
-  constructor(message: string) {
+  readonly code: ShareErrorCode;
+
+  constructor(code: ShareErrorCode, message: string) {
     super(message);
     this.name = "ShareError";
+    this.code = code;
   }
 }
 
 function fromPayload(payload: unknown): SharedAnimation {
-  if (typeof payload !== "object" || payload === null) throw new ShareError("Conteúdo inválido.");
+  if (typeof payload !== "object" || payload === null)
+    throw new ShareError("invalid-content", "Conteúdo inválido.");
   const { svg, spec } = payload as { svg?: unknown; spec?: unknown };
-  if (typeof svg !== "string" || svg.trim() === "") throw new ShareError("O SVG está faltando.");
+  if (typeof svg !== "string" || svg.trim() === "")
+    throw new ShareError("missing-svg", "O SVG está faltando.");
   try {
     return { svg, spec: parseSpec(spec) };
   } catch {
-    throw new ShareError("A animação salva é inválida ou de uma versão não suportada.");
+    throw new ShareError(
+      "invalid-spec",
+      "A animação salva é inválida ou de uma versão não suportada.",
+    );
   }
 }
 
@@ -52,12 +69,12 @@ export function decodeShare(value: string): SharedAnimation {
     ? value.slice(SHARE_HASH_PREFIX.length)
     : value;
   const json = LZString.decompressFromEncodedURIComponent(encoded);
-  if (!json) throw new ShareError("O link está incompleto ou corrompido.");
+  if (!json) throw new ShareError("corrupt-link", "O link está incompleto ou corrompido.");
   try {
     return fromPayload(JSON.parse(json));
   } catch (error) {
     if (error instanceof ShareError) throw error;
-    throw new ShareError("O link está incompleto ou corrompido.");
+    throw new ShareError("corrupt-link", "O link está incompleto ou corrompido.");
   }
 }
 
@@ -76,10 +93,10 @@ export function parseProject(text: string): SharedAnimation {
   try {
     data = JSON.parse(text);
   } catch {
-    throw new ShareError("O arquivo não é um JSON válido.");
+    throw new ShareError("invalid-json", "O arquivo não é um JSON válido.");
   }
   if ((data as { format?: unknown } | null)?.format !== PROJECT_FORMAT) {
-    throw new ShareError("O arquivo não é um projeto do strokit.");
+    throw new ShareError("not-project", "O arquivo não é um projeto do strokit.");
   }
   return fromPayload(data);
 }

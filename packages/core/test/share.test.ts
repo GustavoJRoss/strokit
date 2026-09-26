@@ -66,3 +66,22 @@ describe(".strokit.json", () => {
     expect(() => parseProject("null")).toThrow(/projeto do strokit/);
   });
 });
+
+describe("share error codes", () => {
+  it.each([
+    ["%%%", "corrupt-link"],
+    [LZString.compressToEncodedURIComponent("null"), "invalid-content"],
+    [LZString.compressToEncodedURIComponent('{"svg":" ","spec":{}}'), "missing-svg"],
+    [
+      LZString.compressToEncodedURIComponent('{"svg":"<svg/>","spec":{"version":9}}'),
+      "invalid-spec",
+    ],
+  ])("decodeShare(%s) → %s", (value, code) => {
+    expect(() => decodeShare(value)).toThrowError(expect.objectContaining({ code }));
+  });
+
+  it("parseProject reports invalid JSON and foreign files", () => {
+    expect(() => parseProject("{")).toThrowError(expect.objectContaining({ code: "invalid-json" }));
+    expect(() => parseProject("[]")).toThrowError(expect.objectContaining({ code: "not-project" }));
+  });
+});

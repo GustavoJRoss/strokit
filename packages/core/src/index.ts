@@ -29,6 +29,7 @@ export {
   SHARE_URL_LIMIT,
   type SharedAnimation,
   ShareError,
+  type ShareErrorCode,
   serializeProject,
 } from "./share";
 export {
