@@ -5,6 +5,7 @@ import { createContext, type ReactNode, useCallback, useContext, useMemo, useSta
 import type { Layout } from "react-resizable-panels";
 import { useGroupRef, usePanelRef } from "react-resizable-panels";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { useI18n } from "@/lib/i18n/provider";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { readPref, resetPrefs, writePref } from "@/lib/use-persistent-state";
 import { cn } from "@/lib/utils";
@@ -47,10 +48,13 @@ function savedLayout(key: string, ids: string[]): Layout | undefined {
 function Rail({
   side,
   label,
+  action,
   onExpand,
 }: {
   side: "left" | "right";
   label: string;
+  /** Accessible name, e.g. "Mostrar camadas". */
+  action: string;
   onExpand: () => void;
 }) {
   const Icon = side === "left" ? PanelLeftOpenIcon : PanelRightOpenIcon;
@@ -58,8 +62,8 @@ function Rail({
     <button
       type="button"
       onClick={onExpand}
-      aria-label={`Mostrar ${label.toLowerCase()}`}
-      title={`Mostrar ${label.toLowerCase()}`}
+      aria-label={action}
+      title={action}
       className="flex h-full w-full flex-col items-center gap-3 bg-muted/40 py-3 text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
     >
       <Icon className="size-4" />
@@ -83,6 +87,7 @@ export function EditorLayout({ toolbar, preview }: { toolbar: ReactNode; preview
 }
 
 function ResizableLayout({ toolbar, preview }: { toolbar: ReactNode; preview: ReactNode }) {
+  const { t } = useI18n();
   const horizontal = useGroupRef();
   const vertical = useGroupRef();
   const layers = usePanelRef();
@@ -167,16 +172,21 @@ function ResizableLayout({ toolbar, preview }: { toolbar: ReactNode; preview: Re
               onResize={sync}
             >
               {collapsed.layers ? (
-                <Rail side="left" label="Camadas" onExpand={() => controls.toggle("layers")} />
+                <Rail
+                  side="left"
+                  label={t.layout.names.layers}
+                  action={t.layout.show.layers}
+                  onExpand={() => controls.toggle("layers")}
+                />
               ) : (
                 <LayersPanel onCollapse={() => controls.toggle("layers")} />
               )}
             </ResizablePanel>
-            <ResizableHandle withHandle aria-label="Redimensionar camadas" />
+            <ResizableHandle withHandle aria-label={t.layout.resize.layers} />
             <ResizablePanel id="panel-preview" minSize="25">
               {preview}
             </ResizablePanel>
-            <ResizableHandle withHandle aria-label="Redimensionar parâmetros" />
+            <ResizableHandle withHandle aria-label={t.layout.resize.params} />
             <ResizablePanel
               id="panel-params"
               panelRef={params}
@@ -188,14 +198,19 @@ function ResizableLayout({ toolbar, preview }: { toolbar: ReactNode; preview: Re
               onResize={sync}
             >
               {collapsed.params ? (
-                <Rail side="right" label="Parâmetros" onExpand={() => controls.toggle("params")} />
+                <Rail
+                  side="right"
+                  label={t.layout.names.params}
+                  action={t.layout.show.params}
+                  onExpand={() => controls.toggle("params")}
+                />
               ) : (
                 <ParamsPanel onCollapse={() => controls.toggle("params")} />
               )}
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>
-        <ResizableHandle withHandle aria-label="Redimensionar código" />
+        <ResizableHandle withHandle aria-label={t.layout.resize.export} />
         <ResizablePanel
           id="panel-export"
           panelRef={exportPanel}

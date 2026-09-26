@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useI18n } from "@/lib/i18n/provider";
 import { slug } from "@/lib/project";
 import { downloadBlob } from "@/lib/svg-file";
 import {
@@ -35,9 +36,9 @@ import { selectCompiled } from "@/store/selectors";
 import { NumberField } from "./number-field";
 
 const STROKES = [
-  { value: "original", label: "Cores originais", color: undefined },
-  { value: "white", label: "Branco", color: "#ffffff" },
-  { value: "black", label: "Preto", color: "#000000" },
+  { value: "original", color: undefined },
+  { value: "white", color: "#ffffff" },
+  { value: "black", color: "#000000" },
 ] as const;
 
 type Support = "checking" | "yes" | "no";
@@ -54,6 +55,7 @@ export function VideoExportButton() {
   const [stroke, setStroke] = useState<(typeof STROKES)[number]["value"]>("original");
   const [progress, setProgress] = useState<number | null>(null);
   const abort = useRef<AbortController | null>(null);
+  const { t } = useI18n();
 
   const size = doc ? videoSize(doc.viewBox, width) : null;
 
@@ -83,13 +85,11 @@ export function VideoExportButton() {
         { onProgress: setProgress, signal: controller.signal },
       );
       downloadBlob(blob, `${slug(name)}.webm`);
-      toast.success("Vídeo exportado", {
-        description: `${size.width}×${size.height}, ${fps} fps, fundo transparente.`,
-      });
+      toast.success(t.video.done, { description: t.video.doneBody(size.width, size.height, fps) });
       setOpen(false);
     } catch (error) {
       if (!(error instanceof DOMException && error.name === "AbortError")) {
-        toast.error("Não foi possível gerar o vídeo.");
+        toast.error(t.video.failed);
       }
     } finally {
       abort.current = null;
@@ -103,7 +103,7 @@ export function VideoExportButton() {
     <>
       <Button variant="outline" size="sm" disabled={!compiled} onClick={() => setOpen(true)}>
         <FilmIcon data-icon="inline-start" />
-        Vídeo
+        {t.video.button}
       </Button>
       <Dialog
         open={open}
@@ -114,25 +114,20 @@ export function VideoExportButton() {
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Exportar vídeo transparente</DialogTitle>
-            <DialogDescription>
-              Um .webm (VP9) com fundo transparente, gerado quadro a quadro no seu navegador. O SVG
-              não sai do seu computador.
-            </DialogDescription>
+            <DialogTitle>{t.video.title}</DialogTitle>
+            <DialogDescription>{t.video.description}</DialogDescription>
           </DialogHeader>
 
           {support === "checking" ? (
-            <p className="text-muted-foreground text-sm">Verificando o suporte do navegador…</p>
+            <p className="text-muted-foreground text-sm">{t.video.checking}</p>
           ) : support === "no" ? (
             <p role="alert" className="border p-3 text-sm">
-              Este navegador não consegue gravar vídeo com transparência (VP9 com canal alfa). Use
-              uma versão recente do <strong>Chrome</strong>, do <strong>Edge</strong> ou do{" "}
-              <strong>Firefox</strong>.
+              {t.video.unsupported}
             </p>
           ) : (
             <div className="flex flex-col gap-5">
               <NumberField
-                label="Largura"
+                label={t.video.width}
                 unit="px"
                 value={width}
                 min={256}
@@ -143,11 +138,11 @@ export function VideoExportButton() {
               />
               {size ? (
                 <p className="-mt-3 text-muted-foreground text-xs">
-                  Saída: {size.width} × {size.height} px (mantém a proporção do SVG).
+                  {t.video.output(size.width, size.height)}
                 </p>
               ) : null}
               <NumberField
-                label="Duração"
+                label={t.video.duration}
                 unit="s"
                 value={seconds}
                 min={0.5}
@@ -158,7 +153,7 @@ export function VideoExportButton() {
               />
               <div className="flex items-center justify-between gap-2">
                 <span id="video-fps" className="font-medium text-sm">
-                  Quadros por segundo
+                  {t.video.fps}
                 </span>
                 <ToggleGroup
                   type="single"
@@ -179,7 +174,7 @@ export function VideoExportButton() {
               </div>
               <div className="flex items-center justify-between gap-2">
                 <Label htmlFor="video-stroke" className="text-sm">
-                  Cor do traço
+                  {t.video.strokeColor}
                 </Label>
                 <Select
                   value={stroke}
@@ -192,7 +187,7 @@ export function VideoExportButton() {
                   <SelectContent>
                     {STROKES.map((item) => (
                       <SelectItem key={item.value} value={item.value}>
-                        {item.label}
+                        {t.video.strokes[item.value]}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -202,7 +197,7 @@ export function VideoExportButton() {
                 <div className="flex flex-col gap-2">
                   <div
                     role="progressbar"
-                    aria-label="Progresso da exportação"
+                    aria-label={t.video.progressLabel}
                     aria-valuemin={0}
                     aria-valuemax={100}
                     aria-valuenow={Math.round((progress ?? 0) * 100)}
@@ -214,7 +209,7 @@ export function VideoExportButton() {
                     />
                   </div>
                   <p className="text-muted-foreground text-xs">
-                    Gerando quadros… {Math.round((progress ?? 0) * 100)}%
+                    {t.video.progress(Math.round((progress ?? 0) * 100))}
                   </p>
                 </div>
               ) : null}
@@ -224,12 +219,12 @@ export function VideoExportButton() {
           <DialogFooter>
             {busy ? (
               <Button variant="outline" onClick={() => abort.current?.abort()}>
-                Cancelar
+                {t.common.cancel}
               </Button>
             ) : null}
             <Button onClick={run} disabled={support !== "yes" || busy || !compiled}>
               <FilmIcon data-icon="inline-start" />
-              Exportar .webm
+              {t.video.export}
             </Button>
           </DialogFooter>
         </DialogContent>

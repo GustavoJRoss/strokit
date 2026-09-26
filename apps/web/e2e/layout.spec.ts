@@ -127,7 +127,7 @@ test("a closed Geral section still signals layers without stroke", async ({ page
     "aria-expanded",
     "false",
   );
-  await expect(page.getByLabel("5 camada(s) sem traço")).toBeVisible();
+  await expect(page.getByLabel("5 camadas sem traço")).toBeVisible();
 });
 
 test("sizes, hidden panels and open sections are remembered; restore resets them", async ({

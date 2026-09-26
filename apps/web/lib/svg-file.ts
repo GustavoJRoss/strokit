@@ -1,12 +1,23 @@
 import { MAX_SVG_BYTES } from "@strokit/core";
 
-export class FileReadError extends Error {}
+export type FileReadErrorCode = "not-svg-file" | "too-large";
+
+export class FileReadError extends Error {
+  readonly code: FileReadErrorCode;
+
+  constructor(code: FileReadErrorCode, message: string) {
+    super(message);
+    this.name = "FileReadError";
+    this.code = code;
+  }
+}
 
 /** Reads a user file as SVG markup, rejecting obvious mismatches before parsing. */
 export async function readSvgFile(file: File): Promise<string> {
   const looksLikeSvg = file.type === "image/svg+xml" || file.name.toLowerCase().endsWith(".svg");
-  if (!looksLikeSvg) throw new FileReadError("Escolha um arquivo .svg.");
-  if (file.size > MAX_SVG_BYTES) throw new FileReadError("O SVG passa do limite de 500 KB.");
+  if (!looksLikeSvg) throw new FileReadError("not-svg-file", "Escolha um arquivo .svg.");
+  if (file.size > MAX_SVG_BYTES)
+    throw new FileReadError("too-large", "O SVG passa do limite de 500 KB.");
   return file.text();
 }
 

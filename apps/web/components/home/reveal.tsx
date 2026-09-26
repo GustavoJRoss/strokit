@@ -6,6 +6,11 @@ type RevealProps = {
   from?: "left" | "right";
   /** ms, for staggering siblings. */
   delay?: number;
+  /**
+   * Fade in as well as slide (default). Above-the-fold text should pass false: it slides in
+   * already visible, so the browser counts it as painted immediately (LCP).
+   */
+  fade?: boolean;
   className?: string;
   children: ReactNode;
 };
@@ -15,7 +20,13 @@ type RevealProps = {
  * state only exists under `html.js` (see globals.css), so without JS everything is visible;
  * with reduced motion the CSS drops the movement.
  */
-export function Reveal({ from = "left", delay = 0, className, children }: RevealProps) {
+export function Reveal({
+  from = "left",
+  delay = 0,
+  fade = true,
+  className,
+  children,
+}: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,6 +51,7 @@ export function Reveal({ from = "left", delay = 0, className, children }: Reveal
     <div
       ref={ref}
       data-reveal={from}
+      data-reveal-fade={fade ? undefined : "false"}
       className={className}
       style={{ "--reveal-delay": `${delay}ms` } as CSSProperties}
     >

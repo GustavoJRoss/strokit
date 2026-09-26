@@ -4,6 +4,7 @@ import { ChevronDownIcon, ChevronUpIcon, CopyIcon, DownloadIcon } from "lucide-r
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useI18n } from "@/lib/i18n/provider";
 import { slug } from "@/lib/project";
 import { downloadText } from "@/lib/svg-file";
 import { cn } from "@/lib/utils";
@@ -11,13 +12,6 @@ import { type ExportTab, useEditorStore } from "@/store/editor-store";
 import { selectComponentName, selectExportCode } from "@/store/selectors";
 import { CodeBlock } from "./code-block";
 import { VideoExportButton } from "./video-export-dialog";
-
-const HINTS: Record<ExportTab, string> = {
-  css: "SVG com <style> embutido. Zero runtime.",
-  react: "Componente React tipado, sem dependências. speed, loop e paused não re-renderizam.",
-  motion:
-    "Requer motion. Reproduz a mesma animação via useAnimate; o preview ao lado mostra a versão CSS.",
-};
 
 type ExportPanelProps = {
   collapsed: boolean;
@@ -35,14 +29,15 @@ export function ExportPanel({ collapsed, onToggleCollapsed, fill = false }: Expo
   const name = useEditorStore((state) => state.spec.name);
   const tab = useEditorStore((state) => state.exportTab);
   const setTab = useEditorStore((state) => state.setExportTab);
+  const { t } = useI18n();
 
   const copy = async () => {
     if (!code) return;
     try {
       await navigator.clipboard.writeText(code);
-      toast.success("Código copiado");
+      toast.success(t.exportPanel.codeCopied);
     } catch {
-      toast.error("Não foi possível copiar. Selecione o código e copie manualmente.");
+      toast.error(t.exportPanel.copyFailed);
     }
   };
 
@@ -53,7 +48,10 @@ export function ExportPanel({ collapsed, onToggleCollapsed, fill = false }: Expo
   };
 
   return (
-    <section aria-label="Exportar" className={cn("flex flex-col", fill ? "h-full" : "border-t")}>
+    <section
+      aria-label={t.exportPanel.title}
+      className={cn("flex flex-col", fill ? "h-full" : "border-t")}
+    >
       <Tabs
         value={tab}
         onValueChange={(value) => setTab(value as ExportTab)}
@@ -63,29 +61,31 @@ export function ExportPanel({ collapsed, onToggleCollapsed, fill = false }: Expo
           className="flex shrink-0 items-center gap-2 overflow-hidden px-3"
           style={{ height: EXPORT_HEADER_HEIGHT }}
         >
-          <h2 className="font-medium text-sm">Exportar</h2>
+          <h2 className="font-medium text-sm">{t.exportPanel.title}</h2>
           <TabsList>
             <TabsTrigger value="css">CSS</TabsTrigger>
             <TabsTrigger value="react">React</TabsTrigger>
             <TabsTrigger value="motion">Motion</TabsTrigger>
           </TabsList>
-          <p className="hidden text-muted-foreground text-xs lg:block">{HINTS[tab]}</p>
+          <p className="hidden text-muted-foreground text-xs lg:block">
+            {t.exportPanel.hints[tab]}
+          </p>
           <div className="ml-auto flex gap-2">
             <Button variant="outline" size="sm" disabled={!code} onClick={copy}>
               <CopyIcon data-icon="inline-start" />
-              Copiar
+              {t.common.copy}
             </Button>
             <VideoExportButton />
             <Button variant="outline" size="sm" disabled={!code} onClick={download}>
               <DownloadIcon data-icon="inline-start" />
-              {tab === "css" ? "Baixar .svg" : "Baixar .tsx"}
+              {tab === "css" ? t.exportPanel.downloadSvg : t.exportPanel.downloadTsx}
             </Button>
             <Button
               variant="ghost"
               size="icon-sm"
               aria-expanded={!collapsed}
               aria-controls="export-code-region"
-              aria-label={collapsed ? "Mostrar código" : "Recolher código"}
+              aria-label={collapsed ? t.exportPanel.show : t.exportPanel.collapse}
               onClick={onToggleCollapsed}
             >
               {collapsed ? <ChevronUpIcon /> : <ChevronDownIcon />}
@@ -103,9 +103,7 @@ export function ExportPanel({ collapsed, onToggleCollapsed, fill = false }: Expo
               {code ? (
                 <CodeBlock code={code} lang={tab === "css" ? "html" : "tsx"} />
               ) : (
-                <p className="p-4 text-muted-foreground text-sm">
-                  O código aparece aqui assim que você importar um SVG.
-                </p>
+                <p className="p-4 text-muted-foreground text-sm">{t.exportPanel.empty}</p>
               )}
             </div>
           </TabsContent>

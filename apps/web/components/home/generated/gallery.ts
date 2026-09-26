@@ -11,6 +11,8 @@ import { OrbitaPulse } from "./OrbitaPulse";
 export type GalleryEntry = {
   id: string;
   name: string;
+  /** Key in the dictionaries' `examples` (translated name). */
+  exampleId: string;
   preset: string;
   presetLabel: string;
   Component: ComponentType<{ size?: number | string; speed?: number; className?: string }>;
@@ -22,6 +24,7 @@ export const gallery: GalleryEntry[] = [
   {
     id: "assinatura-draw",
     name: "Assinatura",
+    exampleId: "assinatura",
     preset: "draw",
     presetLabel: "Desenhar",
     Component: AssinaturaDraw,
@@ -31,6 +34,7 @@ export const gallery: GalleryEntry[] = [
   {
     id: "pico-draw-fill",
     name: "Pico",
+    exampleId: "pico",
     preset: "draw-fill",
     presetLabel: "Desenhar e preencher",
     Component: PicoDrawFill,
@@ -40,6 +44,7 @@ export const gallery: GalleryEntry[] = [
   {
     id: "orbita-stagger",
     name: "Órbita",
+    exampleId: "orbita",
     preset: "stagger-draw",
     presetLabel: "Desenhar em sequência",
     Component: OrbitaStagger,
@@ -49,6 +54,7 @@ export const gallery: GalleryEntry[] = [
   {
     id: "anel-comet",
     name: "Anel",
+    exampleId: "anel",
     preset: "comet",
     presetLabel: "Cometa",
     Component: AnelComet,
@@ -58,6 +64,7 @@ export const gallery: GalleryEntry[] = [
   {
     id: "onda-yoyo",
     name: "Onda",
+    exampleId: "onda",
     preset: "yoyo",
     presetLabel: "Vai e vem",
     Component: OndaYoyo,
@@ -67,6 +74,7 @@ export const gallery: GalleryEntry[] = [
   {
     id: "selo-march",
     name: "Selo",
+    exampleId: "selo",
     preset: "march",
     presetLabel: "Formigas marchando",
     Component: SeloMarch,
@@ -76,6 +84,7 @@ export const gallery: GalleryEntry[] = [
   {
     id: "orbita-pulse",
     name: "Órbita",
+    exampleId: "orbita",
     preset: "pulse",
     presetLabel: "Pulsar",
     Component: OrbitaPulse,

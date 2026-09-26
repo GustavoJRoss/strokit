@@ -4,6 +4,7 @@ import { CheckIcon, CopyIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useI18n } from "@/lib/i18n/provider";
 
 type Format = "css" | "react" | "motion";
 
@@ -19,6 +20,7 @@ export function CodeTabs({
 }) {
   const [format, setFormat] = useState<Format>("css");
   const [copied, setCopied] = useState(false);
+  const { t } = useI18n();
 
   const copy = async () => {
     try {
@@ -46,7 +48,7 @@ export function CodeTabs({
         </TabsList>
         <Button variant="outline" size="sm" className="ml-auto" onClick={copy}>
           {copied ? <CheckIcon data-icon="inline-start" /> : <CopyIcon data-icon="inline-start" />}
-          {copied ? "Copiado" : "Copiar"}
+          {copied ? t.common.copied : t.common.copy}
         </Button>
       </div>
       {(Object.keys(LABELS) as Format[]).map((key) => (

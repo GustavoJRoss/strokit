@@ -105,7 +105,7 @@ test("selecting a layer outlines it on the canvas", async ({ page }) => {
   const layer = page.getByRole("button", { name: /sk-2/ });
   await layer.click();
   await expect(layer).toHaveAttribute("aria-pressed", "true");
-  await expect(page.getByText("Aplica às 1 camada(s) selecionada(s).")).toBeVisible();
+  await expect(page.getByText("Aplica à 1 camada selecionada.")).toBeVisible();
 });
 
 /** Pauses every preview animation at `time` and reads computed styles of one element. */
@@ -137,7 +137,7 @@ test.describe("fill-only logo (acceptance, phase 3)", () => {
     await loadExample(page, "Pico");
     await page.getByRole("button", { name: /Desenhar e preencher/ }).click();
     await expect(page.getByTestId("export-code")).toContainText("fill-opacity");
-    await expect(page.getByText(/camada\(s\) sem traço/)).toHaveCount(0);
+    await expect(page.getByText(/camadas? sem traço/)).toHaveCount(0);
 
     const start = await sample(page, "sk-1", 0);
     expect(start?.dashoffset).toBeCloseTo(1);
@@ -169,9 +169,9 @@ test.describe("fill-only logo (acceptance, phase 3)", () => {
     await loadExample(page, "Pico");
     await openSection(page, "Geral");
     await page.getByRole("switch", { name: "Traço automático" }).click();
-    await expect(page.getByText("5 camada(s) sem traço")).toBeVisible();
+    await expect(page.getByText("5 camadas sem traço")).toBeVisible();
     await page.getByRole("button", { name: "Ativar traço automático" }).click();
-    await expect(page.getByText(/camada\(s\) sem traço/)).toHaveCount(0);
+    await expect(page.getByText(/camadas? sem traço/)).toHaveCount(0);
   });
 });
 

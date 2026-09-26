@@ -20,16 +20,18 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { EXAMPLES } from "@/lib/examples";
+import { useI18n } from "@/lib/i18n/provider";
 import { useImporter } from "./use-importer";
 
 export function FilePickerButton({ variant = "outline" }: { variant?: "outline" | "default" }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { importFile } = useImporter();
+  const { t } = useI18n();
   return (
     <>
       <Button variant={variant} size="sm" onClick={() => inputRef.current?.click()}>
         <UploadIcon data-icon="inline-start" />
-        Importar SVG
+        {t.toolbar.importSvg}
       </Button>
       <input
         ref={inputRef}
@@ -53,23 +55,21 @@ export function PasteDialogButton() {
   const [open, setOpen] = useState(false);
   const [markup, setMarkup] = useState("");
   const { importMarkup } = useImporter();
+  const { t } = useI18n();
   return (
     <>
       <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
         <ClipboardPasteIcon data-icon="inline-start" />
-        Colar markup
+        {t.toolbar.pasteMarkup}
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
-            <DialogTitle>Colar SVG</DialogTitle>
-            <DialogDescription>
-              Cole o código do SVG. Ele é sanitizado antes de qualquer renderização e não sai do seu
-              navegador.
-            </DialogDescription>
+            <DialogTitle>{t.paste.title}</DialogTitle>
+            <DialogDescription>{t.paste.description}</DialogDescription>
           </DialogHeader>
           <Label htmlFor="paste-svg" className="sr-only">
-            Markup do SVG
+            {t.paste.label}
           </Label>
           <Textarea
             id="paste-svg"
@@ -88,7 +88,7 @@ export function PasteDialogButton() {
                 }
               }}
             >
-              Importar
+              {t.paste.submit}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -99,12 +99,13 @@ export function PasteDialogButton() {
 
 export function ExamplesMenu({ variant = "outline" }: { variant?: "outline" | "ghost" }) {
   const { importExample } = useImporter();
+  const { t } = useI18n();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant={variant} size="sm">
           <SparklesIcon data-icon="inline-start" />
-          Exemplos
+          {t.toolbar.examples}
           <ChevronDownIcon data-icon="inline-end" />
         </Button>
       </DropdownMenuTrigger>
@@ -112,8 +113,10 @@ export function ExamplesMenu({ variant = "outline" }: { variant?: "outline" | "g
         {EXAMPLES.map((example) => (
           <DropdownMenuItem key={example.id} onSelect={() => void importExample(example)}>
             <div className="flex flex-col">
-              <span>{example.name}</span>
-              <span className="text-muted-foreground text-xs">{example.description}</span>
+              <span>{t.examples[example.id].name}</span>
+              <span className="text-muted-foreground text-xs">
+                {t.examples[example.id].description}
+              </span>
             </div>
           </DropdownMenuItem>
         ))}

@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editor-store";
 import { selectActiveTrack, selectCompiled } from "@/store/selectors";
@@ -23,12 +24,12 @@ import { CollapsibleSection } from "./collapsible-section";
 import { EasingField, easingLabel } from "./easing-field";
 import { NumberField } from "./number-field";
 
-const DIRECTIONS: { value: Timing["direction"]; label: string }[] = [
-  { value: "normal", label: "Normal" },
-  { value: "reverse", label: "Reversa" },
-  { value: "alternate", label: "Vai e volta" },
-  { value: "alternate-reverse", label: "Volta e vai" },
-];
+const DIRECTIONS: Timing["direction"][] = ["normal", "reverse", "alternate", "alternate-reverse"];
+
+/** Translated label of a preset param / enum option, falling back to the core's metadata. */
+function lookup(table: Record<string, string> | undefined, key: string, fallback: string): string {
+  return table?.[key] ?? fallback;
+}
 
 function SelectField<T extends string>(props: {
   label: string;
@@ -64,17 +65,18 @@ function PresetPicker() {
   const selectionCount = useEditorStore((state) => state.selection.length);
   const activeTrack = useEditorStore(selectActiveTrack);
   const applyPreset = useEditorStore((state) => state.applyPresetToSelection);
+  const { t } = useI18n();
 
   return (
     <CollapsibleSection
       id="preset"
-      title="Preset"
+      title={t.params.preset.title}
       defaultOpen
-      summary={activeTrack ? getPreset(activeTrack.preset).label : "Nenhum preset ativo"}
+      summary={activeTrack ? t.presets[activeTrack.preset].label : t.params.preset.none}
     >
       <div className="grid gap-2">
         {presetIds.map((id) => {
-          const preset = getPreset(id);
+          const preset = t.presets[id];
           const active = activeTrack?.preset === id;
           return (
             <button
@@ -97,8 +99,8 @@ function PresetPicker() {
       {hasDoc && (
         <p className="text-muted-foreground text-xs">
           {selectionCount > 0
-            ? `Aplica às ${selectionCount} camada(s) selecionada(s).`
-            : "Sem seleção: aplica a todas as camadas."}
+            ? t.params.preset.appliesToSelection(selectionCount)
+            : t.params.preset.appliesToAll}
         </p>
       )}
     </CollapsibleSection>
@@ -107,6 +109,9 @@ function PresetPicker() {
 
 function PresetParamsFields({ track }: { track: Track }) {
   const updateParams = useEditorStore((state) => state.updateParams);
+  const { t } = useI18n();
+  const labels: Record<string, string> = t.presetParams;
+  const options: Record<string, Record<string, string>> = t.presetOptions;
   const fields = describeParams(getPreset(track.preset).paramsSchema);
   const params = track.params as Record<string, unknown>;
   return fields.map((field) => {
@@ -114,7 +119,7 @@ function PresetParamsFields({ track }: { track: Track }) {
       return (
         <NumberField
           key={field.key}
-          label={field.label}
+          label={lookup(labels, field.key, field.label)}
           value={Number(params[field.key] ?? field.min ?? 0)}
           min={field.min ?? 0}
           max={field.max ?? 100}
@@ -128,16 +133,19 @@ function PresetParamsFields({ track }: { track: Track }) {
       return (
         <SelectField
           key={field.key}
-          label={field.label}
+          label={lookup(labels, field.key, field.label)}
           value={String(params[field.key] ?? "")}
-          options={field.options}
+          options={field.options.map((option) => ({
+            value: option.value,
+            label: lookup(options[field.key], option.value, option.label),
+          }))}
           onChange={(value) => updateParams(track.id, { [field.key]: value })}
         />
       );
     }
     return (
       <div key={field.key} className="flex items-center justify-between">
-        <Label className="text-sm">{field.label}</Label>
+        <Label className="text-sm">{lookup(labels, field.key, field.label)}</Label>
         <Switch
           checked={Boolean(params[field.key])}
           onCheckedChange={(value) => updateParams(track.id, { [field.key]: value })}
@@ -151,14 +159,14 @@ function TimingSection() {
   const track = useEditorStore(selectActiveTrack);
   const hasSelection = useEditorStore((state) => state.selection.length > 0);
   const updateTiming = useEditorStore((state) => state.updateTiming);
+  const { t } = useI18n();
+  const copy = t.params.timing;
 
   if (!track) {
     return (
-      <CollapsibleSection id="timing" title="Animação" summary="Nenhuma camada animada selecionada">
+      <CollapsibleSection id="timing" title={copy.title} summary={copy.noTrackSummary}>
         <p className="text-muted-foreground text-sm">
-          {hasSelection
-            ? "A camada selecionada não tem preset. Escolha um acima."
-            : "Selecione uma camada para editar a animação dela."}
+          {hasSelection ? copy.layerWithoutPreset : copy.selectLayer}
         </p>
       </CollapsibleSection>
     );
@@ -168,19 +176,19 @@ function TimingSection() {
   const infinite = timing.iterations === "infinite";
   const set = (patch: Partial<Timing>) => updateTiming(track.id, patch);
 
-  const repeats = infinite ? "sempre" : `${timing.iterations}x`;
+  const repeats = timing.iterations === "infinite" ? copy.forever : copy.times(timing.iterations);
 
   return (
     <CollapsibleSection
       id="timing"
-      title="Animação"
-      summary={`${timing.duration} ms · ${easingLabel(timing.easing)} · ${repeats}`}
+      title={copy.title}
+      summary={copy.summary(timing.duration, easingLabel(timing.easing, t), repeats)}
     >
       <p className="-mt-1 text-muted-foreground text-xs">
-        {getPreset(track.preset).label} · {track.targets.length} camada(s)
+        {copy.trackInfo(t.presets[track.preset].label, track.targets.length)}
       </p>
       <NumberField
-        label="Duração"
+        label={copy.duration}
         unit="ms"
         value={timing.duration}
         min={100}
@@ -189,7 +197,7 @@ function TimingSection() {
         onChange={(duration) => set({ duration })}
       />
       <NumberField
-        label="Atraso"
+        label={copy.delay}
         unit="ms"
         value={timing.delay}
         min={0}
@@ -199,7 +207,7 @@ function TimingSection() {
       />
       <EasingField value={timing.easing} onChange={(easing) => set({ easing })} />
       <NumberField
-        label="Repetições"
+        label={copy.repetitions}
         value={timing.iterations === "infinite" ? 1 : timing.iterations}
         min={1}
         max={20}
@@ -208,7 +216,7 @@ function TimingSection() {
       />
       <div className="flex items-center justify-between">
         <Label htmlFor="iterations-infinite" className="text-sm">
-          Repetir para sempre
+          {copy.repeatForever}
         </Label>
         <Switch
           id="iterations-infinite"
@@ -217,9 +225,9 @@ function TimingSection() {
         />
       </div>
       <SelectField
-        label="Direção"
+        label={copy.direction}
         value={timing.direction}
-        options={DIRECTIONS}
+        options={DIRECTIONS.map((value) => ({ value, label: copy.directions[value] }))}
         onChange={(direction) => set({ direction })}
       />
       <PresetParamsFields track={track} />
@@ -236,24 +244,26 @@ function GlobalSection() {
   const missing =
     compiled?.warnings.filter((warning) => warning.code === "missing-stroke").length ?? 0;
   const labelId = useId();
+  const { t } = useI18n();
+  const copy = t.params.global;
 
   return (
     <CollapsibleSection
       id="global"
-      title="Geral"
-      summary={`Traço automático ${global.autoStroke.enabled ? "ligado" : "desligado"}`}
+      title={copy.title}
+      summary={copy.autoStrokeSummary(global.autoStroke.enabled)}
       alert={
         missing > 0 ? (
           <TriangleAlertIcon
             className="size-4 shrink-0 text-amber-600"
-            aria-label={`${missing} camada(s) sem traço`}
+            aria-label={copy.missing(missing)}
           />
         ) : null
       }
     >
       <div className="flex flex-col gap-2">
         <Label htmlFor={labelId} className="text-sm">
-          Rótulo acessível
+          {copy.a11yLabel}
         </Label>
         <Input
           id={labelId}
@@ -264,7 +274,7 @@ function GlobalSection() {
       </div>
       <div className="flex items-center justify-between gap-2">
         <Label htmlFor="auto-stroke" className="text-sm">
-          Traço automático
+          {copy.autoStroke}
         </Label>
         <Switch
           id="auto-stroke"
@@ -275,7 +285,7 @@ function GlobalSection() {
       </div>
       {global.autoStroke.enabled && (
         <NumberField
-          label="Largura do traço"
+          label={copy.strokeWidth}
           value={global.autoStroke.width}
           min={0.5}
           max={20}
@@ -283,23 +293,20 @@ function GlobalSection() {
           onChange={(width) => setAutoStroke({ width })}
         />
       )}
-      <p className="text-muted-foreground text-xs">
-        Camadas só com preenchimento ganham um traço na cor do preenchimento para os presets de
-        traço funcionarem.
-      </p>
+      <p className="text-muted-foreground text-xs">{copy.autoStrokeHint}</p>
       {missing > 0 && (
         <Alert>
           <TriangleAlertIcon />
-          <AlertTitle>{missing} camada(s) sem traço</AlertTitle>
+          <AlertTitle>{copy.missing(missing)}</AlertTitle>
           <AlertDescription>
-            O preset anima o traço, mas essas camadas só têm preenchimento.
+            {copy.missingBody}
             <Button
               size="xs"
               variant="outline"
               className="mt-2"
               onClick={() => setAutoStroke({ enabled: true })}
             >
-              Ativar traço automático
+              {copy.enableAutoStroke}
             </Button>
           </AlertDescription>
         </Alert>
@@ -309,21 +316,22 @@ function GlobalSection() {
 }
 
 export function ParamsPanel({ onCollapse }: { onCollapse?: () => void }) {
+  const { t } = useI18n();
   return (
-    <aside aria-label="Parâmetros" className="flex h-full min-h-0 flex-col">
+    <aside aria-label={t.params.title} className="flex h-full min-h-0 flex-col">
       <div className="flex items-center gap-2 border-b px-3 py-2">
         {onCollapse ? (
           <Button
             variant="ghost"
             size="icon-xs"
             onClick={onCollapse}
-            aria-label="Esconder parâmetros"
-            title="Esconder parâmetros"
+            aria-label={t.params.hide}
+            title={t.params.hide}
           >
             <PanelRightCloseIcon />
           </Button>
         ) : null}
-        <h2 className="font-medium text-sm">Parâmetros</h2>
+        <h2 className="font-medium text-sm">{t.params.title}</h2>
       </div>
       <ScrollArea className="min-h-0 flex-1">
         <PresetPicker />

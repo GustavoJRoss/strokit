@@ -49,7 +49,21 @@ test.describe("theme", () => {
 test.describe("reveal from the sides", () => {
   test("every block ends fully visible after scrolling", async ({ page }) => {
     await page.goto("/");
-    expect(await hiddenAfterScrolling(page)).toEqual([]);
+    // Scroll everything into view once, then wait (instead of a fixed delay) for the transitions.
+    await hiddenAfterScrolling(page);
+    await expect
+      .poll(
+        () =>
+          page.evaluate(
+            () =>
+              [...document.querySelectorAll<HTMLElement>("[data-reveal]")].filter((block) => {
+                const style = getComputedStyle(block);
+                return style.opacity !== "1" || style.transform !== "none";
+              }).length,
+          ),
+        { timeout: 10_000 },
+      )
+      .toBe(0);
   });
 
   test("blocks start offset to their side before entering the viewport", async ({ page }) => {
@@ -139,12 +153,13 @@ test.describe("gallery", () => {
     await page.goto("/");
     await page.locator("#exemplos").scrollIntoViewIfNeeded();
     await page.getByRole("radio", { name: "2x" }).click();
-    const speed = await page
-      .getByTestId("gallery-onda-yoyo")
-      .locator("svg")
-      .first()
-      .evaluate((svg) => (svg as SVGElement).style.getPropertyValue("--sk-speed"));
-    expect(speed).toBe("2");
+    const speed = () =>
+      page
+        .getByTestId("gallery-onda-yoyo")
+        .locator("svg")
+        .first()
+        .evaluate((svg) => (svg as SVGElement).style.getPropertyValue("--sk-speed"));
+    await expect.poll(speed).toBe("2");
 
     await page.getByRole("link", { name: /Abrir Vai e vem \(Onda\) no editor/ }).click();
     await expect(page).toHaveURL(/\/editor/);

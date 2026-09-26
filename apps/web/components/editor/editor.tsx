@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { DocumentTitle, useI18n } from "@/lib/i18n/provider";
 import { useEditorStore } from "@/store/editor-store";
 import { EditorLayout } from "./editor-layout";
 import { EmptyState } from "./empty-state";
@@ -22,6 +23,7 @@ export function Editor() {
   const hasDoc = useEditorStore((state) => state.doc !== null);
   const { importFile, importMarkup } = useImporter();
   const [dragging, setDragging] = useState(false);
+  const { t } = useI18n();
   useDraft();
 
   useEffect(() => {
@@ -45,6 +47,7 @@ export function Editor() {
 
   return (
     <TooltipProvider>
+      <DocumentTitle page="editor" />
       {/* biome-ignore lint/a11y/noStaticElementInteractions: file drop target; the file picker and paste dialog are the keyboard paths */}
       <div
         className="relative flex h-dvh flex-col bg-background"
@@ -78,7 +81,7 @@ export function Editor() {
         />
         {dragging && (
           <div className="pointer-events-none absolute inset-2 z-50 flex items-center justify-center rounded-xl border-2 border-primary border-dashed bg-background/80 font-medium">
-            Solte o SVG ou o projeto para importar
+            {t.editor.dropHere}
           </div>
         )}
         <Toaster richColors position="bottom-right" />

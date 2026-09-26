@@ -1,12 +1,12 @@
 export const site = {
   name: "strokit",
-  tagline: "Anime sua logo SVG e exporte código pronto: CSS, React ou Motion.",
   author: "Gustavo Ross",
+  /** Anchors of the home page; labels live in the dictionaries (home.nav). */
   nav: [
-    { href: "#como-funciona", label: "Como funciona" },
-    { href: "#exemplos", label: "Exemplos" },
-    { href: "#codigo", label: "Código" },
-    { href: "#apoie", label: "Apoiar" },
+    { href: "#como-funciona", key: "how" },
+    { href: "#exemplos", key: "examples" },
+    { href: "#codigo", key: "code" },
+    { href: "#apoie", key: "support" },
   ],
   /** Donation link. `null` keeps the button inert until a method is chosen. */
   donationUrl: null as string | null,

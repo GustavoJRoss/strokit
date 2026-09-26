@@ -3,17 +3,19 @@
 import { parseProject, type SharedAnimation } from "@strokit/core";
 import { useMemo } from "react";
 import { toast } from "sonner";
-import { type Example, fetchExample } from "@/lib/examples";
+import { type Example, ExampleLoadError, fetchExample } from "@/lib/examples";
+import type { Dictionary } from "@/lib/i18n/dictionaries/pt";
+import { useI18n } from "@/lib/i18n/provider";
 import { importErrorMessage, importWarningMessage } from "@/lib/messages";
 import { isProjectFile } from "@/lib/project";
 import { baseName, readSvgFile } from "@/lib/svg-file";
 import { useEditorStore } from "@/store/editor-store";
 
-function reportWarnings(): void {
+function reportWarnings(t: Dictionary): void {
   const warnings = useEditorStore.getState().importWarnings;
   if (warnings.length > 0) {
-    toast.warning("SVG importado com ajustes", {
-      description: warnings.map(importWarningMessage).join("\n"),
+    toast.warning(t.importing.adjusted, {
+      description: warnings.map((warning) => importWarningMessage(warning, t)).join("\n"),
     });
   }
 }
@@ -22,16 +24,17 @@ function reportWarnings(): void {
 export function useImporter() {
   const loadSvg = useEditorStore((state) => state.loadSvg);
   const loadShared = useEditorStore((state) => state.loadShared);
+  const { t } = useI18n();
 
   return useMemo(() => {
     const importMarkup = (markup: string, name: string): boolean => {
       try {
         loadSvg(markup, name);
       } catch (error) {
-        toast.error(importErrorMessage(error));
+        toast.error(importErrorMessage(error, t));
         return false;
       }
-      reportWarnings();
+      reportWarnings(t);
       return true;
     };
 
@@ -39,10 +42,10 @@ export function useImporter() {
       try {
         loadShared(shared);
       } catch (error) {
-        toast.error(importErrorMessage(error));
+        toast.error(importErrorMessage(error, t));
         return false;
       }
-      reportWarnings();
+      reportWarnings(t);
       return true;
     };
 
@@ -54,20 +57,25 @@ export function useImporter() {
         }
         return importMarkup(await readSvgFile(file), baseName(file.name));
       } catch (error) {
-        toast.error(importErrorMessage(error));
+        toast.error(importErrorMessage(error, t));
         return false;
       }
     };
 
     const importExample = async (example: Example): Promise<boolean> => {
+      const name = t.examples[example.id].name;
       try {
-        return importMarkup(await fetchExample(example), example.name);
+        return importMarkup(await fetchExample(example), name);
       } catch (error) {
-        toast.error(importErrorMessage(error));
+        toast.error(
+          error instanceof ExampleLoadError
+            ? t.importing.exampleFailed(name)
+            : importErrorMessage(error, t),
+        );
         return false;
       }
     };
 
     return { importMarkup, importShared, importFile, importExample };
-  }, [loadSvg, loadShared]);
+  }, [loadSvg, loadShared, t]);
 }

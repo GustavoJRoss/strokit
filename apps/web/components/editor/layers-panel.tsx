@@ -1,23 +1,14 @@
 "use client";
 
-import { type DrawableElement, getPreset } from "@strokit/core";
+import type { DrawableElement } from "@strokit/core";
 import { PanelLeftCloseIcon, TriangleAlertIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editor-store";
 import { selectCompiled } from "@/store/selectors";
-
-const TAG_LABELS: Record<DrawableElement["tag"], string> = {
-  path: "Caminho",
-  line: "Linha",
-  polyline: "Polilinha",
-  polygon: "Polígono",
-  rect: "Retângulo",
-  circle: "Círculo",
-  ellipse: "Elipse",
-};
 
 function Swatch({ element }: { element: DrawableElement }) {
   const color = element.hasStroke ? element.stroke : element.fill;
@@ -50,6 +41,7 @@ export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
   const clearSelection = useEditorStore((state) => state.clearSelection);
   const setHovered = useEditorStore((state) => state.setHovered);
   const compiled = useEditorStore(selectCompiled);
+  const { t } = useI18n();
 
   const missingStroke = new Set(
     compiled?.warnings
@@ -58,19 +50,19 @@ export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
   );
   const presetFor = (id: string) => {
     const track = spec.tracks.find((item) => item.targets.includes(id));
-    return track ? getPreset(track.preset).label : null;
+    return track ? t.presets[track.preset].label : null;
   };
 
   return (
-    <aside aria-label="Camadas" className="flex h-full min-h-0 flex-col">
+    <aside aria-label={t.layers.title} className="flex h-full min-h-0 flex-col">
       <div className="flex items-center justify-between gap-2 border-b px-3 py-2">
         <h2 className="font-medium text-sm">
-          Camadas
+          {t.layers.title}
           {doc ? <span className="text-muted-foreground"> ({doc.elements.length})</span> : null}
         </h2>
         <div className="flex gap-1">
           <Button variant="ghost" size="xs" disabled={!doc} onClick={selectAll}>
-            Todas
+            {t.layers.all}
           </Button>
           <Button
             variant="ghost"
@@ -78,15 +70,15 @@ export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
             disabled={selection.length === 0}
             onClick={clearSelection}
           >
-            Nenhuma
+            {t.layers.none}
           </Button>
           {onCollapse ? (
             <Button
               variant="ghost"
               size="icon-xs"
               onClick={onCollapse}
-              aria-label="Esconder camadas"
-              title="Esconder camadas"
+              aria-label={t.layers.hide}
+              title={t.layers.hide}
             >
               <PanelLeftCloseIcon />
             </Button>
@@ -95,7 +87,7 @@ export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
       </div>
       <ScrollArea className="min-h-0 flex-1">
         {!doc ? (
-          <p className="p-3 text-muted-foreground text-sm">Importe um SVG para ver as camadas.</p>
+          <p className="p-3 text-muted-foreground text-sm">{t.layers.empty}</p>
         ) : (
           <ul className="flex flex-col gap-0.5 p-1.5">
             {doc.elements.map((element) => {
@@ -106,7 +98,7 @@ export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
                   <button
                     type="button"
                     aria-pressed={selected}
-                    aria-label={`${TAG_LABELS[element.tag]} ${element.id}${preset ? `, ${preset}` : ""}`}
+                    aria-label={`${t.layers.tags[element.tag]} ${element.id}${preset ? `, ${preset}` : ""}`}
                     onClick={(event) =>
                       select(
                         element.id,
@@ -128,12 +120,12 @@ export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
                     )}
                   >
                     <Swatch element={element} />
-                    <span className="min-w-0 truncate">{TAG_LABELS[element.tag]}</span>
+                    <span className="min-w-0 truncate">{t.layers.tags[element.tag]}</span>
                     <span className="shrink-0 text-muted-foreground text-xs">{element.id}</span>
                     {missingStroke.has(element.id) && (
                       <TriangleAlertIcon
                         className="size-3.5 shrink-0 text-amber-600"
-                        aria-label="Sem traço: ative o traço automático"
+                        aria-label={t.layers.noStroke}
                       />
                     )}
                     {preset && (
@@ -152,11 +144,7 @@ export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
           </ul>
         )}
       </ScrollArea>
-      {doc && (
-        <p className="border-t px-3 py-2 text-muted-foreground text-xs">
-          Shift seleciona um intervalo; Ctrl/⌘ soma à seleção.
-        </p>
-      )}
+      {doc && <p className="border-t px-3 py-2 text-muted-foreground text-xs">{t.layers.hint}</p>}
     </aside>
   );
 }

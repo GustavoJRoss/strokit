@@ -162,6 +162,9 @@
 .js [data-reveal="right"] {
   transform: translateX(64px);
 }
+.js [data-reveal][data-reveal-fade="false"] {
+  opacity: 1;
+}
 .js [data-reveal][data-revealed] {
   opacity: 1;
   transform: none;
@@ -180,4 +183,9 @@
 }
 .dark .shiki span {
   color: var(--shiki-dark);
+}
+
+/* Language switch before first paint (see LOCALE_BOOT_SCRIPT): hide, never longer than ~800ms. */
+.i18n-pending body {
+  visibility: hidden;
 }

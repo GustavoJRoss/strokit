@@ -11,6 +11,8 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: "on-first-retry",
+    // Existing specs use Portuguese copy; i18n.spec overrides the locale per test.
+    locale: "pt-BR",
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },

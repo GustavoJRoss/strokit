@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useI18n } from "@/lib/i18n/provider";
 import { downloadProject, shareHash } from "@/lib/project";
 import { useEditorStore } from "@/store/editor-store";
 import { useImporter } from "./use-importer";
@@ -21,6 +22,7 @@ export function ShareMenu() {
   const spec = useEditorStore((state) => state.spec);
   const inputRef = useRef<HTMLInputElement>(null);
   const { importFile } = useImporter();
+  const { t } = useI18n();
 
   const save = () => {
     if (doc) downloadProject({ svg: doc.raw, spec });
@@ -30,9 +32,9 @@ export function ShareMenu() {
     if (!doc) return;
     const hash = shareHash({ svg: doc.raw, spec });
     if (!hash) {
-      toast.warning("Esta animação é grande demais para um link", {
-        description: `Baixe o projeto (${PROJECT_EXTENSION}) e compartilhe o arquivo.`,
-        action: { label: "Baixar projeto", onClick: save },
+      toast.warning(t.share.tooLarge, {
+        description: t.share.tooLargeBody(PROJECT_EXTENSION),
+        action: { label: t.share.downloadAction, onClick: save },
       });
       return;
     }
@@ -40,9 +42,9 @@ export function ShareMenu() {
     const url = `${window.location.origin}${window.location.pathname}${hash}`;
     try {
       await navigator.clipboard.writeText(url);
-      toast.success("Link copiado", { description: "A animação e o SVG vão no próprio link." });
+      toast.success(t.share.linkCopied, { description: t.share.linkCopiedBody });
     } catch {
-      window.prompt("Não foi possível copiar automaticamente. Copie o link:", url);
+      window.prompt(t.share.copyFallback, url);
     }
   };
 
@@ -52,23 +54,23 @@ export function ShareMenu() {
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm">
             <Share2Icon data-icon="inline-start" />
-            Compartilhar
+            {t.share.menu}
             <ChevronDownIcon data-icon="inline-end" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem disabled={!doc} onSelect={() => void copyLink()}>
             <LinkIcon />
-            Copiar link
+            {t.share.copyLink}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem disabled={!doc} onSelect={save}>
             <DownloadIcon />
-            Baixar projeto ({PROJECT_EXTENSION})
+            {t.share.downloadProject(PROJECT_EXTENSION)}
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => inputRef.current?.click()}>
             <FolderOpenIcon />
-            Abrir projeto…
+            {t.share.openProject}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

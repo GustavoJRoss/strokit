@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useI18n } from "@/lib/i18n/provider";
 import { LOGO_PATHS, LOGO_VIEWBOX } from "./brand";
 import { BrandMark } from "./generated/BrandMark";
 
@@ -10,12 +11,13 @@ import { BrandMark } from "./generated/BrandMark";
  */
 export function HeroMark() {
   const [run, setRun] = useState(0);
+  const { t } = useI18n();
   return (
     <button
       type="button"
       onClick={() => setRun((value) => value + 1)}
-      aria-label="Reiniciar a animação da marca"
-      title="Clique para reiniciar"
+      aria-label={t.home.hero.replay}
+      title={t.home.hero.replayHint}
       className="relative block aspect-[883/504] w-full max-w-[520px] cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring"
       style={{ ["--sk-stroke" as string]: "currentColor" }}
     >

@@ -188,6 +188,7 @@ function galleryModule(): string {
     return `  {
     id: ${JSON.stringify(item.id)},
     name: ${JSON.stringify(item.name)},
+    exampleId: ${JSON.stringify(item.svg.replace(/^examples\//, "").replace(/\.svg$/, ""))},
     preset: ${JSON.stringify(item.preset)},
     presetLabel: ${JSON.stringify(getPreset(item.preset).label)},
     Component: ${item.component},
@@ -202,6 +203,8 @@ ${imports.join("\n")}
 export type GalleryEntry = {
   id: string;
   name: string;
+  /** Key in the dictionaries' \`examples\` (translated name). */
+  exampleId: string;
   preset: string;
   presetLabel: string;
   Component: ComponentType<{ size?: number | string; speed?: number; className?: string }>;

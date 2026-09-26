@@ -1,25 +1,24 @@
 import { type ImportWarning, ShareError, SvgImportError } from "@strokit/core";
+import type { Dictionary } from "./i18n/dictionaries/pt";
 import { FileReadError } from "./svg-file";
 
-export function importErrorMessage(error: unknown): string {
-  if (
-    error instanceof SvgImportError ||
-    error instanceof FileReadError ||
-    error instanceof ShareError
-  ) {
-    return error.message;
-  }
-  if (error instanceof Error && error.message) return error.message;
-  return "Não foi possível importar o SVG.";
+/** Errors are translated by code; the core's Portuguese message is only a fallback. */
+export function importErrorMessage(error: unknown, t: Dictionary): string {
+  const messages = t.importing;
+  if (error instanceof SvgImportError) return messages.svgErrors[error.code] ?? error.message;
+  if (error instanceof ShareError) return messages.shareErrors[error.code] ?? error.message;
+  if (error instanceof FileReadError) return messages.fileErrors[error.code] ?? error.message;
+  return messages.generic;
 }
 
-export function importWarningMessage(warning: ImportWarning): string {
+export function importWarningMessage(warning: ImportWarning, t: Dictionary): string {
+  const messages = t.importing.warnings;
   switch (warning.code) {
     case "removed-element":
-      return `Elemento <${warning.element}> removido por segurança ou por não ser suportado.`;
+      return messages.removedElement(warning.element);
     case "unsupported-css-selector":
-      return `Seletor CSS não suportado ignorado: ${warning.selector}`;
+      return messages.unsupportedSelector(warning.selector);
     case "missing-viewbox":
-      return "O SVG não tinha viewBox; usamos o tamanho do arquivo.";
+      return messages.missingViewBox;
   }
 }

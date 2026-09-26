@@ -11,15 +11,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { Dictionary } from "@/lib/i18n/dictionaries/pt";
+import { useI18n } from "@/lib/i18n/provider";
 
 type Bezier = [number, number, number, number];
 
-const PRESETS: { value: EasingPreset; label: string; curve: Bezier }[] = [
-  { value: "linear", label: "Linear", curve: [0, 0, 1, 1] },
-  { value: "ease", label: "Suave", curve: [0.25, 0.1, 0.25, 1] },
-  { value: "ease-in", label: "Acelerar", curve: [0.42, 0, 1, 1] },
-  { value: "ease-out", label: "Desacelerar", curve: [0, 0, 0.58, 1] },
-  { value: "ease-in-out", label: "Acelerar e desacelerar", curve: [0.42, 0, 0.58, 1] },
+const PRESETS: { value: EasingPreset; curve: Bezier }[] = [
+  { value: "linear", curve: [0, 0, 1, 1] },
+  { value: "ease", curve: [0.25, 0.1, 0.25, 1] },
+  { value: "ease-in", curve: [0.42, 0, 1, 1] },
+  { value: "ease-out", curve: [0, 0, 0.58, 1] },
+  { value: "ease-in-out", curve: [0.42, 0, 0.58, 1] },
 ];
 
 const CUSTOM = "custom";
@@ -37,9 +39,9 @@ const round2 = (value: number) => Math.round(value * 100) / 100;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 /** Short UI label for summaries ("Acelerar e desacelerar", "Personalizado"). */
-export function easingLabel(easing: Easing): string {
-  if (typeof easing !== "string") return "Personalizado";
-  return PRESETS.find((preset) => preset.value === easing)?.label ?? easing;
+export function easingLabel(easing: Easing, t: Dictionary): string {
+  if (typeof easing !== "string") return t.params.easing.custom;
+  return t.params.easing.presets[easing] ?? easing;
 }
 
 export function curveOf(easing: Easing): Bezier {
@@ -48,6 +50,7 @@ export function curveOf(easing: Easing): Bezier {
 }
 
 function BezierEditor({ value, onChange }: { value: Bezier; onChange: (value: Bezier) => void }) {
+  const { t } = useI18n();
   const svgRef = useRef<SVGSVGElement>(null);
   const baseId = useId();
   const [x1, y1, x2, y2] = value;
@@ -78,7 +81,7 @@ function BezierEditor({ value, onChange }: { value: Bezier; onChange: (value: Be
       r={7}
       tabIndex={0}
       role="slider"
-      aria-label={`Ponto de controle ${point + 1}`}
+      aria-label={t.params.easing.point(point + 1)}
       aria-valuetext={`x ${x}, y ${y}`}
       aria-valuenow={y}
       aria-valuemin={Y_MIN}
@@ -108,13 +111,13 @@ function BezierEditor({ value, onChange }: { value: Bezier; onChange: (value: Be
 
   return (
     <fieldset className="flex flex-col gap-3">
-      <legend className="sr-only">Curva de easing</legend>
+      <legend className="sr-only">{t.params.easing.curve}</legend>
       <svg
         ref={svgRef}
         viewBox={`0 0 ${W} ${H}`}
         className="mx-auto h-48 w-40 touch-none select-none"
       >
-        <title>Curva de easing: arraste os pontos ou use as setas</title>
+        <title>{t.params.easing.curveHelp}</title>
         <rect
           x={toX(0)}
           y={toY(1)}
@@ -185,12 +188,13 @@ export function EasingField({
   onChange: (value: Easing) => void;
 }) {
   const id = useId();
+  const { t } = useI18n();
   const selected = typeof value === "string" ? value : CUSTOM;
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-2">
         <Label htmlFor={id} className="text-sm">
-          Easing
+          {t.params.easing.label}
         </Label>
         <Select
           value={selected}
@@ -204,10 +208,10 @@ export function EasingField({
           <SelectContent>
             {PRESETS.map((preset) => (
               <SelectItem key={preset.value} value={preset.value}>
-                {preset.label}
+                {t.params.easing.presets[preset.value]}
               </SelectItem>
             ))}
-            <SelectItem value={CUSTOM}>Personalizado</SelectItem>
+            <SelectItem value={CUSTOM}>{t.params.easing.custom}</SelectItem>
           </SelectContent>
         </Select>
       </div>

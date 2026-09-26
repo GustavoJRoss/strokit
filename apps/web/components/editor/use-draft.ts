@@ -4,6 +4,7 @@ import { decodeShare, SHARE_HASH_PREFIX } from "@strokit/core";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { clearDraft, readDraft, writeDraft } from "@/lib/draft";
+import { useI18n } from "@/lib/i18n/provider";
 import { importErrorMessage } from "@/lib/messages";
 import { useEditorStore } from "@/store/editor-store";
 import { useImporter } from "./use-importer";
@@ -17,6 +18,7 @@ const SAVE_DEBOUNCE_MS = 500;
  */
 export function useDraft(): void {
   const { importShared } = useImporter();
+  const { t } = useI18n();
   const reset = useEditorStore((state) => state.reset);
   const doc = useEditorStore((state) => state.doc);
   const spec = useEditorStore((state) => state.spec);
@@ -30,7 +32,7 @@ export function useDraft(): void {
       try {
         importShared(decodeShare(hash));
       } catch (error) {
-        toast.error(importErrorMessage(error));
+        toast.error(importErrorMessage(error, t));
       }
       window.history.replaceState(window.history.state, "", `${pathname}${search}`);
       return;
@@ -38,10 +40,10 @@ export function useDraft(): void {
     const draft = readDraft();
     if (!draft) return;
     if (importShared(draft)) {
-      toast("Trabalho anterior restaurado", {
-        description: "Seu último SVG e a animação estavam salvos neste navegador.",
+      toast(t.draft.restored, {
+        description: t.draft.restoredBody,
         action: {
-          label: "Começar do zero",
+          label: t.draft.startOver,
           onClick: () => {
             clearDraft();
             reset();
@@ -51,7 +53,8 @@ export function useDraft(): void {
     } else {
       clearDraft();
     }
-  }, [importShared, reset]);
+    // Runs once (guarded by `opened`), even if the language changes later.
+  }, [importShared, reset, t]);
 
   useEffect(() => {
     if (!doc) return;

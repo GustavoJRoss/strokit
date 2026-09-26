@@ -27,6 +27,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { EXAMPLES, fetchExample } from "@/lib/examples";
+import { useI18n } from "@/lib/i18n/provider";
 import { injectMarkup } from "@/lib/preview";
 import { shareHash } from "@/lib/project";
 
@@ -43,6 +44,8 @@ export function Playground() {
   const [markups, setMarkups] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState(false);
   const hostRef = useRef<HTMLDivElement>(null);
+  const { t } = useI18n();
+  const text = t.home.playground;
   const [root, setRoot] = useState<ShadowRoot | null>(null);
 
   const example = EXAMPLES.find((item) => item.id === exampleId) ?? EXAMPLES[0];
@@ -65,11 +68,11 @@ export function Playground() {
     if (!markup || !example) return null;
     const { document } = importSvg(markup, { parser: new DOMParser() });
     const spec = applyPreset(
-      createEmptySpec(example.name),
+      createEmptySpec(t.examples[example.id].name),
       document.elements.map((element) => element.id),
       preset,
     );
-    spec.global.a11y.label = example.name;
+    spec.global.a11y.label = t.examples[example.id].name;
     spec.global.autoStroke.enabled = document.elements.some((element) => !element.hasStroke);
     for (const track of spec.tracks) {
       track.timing.duration = duration;
@@ -77,7 +80,7 @@ export function Playground() {
     }
     const css = exporters.css(compile(document, spec));
     return { css, hash: shareHash({ svg: document.raw, spec }) };
-  }, [markup, example, preset, duration, repeat]);
+  }, [markup, example, preset, duration, repeat, t]);
 
   useLayoutEffect(() => {
     const host = hostRef.current;
@@ -109,7 +112,7 @@ export function Playground() {
       <div className="flex flex-col gap-6 border p-5">
         <div className="flex flex-col gap-2">
           <Label htmlFor="playground-example" className="text-sm">
-            Logo
+            {text.logo}
           </Label>
           <Select value={exampleId} onValueChange={setExampleId}>
             <SelectTrigger id="playground-example" className="w-full">
@@ -118,7 +121,7 @@ export function Playground() {
             <SelectContent>
               {EXAMPLES.map((item) => (
                 <SelectItem key={item.id} value={item.id}>
-                  {item.name}
+                  {t.examples[item.id].name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -126,7 +129,7 @@ export function Playground() {
         </div>
         <div className="flex flex-col gap-2">
           <span id="playground-preset" className="font-medium text-sm">
-            Preset
+            {text.preset}
           </span>
           <ToggleGroup
             type="single"
@@ -139,13 +142,13 @@ export function Playground() {
           >
             {presetIds.map((id) => (
               <ToggleGroupItem key={id} value={id} className="flex-none px-2.5">
-                {getPreset(id).label}
+                {t.presets[id].label}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
         </div>
         <NumberField
-          label="Duração"
+          label={text.duration}
           unit="ms"
           value={duration}
           min={200}
@@ -155,13 +158,13 @@ export function Playground() {
         />
         <div className="flex items-center justify-between gap-2">
           <Label htmlFor="playground-repeat" className="text-sm">
-            Repetir para sempre
+            {text.repeat}
           </Label>
           <Switch id="playground-repeat" checked={repeat} onCheckedChange={setRepeat} />
         </div>
         <div className="flex items-center justify-between gap-2">
           <Label htmlFor="playground-themed" className="text-sm">
-            Cor do tema (<code className="font-mono text-xs">--sk-stroke</code>)
+            {text.themeColor} (<code className="font-mono text-xs">--sk-stroke</code>)
           </Label>
           <Switch id="playground-themed" checked={themed} onCheckedChange={setThemed} />
         </div>
@@ -177,7 +180,7 @@ export function Playground() {
         <div className="flex min-w-0 flex-col border">
           <div className="flex items-center gap-2 border-b px-3 py-2">
             <span className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
-              CSS exportado
+              {text.exported}
             </span>
             <div className="ml-auto flex gap-2">
               <Button variant="outline" size="sm" onClick={copy} disabled={!result}>
@@ -186,13 +189,13 @@ export function Playground() {
                 ) : (
                   <CopyIcon data-icon="inline-start" />
                 )}
-                {copied ? "Copiado" : "Copiar"}
+                {copied ? t.common.copied : t.common.copy}
               </Button>
               {result?.hash ? (
                 <Button asChild size="sm">
                   <Link href={`/editor${result.hash}`}>
                     <ExternalLinkIcon data-icon="inline-start" />
-                    Abrir no editor
+                    {text.openInEditor}
                   </Link>
                 </Button>
               ) : null}
@@ -202,7 +205,7 @@ export function Playground() {
             {result ? (
               <CodeBlock code={result.css} lang="html" />
             ) : (
-              <p className="p-4 text-muted-foreground text-sm">Carregando…</p>
+              <p className="p-4 text-muted-foreground text-sm">{t.common.loading}</p>
             )}
           </div>
         </div>

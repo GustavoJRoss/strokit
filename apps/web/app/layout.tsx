@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Archivo, Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LOCALE_BOOT_SCRIPT } from "@/lib/i18n/locales";
+import { I18nProvider } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
@@ -10,7 +12,6 @@ const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" });
 const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-display" });
 
 export const metadata: Metadata = {
-  title: "strokit",
   description: "Anime sua logo SVG e exporte código pronto: CSS, React ou Motion.",
 };
 
@@ -22,10 +23,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
-        {/* Marks JS as available before the first paint: reveal animations only hide content then. */}
+        {/* Before the first paint: marks JS as available (reveal animations) and, when the visitor's
+            language isn't Portuguese, hides the page until React swaps the texts. */}
         <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: static, first-party one-liner
-          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static, first-party boot script
+          dangerouslySetInnerHTML={{ __html: LOCALE_BOOT_SCRIPT }}
         />
       </head>
       <body>
@@ -35,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <I18nProvider>{children}</I18nProvider>
         </ThemeProvider>
       </body>
     </html>
