@@ -56,6 +56,7 @@ pnpm build
 
 ## Convenções
 
-- Código, nomes e commits em inglês; documentação e textos de UI em português (i18n fica fora do MVP).
+- Código, nomes e commits em inglês; documentação em português.
+- Textos de UI nunca ficam fixos nos componentes: vão para `apps/web/lib/i18n/dictionaries/` (pt é a fonte da verdade; en e es precisam ter as mesmas chaves — o TypeScript e `test/i18n.test.ts` garantem). O core devolve códigos de erro, não mensagens de UI.
 - Arquivos em kebab-case; componentes React em PascalCase.
 - Presets vivem em `packages/core/src/presets/<nome>.ts`, um por arquivo, todos registrados em `presets/index.ts`.
