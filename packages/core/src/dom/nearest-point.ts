@@ -71,3 +71,26 @@ export function pointAtFraction(geometry: GeometryLike, fraction: number): Point
   const total = geometry.getTotalLength();
   return apply(geometry.getScreenCTM(), geometry.getPointAtLength(total * fraction));
 }
+
+/**
+ * The outline closest to `target` among `candidates`, with the fraction to start from. Used
+ * instead of pointer hit testing, which misses strokes whose dashes are invisible (Chromium
+ * hit-tests dashes) and thin outlines. `null` when nothing is within `maxDistance` px.
+ */
+export function pickNearestOutline<Id>(
+  candidates: readonly { id: Id; geometry: GeometryLike }[],
+  target: Point,
+  maxDistance = Number.POSITIVE_INFINITY,
+): { id: Id; fraction: number } | null {
+  let best: { id: Id; fraction: number } | null = null;
+  let bestDistance = maxDistance;
+  for (const { id, geometry } of candidates) {
+    const fraction = pickPathFraction(geometry, target);
+    const current = distance(pointAtFraction(geometry, fraction), target);
+    if (current <= bestDistance) {
+      best = { id, fraction };
+      bestDistance = current;
+    }
+  }
+  return best;
+}

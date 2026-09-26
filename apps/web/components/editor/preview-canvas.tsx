@@ -1,6 +1,6 @@
 "use client";
 
-import { pickPathFraction, pointAtFraction } from "@strokit/core";
+import { pickNearestOutline, pointAtFraction } from "@strokit/core";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n/provider";
 import { applyPlayback, applyReducedMotion, injectMarkup } from "@/lib/preview";
@@ -24,6 +24,9 @@ function modeFor(event: MouseEvent): "replace" | "toggle" | "range" {
 }
 
 type Marker = { id: string; x: number; y: number };
+
+/** How far (px) from an outline a click still counts when picking a start point. */
+const PICK_DISTANCE = 24;
 
 function layerAt(event: Event): Element | null {
   for (const target of event.composedPath()) {
@@ -128,12 +131,25 @@ export function PreviewCanvas() {
     if (!root) return;
     const onClick = (event: Event) => {
       const mouse = event as MouseEvent;
-      if (useEditorStore.getState().tool === "start") {
-        const layer = layerAt(event);
-        const id = layer?.getAttribute("data-sk-id");
-        if (id && layer instanceof SVGGeometryElement) {
-          setLayerStart(id, pickPathFraction(layer, { x: mouse.clientX, y: mouse.clientY }));
-        }
+      const state = useEditorStore.getState();
+      if (state.tool === "start") {
+        // Nearest outline instead of hit testing: invisible dashes and thin strokes miss clicks.
+        const hit = layerAt(event)?.getAttribute("data-sk-id");
+        const ids = hit
+          ? [hit]
+          : state.selection.length > 0
+            ? state.selection
+            : (state.doc?.elements.map((element) => element.id) ?? []);
+        const candidates = ids.flatMap((id) => {
+          const element = root.querySelector(`[data-sk-id="${CSS.escape(id)}"]`);
+          return element instanceof SVGGeometryElement ? [{ id, geometry: element }] : [];
+        });
+        const picked = pickNearestOutline(
+          candidates,
+          { x: mouse.clientX, y: mouse.clientY },
+          hit ? Number.POSITIVE_INFINITY : PICK_DISTANCE,
+        );
+        if (picked) setLayerStart(picked.id, picked.fraction);
         return;
       }
       const id = elementIdAt(event);

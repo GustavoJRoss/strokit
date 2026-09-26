@@ -9,6 +9,7 @@ import {
   serializeProject,
 } from "../src/share";
 import { applyPreset, createEmptySpec, updateTrackTiming } from "../src/spec/defaults";
+import { updateLayers } from "../src/spec/layers";
 import { importSvg } from "../src/svg/import";
 import { fixture, parser } from "./helpers";
 
@@ -21,6 +22,18 @@ function shared() {
 }
 
 describe("share links", () => {
+  it("round-trips layer edits and rejects unsafe ones", () => {
+    const { value } = shared();
+    const spec = updateLayers(value.spec, ["sk-0"], {
+      name: "Onda 1",
+      stroke: "#e11d48",
+      start: 0.4,
+    });
+    expect(decodeShare(encodeShare({ ...value, spec }))).toEqual({ ...value, spec });
+    const unsafe = { ...spec, layers: { "sk-0": { stroke: "red;} *{display:none" } } };
+    expect(() => decodeShare(encodeShare({ ...value, spec: unsafe }))).toThrow(ShareError);
+  });
+
   it("round-trips SVG and spec, with or without the #s= prefix", () => {
     const { value } = shared();
     const encoded = encodeShare(value);

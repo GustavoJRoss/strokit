@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   type GeometryLike,
   nearestIndex,
+  pickNearestOutline,
   pickPathFraction,
   pointAtFraction,
 } from "../src/dom/nearest-point";
@@ -83,6 +84,31 @@ describe("pickPathFraction", () => {
     const unrendered = { ...circle, getScreenCTM: () => null };
     expect(pickPathFraction(unrendered, { x: 50, y: 60 })).toBeCloseTo(0.25, 3);
     expect(nearestIndex([], { x: 0, y: 0 })).toBe(0);
+  });
+});
+
+describe("pickNearestOutline", () => {
+  const moved: GeometryLike = {
+    ...circle,
+    getScreenCTM: () => ({ a: 2, b: 0, c: 0, d: 2, e: 205, f: 5 }),
+  };
+  const candidates = [
+    { id: "left", geometry: circle },
+    { id: "right", geometry: moved },
+  ];
+
+  it("picks the closest outline and where to start on it", () => {
+    // Bottom of the right circle, a little outside the stroke.
+    expect(pickNearestOutline(candidates, { x: 305, y: 130 })).toEqual({
+      id: "right",
+      fraction: expect.closeTo(0.25, 3),
+    });
+    expect(pickNearestOutline(candidates, { x: 60, y: 105 })?.id).toBe("left");
+  });
+
+  it("ignores clicks far from every outline", () => {
+    expect(pickNearestOutline(candidates, { x: 105, y: 400 }, 24)).toBeNull();
+    expect(pickNearestOutline([], { x: 0, y: 0 })).toBeNull();
   });
 });
 

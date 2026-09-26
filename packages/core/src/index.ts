@@ -13,6 +13,7 @@ export {
   type MatrixLike,
   nearestIndex,
   type Point,
+  pickNearestOutline,
   pickPathFraction,
   pointAtFraction,
 } from "./dom/nearest-point";
