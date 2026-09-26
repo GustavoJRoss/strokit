@@ -6,6 +6,7 @@ import { marchParamsSchema } from "../presets/march";
 import { pulseParamsSchema } from "../presets/pulse";
 import { staggerDrawParamsSchema } from "../presets/stagger-draw";
 import { yoyoParamsSchema } from "../presets/yoyo";
+import { layerOverrideSchema } from "./layers";
 import { timingSchema } from "./timing";
 
 const trackBase = z.object({
@@ -35,6 +36,8 @@ export const animationSpecSchema = z
       a11y: z.object({ label: z.string().max(200), mode: z.enum(["img", "status"]) }),
     }),
     tracks: z.array(trackSchema),
+    /** Per-layer edits by element id. Absent when there are none (keeps old specs identical). */
+    layers: z.record(z.string().min(1), layerOverrideSchema).optional(),
   })
   .superRefine((spec, ctx) => {
     const trackIds = new Set<string>();

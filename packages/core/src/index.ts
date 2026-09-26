@@ -40,6 +40,17 @@ export {
   updateTrackParams,
   updateTrackTiming,
 } from "./spec/defaults";
+export {
+  colorSchema,
+  getLayer,
+  type LayerOverride,
+  type LayerPatch,
+  layerOverrideSchema,
+  layerTokens,
+  pickLayers,
+  resetLayers,
+  updateLayers,
+} from "./spec/layers";
 export { CURRENT_SPEC_VERSION, migrate, parseSpec, SpecVersionError } from "./spec/migrate";
 export {
   type AnimationSpec,
