@@ -20,7 +20,8 @@ export type AnimationDef = Timing & {
 
 export type ElementRule = {
   elementId: string;
-  trackId: string;
+  /** Absent for edited layers that are not animated (static colors only). */
+  trackId?: string;
   props: CssProps;
   animations: AnimationDef[];
   /** Static final state shown under `prefers-reduced-motion: reduce`. */
@@ -29,7 +30,8 @@ export type ElementRule = {
 
 export type CompileWarning =
   | { code: "missing-stroke"; trackId: string; elementId: string }
-  | { code: "unknown-target"; trackId: string; elementId: string };
+  | { code: "unknown-target"; trackId: string; elementId: string }
+  | { code: "unknown-layer"; elementId: string };
 
 /** Neutral IR read by every exporter. Exporters never know about presets. */
 export type CompiledAnimation = {

@@ -7,6 +7,7 @@ import { exportMotion } from "../src/exporters/motion";
 import { exportReact } from "../src/exporters/react";
 import { presetIds } from "../src/presets";
 import { applyPreset, createEmptySpec } from "../src/spec/defaults";
+import { updateLayers } from "../src/spec/layers";
 import { importSvg } from "../src/svg/import";
 import { fixture, parser } from "./helpers";
 
@@ -28,10 +29,12 @@ describe("exported TSX compiles", () => {
       const { document } = importSvg(fixture(name), { parser });
       for (const preset of presetIds) {
         for (const mode of ["img", "status"] as const) {
-          const spec = applyPreset(
-            createEmptySpec(),
-            document.elements.map((element) => element.id),
-            preset,
+          // The last layer stays out of the track but is edited: a rule with no animation.
+          const ids = document.elements.map((element) => element.id);
+          const spec = updateLayers(
+            applyPreset(createEmptySpec(), ids.slice(0, -1), preset),
+            [ids[0] ?? "", ids[ids.length - 1] ?? ""],
+            { name: "Primeira", stroke: "#e11d48", opacity: 0.5, linecap: "round" },
           );
           spec.global.autoStroke.enabled = true;
           spec.global.a11y = { label: 'Logo "x" {y}', mode };
