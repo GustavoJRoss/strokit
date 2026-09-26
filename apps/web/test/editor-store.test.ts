@@ -6,6 +6,7 @@ import {
   selectActiveTrack,
   selectCompiled,
   selectCssExport,
+  selectLayerTree,
   selectPreviewMarkup,
 } from "@/store/selectors";
 
@@ -143,5 +144,75 @@ describe("selectors", () => {
     expect(style(preview)).toBe(style(exported));
     expect(preview).toContain('data-sk-id="sk-0"');
     expect(exported).not.toContain("data-sk-id");
+  });
+
+  it("edits the selected layers and resets them", () => {
+    store().loadSvg(example("orbita.svg"), "Órbita");
+    store().updateLayers({ stroke: "#e11d48" });
+    expect(store().spec.layers).toBeUndefined();
+
+    store().selectMany(["sk-0", "sk-2"]);
+    store().updateLayers({ stroke: "#e11d48", strokeWidth: 3 });
+    expect(Object.keys(store().spec.layers ?? {})).toEqual(["sk-0", "sk-2"]);
+    expect(selectCssExport(store())).toContain(
+      "var(--sk-layer-0-stroke, var(--sk-stroke, #e11d48))",
+    );
+
+    store().resetLayers(["sk-0"]);
+    expect(Object.keys(store().spec.layers ?? {})).toEqual(["sk-2"]);
+    store().resetLayers();
+    expect(store().spec.layers).toBeUndefined();
+  });
+
+  it("selects groups and toggles them", () => {
+    store().loadSvg(example("orbita.svg"), "Órbita");
+    store().selectMany(["sk-1", "sk-2"]);
+    expect(store().selection).toEqual(["sk-1", "sk-2"]);
+    store().selectMany(["sk-2", "sk-3"], "toggle");
+    expect(store().selection).toEqual(["sk-1", "sk-2", "sk-3"]);
+    store().selectMany(["sk-2", "sk-3"], "toggle");
+    expect(store().selection).toEqual(["sk-1"]);
+  });
+
+  it("sets the start point from the canvas and selects the layer", () => {
+    store().loadSvg(example("anel.svg"), "Anel");
+    store().setTool("start");
+    store().setLayerStart("sk-1", 0.25);
+    expect(store().spec.layers).toEqual({ "sk-1": { start: 0.25 } });
+    expect(store().selection).toEqual(["sk-1"]);
+    store().setLayerStart("sk-1", 0);
+    expect(store().spec.layers).toBeUndefined();
+    store().loadSvg(example("anel.svg"), "Anel");
+    expect(store().tool).toBe("select");
+  });
+
+  it("replaces the SVG keeping animations and edits of the layers that remain", () => {
+    store().loadSvg(example("orbita.svg"), "Órbita");
+    store().select("sk-3");
+    store().applyPresetToSelection("comet");
+    store().updateLayers({ name: "Lua" });
+    const markup = example("orbita.svg").replace(/<circle cx="126"[^>]*\/>/, "");
+    const result = store().replaceSvg(markup);
+    expect(result.removed).toEqual(["sk-3"]);
+    expect(store().doc?.elements).toHaveLength(3);
+    expect(store().spec.tracks.map((track) => track.preset)).toEqual(["draw"]);
+    expect(store().spec.layers).toBeUndefined();
+    expect(store().selection).toEqual([]);
+
+    expect(() => store().replaceSvg("<html/>")).toThrowError(
+      expect.objectContaining({ code: "not-svg" }),
+    );
+    expect(store().doc?.elements).toHaveLength(3);
+  });
+
+  it("derives the layer tree from the document", () => {
+    expect(selectLayerTree(store())).toEqual([]);
+    store().loadSvg(example("pico.svg"), "Pico");
+    expect(selectLayerTree(store()).map((node) => node.kind)).toEqual([
+      "layer",
+      "group",
+      "layer",
+      "layer",
+    ]);
   });
 });

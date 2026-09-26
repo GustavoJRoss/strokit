@@ -8,13 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils";
@@ -22,42 +15,15 @@ import { useEditorStore } from "@/store/editor-store";
 import { selectActiveTrack, selectCompiled } from "@/store/selectors";
 import { CollapsibleSection } from "./collapsible-section";
 import { EasingField, easingLabel } from "./easing-field";
+import { LayerSection } from "./layer-inspector";
 import { NumberField } from "./number-field";
+import { SelectField } from "./select-field";
 
 const DIRECTIONS: Timing["direction"][] = ["normal", "reverse", "alternate", "alternate-reverse"];
 
 /** Translated label of a preset param / enum option, falling back to the core's metadata. */
 function lookup(table: Record<string, string> | undefined, key: string, fallback: string): string {
   return table?.[key] ?? fallback;
-}
-
-function SelectField<T extends string>(props: {
-  label: string;
-  value: T | "";
-  options: { value: T; label: string }[];
-  placeholder?: string;
-  onChange: (value: T) => void;
-}) {
-  const id = useId();
-  return (
-    <div className="flex items-center justify-between gap-2">
-      <Label htmlFor={id} className="text-sm">
-        {props.label}
-      </Label>
-      <Select value={props.value} onValueChange={(value) => props.onChange(value as T)}>
-        <SelectTrigger id={id} size="sm" className="w-44">
-          <SelectValue placeholder={props.placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          {props.options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
 }
 
 function PresetPicker() {
@@ -334,6 +300,7 @@ export function ParamsPanel({ onCollapse }: { onCollapse?: () => void }) {
         <h2 className="font-medium text-sm">{t.params.title}</h2>
       </div>
       <ScrollArea className="min-h-0 flex-1">
+        <LayerSection />
         <PresetPicker />
         <TimingSection />
         <GlobalSection />

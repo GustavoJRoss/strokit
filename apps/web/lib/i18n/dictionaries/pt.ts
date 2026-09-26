@@ -42,6 +42,23 @@ export const pt = {
     label: "Markup do SVG",
     submit: "Importar",
   },
+  svgEditor: {
+    button: "Editar SVG",
+    title: "Editar o SVG",
+    description:
+      "Altere o markup à vontade. Ele passa de novo pela sanitização, e as animações e edições continuam nas camadas que ficarem na mesma posição.",
+    label: "Markup do SVG",
+    apply: "Aplicar",
+    applied: "SVG atualizado",
+    summary: (kept: number, added: number, removed: number) =>
+      [
+        `${kept} ${plural(kept, "camada mantida", "camadas mantidas")}`,
+        added > 0 ? `${added} ${plural(added, "nova", "novas")} (com Desenhar)` : "",
+        removed > 0 ? `${removed} ${plural(removed, "removida", "removidas")}` : "",
+      ]
+        .filter(Boolean)
+        .join(" · "),
+  },
   empty: {
     title: "Arraste a sua logo SVG para cá",
     body: "Ou escolha um arquivo, cole o markup (Ctrl/⌘+V também funciona) ou comece com um exemplo. Nada sai do seu navegador.",
@@ -75,6 +92,13 @@ export const pt = {
     hint: "Shift seleciona um intervalo; Ctrl/⌘ soma à seleção.",
     hide: "Esconder camadas",
     noStroke: "Sem traço: ative o traço automático",
+    group: "Grupo",
+    groupCount: (n: number) => `${n} ${plural(n, "camada", "camadas")}`,
+    expand: "Expandir grupo",
+    collapse: "Recolher grupo",
+    showLayer: "Mostrar camada",
+    hideLayer: "Ocultar camada",
+    edited: "Camada editada",
     tags: {
       path: "Caminho",
       line: "Linha",
@@ -88,6 +112,39 @@ export const pt = {
   params: {
     title: "Parâmetros",
     hide: "Esconder parâmetros",
+    layer: {
+      title: "Camada",
+      none: "Nenhuma camada selecionada",
+      selected: (n: number) => `${n} ${plural(n, "camada selecionada", "camadas selecionadas")}`,
+      selectHint:
+        "Selecione uma camada na lista ou no preview para mudar cor, espessura e ponto de partida.",
+      editingMany: (n: number) => `Editando ${n} camadas: as mudanças valem para todas.`,
+      name: "Nome",
+      namePlaceholder: "Ex.: olho",
+      nameHint: "Também nomeia as variáveis CSS da camada (--sk-nome-stroke).",
+      visible: "Visível",
+      stroke: "Cor do traço",
+      fill: "Cor do preenchimento",
+      colorText: (label: string) => `${label} (texto)`,
+      original: "Original",
+      auto: "Automático",
+      noColor: "Nenhum",
+      invalidColor: "Cor inválida. Use #hex, rgb(), hsl() ou um nome de cor.",
+      strokeWidth: "Espessura do traço",
+      opacity: "Opacidade",
+      linecap: "Pontas do traço",
+      linecaps: { butt: "Retas", round: "Arredondadas", square: "Quadradas" },
+      linejoin: "Cantos",
+      linejoins: { miter: "Vivos", round: "Arredondados", bevel: "Chanfrados" },
+      fromSvg: "Do SVG",
+      start: "Ponto de partida",
+      pickStart: "Escolher no preview",
+      picking: "Clique no contorno da camada (Esc cancela)",
+      startHint: "Em caminhos abertos, o desenho segue até o fim e continua do começo.",
+      startMarker: "Ponto de partida da animação",
+      reverse: "Inverter sentido",
+      reset: "Restaurar camada",
+    },
     preset: {
       title: "Preset",
       none: "Nenhum preset ativo",

@@ -39,6 +39,23 @@ export const en: Dictionary = {
     label: "SVG markup",
     submit: "Import",
   },
+  svgEditor: {
+    button: "Edit SVG",
+    title: "Edit the SVG",
+    description:
+      "Change the markup freely. It is sanitized again, and animations and edits stay on the layers that keep their position.",
+    label: "SVG markup",
+    apply: "Apply",
+    applied: "SVG updated",
+    summary: (kept, added, removed) =>
+      [
+        `${kept} ${plural(kept, "layer kept", "layers kept")}`,
+        added > 0 ? `${added} new (with Draw)` : "",
+        removed > 0 ? `${removed} removed` : "",
+      ]
+        .filter(Boolean)
+        .join(" · "),
+  },
   empty: {
     title: "Drop your SVG logo here",
     body: "Or pick a file, paste the markup (Ctrl/⌘+V works too) or start from an example. Nothing leaves your browser.",
@@ -72,6 +89,13 @@ export const en: Dictionary = {
     hint: "Shift selects a range; Ctrl/⌘ adds to the selection.",
     hide: "Hide layers",
     noStroke: "No stroke: turn on auto stroke",
+    group: "Group",
+    groupCount: (n) => `${n} ${plural(n, "layer", "layers")}`,
+    expand: "Expand group",
+    collapse: "Collapse group",
+    showLayer: "Show layer",
+    hideLayer: "Hide layer",
+    edited: "Edited layer",
     tags: {
       path: "Path",
       line: "Line",
@@ -85,6 +109,39 @@ export const en: Dictionary = {
   params: {
     title: "Parameters",
     hide: "Hide parameters",
+    layer: {
+      title: "Layer",
+      none: "No layer selected",
+      selected: (n) => `${n} selected ${plural(n, "layer", "layers")}`,
+      selectHint:
+        "Select a layer in the list or in the preview to change its color, width and start point.",
+      editingMany: (n) => `Editing ${n} layers: changes apply to all of them.`,
+      name: "Name",
+      namePlaceholder: "e.g. eye",
+      nameHint: "Also names the layer's CSS variables (--sk-name-stroke).",
+      visible: "Visible",
+      stroke: "Stroke color",
+      fill: "Fill color",
+      colorText: (label) => `${label} (text)`,
+      original: "Original",
+      auto: "Automatic",
+      noColor: "None",
+      invalidColor: "Invalid color. Use #hex, rgb(), hsl() or a color name.",
+      strokeWidth: "Stroke width",
+      opacity: "Opacity",
+      linecap: "Line caps",
+      linecaps: { butt: "Flat", round: "Round", square: "Square" },
+      linejoin: "Corners",
+      linejoins: { miter: "Sharp", round: "Round", bevel: "Bevel" },
+      fromSvg: "From the SVG",
+      start: "Start point",
+      pickStart: "Pick in the preview",
+      picking: "Click on the layer's outline (Esc cancels)",
+      startHint: "On open paths the drawing runs to the end and continues from the beginning.",
+      startMarker: "Animation start point",
+      reverse: "Reverse direction",
+      reset: "Reset layer",
+    },
     preset: {
       title: "Preset",
       none: "No active preset",

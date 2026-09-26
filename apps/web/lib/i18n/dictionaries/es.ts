@@ -39,6 +39,23 @@ export const es: Dictionary = {
     label: "Markup del SVG",
     submit: "Importar",
   },
+  svgEditor: {
+    button: "Editar SVG",
+    title: "Editar el SVG",
+    description:
+      "Cambia el markup libremente. Se vuelve a sanitizar, y las animaciones y ediciones se mantienen en las capas que conserven su posición.",
+    label: "Markup del SVG",
+    apply: "Aplicar",
+    applied: "SVG actualizado",
+    summary: (kept, added, removed) =>
+      [
+        `${kept} ${plural(kept, "capa mantenida", "capas mantenidas")}`,
+        added > 0 ? `${added} ${plural(added, "nueva", "nuevas")} (con Dibujar)` : "",
+        removed > 0 ? `${removed} ${plural(removed, "eliminada", "eliminadas")}` : "",
+      ]
+        .filter(Boolean)
+        .join(" · "),
+  },
   empty: {
     title: "Arrastra tu logo SVG aquí",
     body: "O elige un archivo, pega el markup (Ctrl/⌘+V también funciona) o empieza con un ejemplo. Nada sale de tu navegador.",
@@ -72,6 +89,13 @@ export const es: Dictionary = {
     hint: "Shift selecciona un rango; Ctrl/⌘ suma a la selección.",
     hide: "Ocultar capas",
     noStroke: "Sin trazo: activa el trazo automático",
+    group: "Grupo",
+    groupCount: (n) => `${n} ${plural(n, "capa", "capas")}`,
+    expand: "Expandir grupo",
+    collapse: "Contraer grupo",
+    showLayer: "Mostrar capa",
+    hideLayer: "Ocultar capa",
+    edited: "Capa editada",
     tags: {
       path: "Trazado",
       line: "Línea",
@@ -85,6 +109,39 @@ export const es: Dictionary = {
   params: {
     title: "Parámetros",
     hide: "Ocultar parámetros",
+    layer: {
+      title: "Capa",
+      none: "Ninguna capa seleccionada",
+      selected: (n) => `${n} ${plural(n, "capa seleccionada", "capas seleccionadas")}`,
+      selectHint:
+        "Selecciona una capa en la lista o en la vista previa para cambiar color, grosor y punto de partida.",
+      editingMany: (n) => `Editando ${n} capas: los cambios se aplican a todas.`,
+      name: "Nombre",
+      namePlaceholder: "Ej.: ojo",
+      nameHint: "También nombra las variables CSS de la capa (--sk-nombre-stroke).",
+      visible: "Visible",
+      stroke: "Color del trazo",
+      fill: "Color del relleno",
+      colorText: (label) => `${label} (texto)`,
+      original: "Original",
+      auto: "Automático",
+      noColor: "Ninguno",
+      invalidColor: "Color no válido. Usa #hex, rgb(), hsl() o un nombre de color.",
+      strokeWidth: "Grosor del trazo",
+      opacity: "Opacidad",
+      linecap: "Extremos del trazo",
+      linecaps: { butt: "Rectos", round: "Redondeados", square: "Cuadrados" },
+      linejoin: "Esquinas",
+      linejoins: { miter: "Vivas", round: "Redondeadas", bevel: "Biseladas" },
+      fromSvg: "Del SVG",
+      start: "Punto de partida",
+      pickStart: "Elegir en la vista previa",
+      picking: "Haz clic en el contorno de la capa (Esc cancela)",
+      startHint: "En trazados abiertos, el dibujo sigue hasta el final y continúa desde el inicio.",
+      startMarker: "Punto de partida de la animación",
+      reverse: "Invertir sentido",
+      reset: "Restaurar capa",
+    },
     preset: {
       title: "Preset",
       none: "Ningún preset activo",

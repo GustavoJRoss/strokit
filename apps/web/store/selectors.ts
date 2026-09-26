@@ -4,7 +4,10 @@ import {
   compile,
   exporters,
   findTrackForElement,
+  type LayerNode,
+  layerTree,
   type SvgDocument,
+  type SvgElementNode,
   type Track,
   toComponentName,
 } from "@strokit/core";
@@ -23,6 +26,7 @@ const reactMemo = memoizeLast((compiled: CompiledAnimation, componentName: strin
 const motionMemo = memoizeLast((compiled: CompiledAnimation, componentName: string) =>
   exporters.motion(compiled, { componentName }),
 );
+const treeMemo = memoizeLast((root: SvgElementNode) => layerTree(root));
 const previewMemo = memoizeLast((compiled: CompiledAnimation) =>
   exporters.css(compiled, { includeElementIds: true }),
 );
@@ -59,3 +63,9 @@ export const selectActiveTrack = (state: EditorState): Track | null => {
   if (first !== undefined) return findTrackForElement(state.spec, first) ?? null;
   return state.spec.tracks.length === 1 ? (state.spec.tracks[0] ?? null) : null;
 };
+
+const NO_LAYERS: LayerNode[] = [];
+
+/** Layers grouped by their `<g>` ancestors, for the layers panel. */
+export const selectLayerTree = (state: EditorState): LayerNode[] =>
+  state.doc ? treeMemo(state.doc.root) : NO_LAYERS;
