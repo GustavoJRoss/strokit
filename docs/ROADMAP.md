@@ -1,18 +1,18 @@
 # ROADMAP — strokit
 
-Regra: uma fase por vez. Ao terminar, rode `pnpm lint && pnpm typecheck && pnpm test`, marque os itens e **pare para revisão**.
+Regra: uma fase por vez. Ao terminar, rode `npm run lint && npm run typecheck && npm test`, marque os itens e **pare para revisão**.
 
 ---
 
 ## Fase 0 — Fundação
 
-- [x] Monorepo pnpm (`packages/core`, `apps/web`), `tsconfig.base.json` strict
+- [x] Monorepo com npm workspaces (`packages/core`, `apps/web`), `tsconfig.base.json` strict
 - [x] Biome configurado; scripts raiz `dev`, `build`, `test`, `test:e2e`, `lint`, `typecheck`
 - [x] `apps/web`: Next.js App Router, Tailwind v4, shadcn/ui inicializado, static export
 - [x] Vitest em `core` e `web`; Playwright em `web` com 1 teste smoke (home carrega)
 - [x] CI (GitHub Actions): lint, typecheck, test em PR
 
-**Aceite:** `pnpm install && pnpm build && pnpm test` passam do zero; CI verde.
+**Aceite:** `npm install && npm run build && npm test` passam do zero; CI verde.
 
 ---
 

@@ -17,7 +17,6 @@ strokit/
 ├─ CLAUDE.md
 ├─ docs/
 ├─ package.json            # scripts raiz
-├─ pnpm-workspace.yaml
 ├─ biome.json
 ├─ tsconfig.base.json
 ├─ packages/
@@ -281,7 +280,7 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | — | IR `CompiledAnimation` entre presets e exportadores | Desacopla N presets de M exportadores |
 | — | Preview = export CSS | WYSIWYG garantido |
 | 2026-09-25 | Docs movidos de `strokekit-plan/docs/` para `docs/` | O CLAUDE.md referencia `docs/` |
-| 2026-09-25 | Versões fixadas: Next 16.3, React 19.3, Tailwind 4.3, shadcn 4.21 (base Radix, preset Nova), Zod 4, Zustand 5, Vitest 5, Playwright 1.63, Biome 2.5, TypeScript 7.0, pnpm 12.6, Node 24 | Versões estáveis em 25/09/2026. TS 7 validado com `next build`, `next typegen` e Vitest na Fase 0 |
+| 2026-09-25 | Versões fixadas: Next 16.3, React 19.3, Tailwind 4.3, shadcn 4.21 (base Radix, preset Nova), Zod 4, Zustand 5, Vitest 5, Playwright 1.63, Biome 2.5, TypeScript 7.0, pnpm 12.6, Node 24 | Versões estáveis em 25/09/2026. TS 7 validado com `next build`, `next typegen` e Vitest na Fase 0 (pnpm trocado por npm em 2026-09-26, ver decisão abaixo) |
 | 2026-09-25 | `<style>` e `style=""` do SVG: seletores simples (`.classe`, `#id`, `tag`, listas com vírgula) resolvidos em atributos de apresentação na normalização; o `<style>` é descartado | Logos do Illustrator/Figma definem cores por classe; a allowlist apagaria as cores |
 | 2026-09-25 | Sanitizer próprio com allowlist sobre um `DOMParser` injetado (`window.DOMParser` no browser, `linkedom` nos testes); sem DOMPurify | Core continua puro, sem dependência de runtime; os testes são o contrato |
 | 2026-09-25 | Um elemento pertence a no máximo um track; aplicar preset move os alvos e remove tracks vazios | Evita duas animações CSS disputando a mesma propriedade |
@@ -351,6 +350,10 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-26 | `opacity` animada (pulse) também vai para um `<g>` pai quando a camada tem opacidade própria, como já acontecia com `transform` | CSS substitui o atributo em vez de compor |
 | 2026-09-26 | O clique de ponto de partida mede o contorno mais próximo (clicado, selecionados ou todos, até 24 px) em vez de confiar no hit test | O Chromium considera o tracejado no hit test: um traço ainda não desenhado não recebe o clique |
 | 2026-09-26 | "Editar SVG" (RF16) mostra o markup normalizado, indentado e sem `data-sk-id`; aplicar reimporta pelo pipeline completo e reconcilia a spec por posição | Sanitização continua obrigatória (regra 4); ids por ordem do documento são o que o resto do sistema já usa |
+
+| 2026-09-26 | Gerenciador de pacotes trocado de pnpm para npm workspaces, a pedido do autor | `pnpm-workspace.yaml` sai; `package.json` raiz ganha `"workspaces"`; `workspace:*` em `apps/web` vira `"*"` (sintaxe que o npm resolve para o pacote do workspace). Estrutura de pastas não muda: `apps/web` já seguia o layout padrão do Next (`app/` na raiz do pacote, sem `src/`) |
+| 2026-09-26 | Caminhos de binário resolvidos via `require.resolve` (`typescript/package.json`, `serve/package.json`) em vez de `node_modules/.bin/…` fixo | O pnpm cria um `node_modules/.bin` por pacote; o npm eleva (hoist) os binários dos workspaces para a raiz do repo. `tsx-typecheck.test.ts` e `playwright.config.ts` dependiam do caminho antigo |
+| 2026-09-26 | `allowBuilds`/`minimumReleaseAgeExclude` do pnpm não têm equivalente direto no npm: scripts de instalação de dependências nativas (ex.: `sharp`) rodam normalmente | O npm não tem o modelo "nega por padrão" de scripts de instalação do pnpm; nenhuma dependência do projeto exige isso hoje (`next.config.ts` usa `images.unoptimized: true`), mas fica registrado como diferença de comportamento |
 
 ### Pendências abertas (decidir até a fase indicada)
 

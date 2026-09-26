@@ -19,7 +19,7 @@ import { describe, expect, it } from "vitest";
  * - `app/exemplos/generated/*.tsx` (React/Motion components on /exemplos);
  * - `components/home/generated/*` (home: brand mark, gallery components and data, code samples);
  * - `public/showcase/*.svg` (downloadable CSS exports of the gallery).
- * Regenerate with: UPDATE_GENERATED=1 pnpm --filter @strokit/web test
+ * Regenerate with: UPDATE_GENERATED=1 npm run test --workspace=@strokit/web
  */
 type Source = {
   /** Path under `public/`. */

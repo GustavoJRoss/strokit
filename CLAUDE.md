@@ -15,7 +15,7 @@ Diferencial: não é uma timeline genérica para designers. É uma ferramenta qu
 
 ## Stack
 
-- **pnpm workspaces** (monorepo), Node LTS
+- **npm workspaces** (monorepo), Node LTS
 - `packages/core` — TypeScript puro, **zero dependência de React/DOM de framework**
 - `apps/web` — Next.js (App Router), React 19, Tailwind CSS v4, shadcn/ui (Radix), Zustand
 - Validação: Zod
@@ -26,13 +26,13 @@ Diferencial: não é uma timeline genérica para designers. É uma ferramenta qu
 ## Comandos
 
 ```bash
-pnpm install
-pnpm dev            # apps/web em modo dev
-pnpm test           # vitest em todos os pacotes
-pnpm test:e2e       # playwright
-pnpm lint           # biome check
-pnpm typecheck      # tsc --noEmit em todos os pacotes
-pnpm build
+npm install
+npm run dev            # apps/web em modo dev
+npm test               # vitest em todos os pacotes
+npm run test:e2e       # playwright
+npm run lint           # biome check
+npm run typecheck      # tsc --noEmit em todos os pacotes
+npm run build
 ```
 
 ## Regras invioláveis

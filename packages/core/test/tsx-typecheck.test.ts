@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
 import { compile } from "../src/compile/compile";
 import { exportMotion } from "../src/exporters/motion";
@@ -16,7 +17,10 @@ import { fixture, parser } from "./helpers";
  * This runs the TypeScript compiler on generated files for every preset and both a11y modes.
  */
 const outDir = join(import.meta.dirname, ".tsx-check");
-const tsc = join(import.meta.dirname, "..", "node_modules", ".bin", "tsc");
+// Resolved through Node instead of a hardcoded `node_modules/.bin` path: npm hoists workspace
+// binaries to the repo root, while pnpm keeps one per package.
+const typescriptDir = dirname(createRequire(import.meta.url).resolve("typescript/package.json"));
+const tsc = join(typescriptDir, "bin", "tsc");
 
 afterAll(() => rmSync(outDir, { recursive: true, force: true }));
 

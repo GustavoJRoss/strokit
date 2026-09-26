@@ -1,6 +1,16 @@
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 4173;
+
+// Resolved through Node instead of a hardcoded `node_modules/serve` path: npm hoists
+// workspace dependencies to the repo root, while pnpm keeps one per package.
+const serveMain = join(
+  dirname(createRequire(import.meta.url).resolve("serve/package.json")),
+  "build",
+  "main.js",
+);
 
 export default defineConfig({
   testDir: "./e2e",
@@ -20,7 +30,7 @@ export default defineConfig({
     { name: "webkit", use: { ...devices["Desktop Safari"] } },
   ],
   webServer: {
-    command: `node node_modules/serve/build/main.js out -l ${PORT} --no-clipboard`,
+    command: `node ${serveMain} out -l ${PORT} --no-clipboard`,
     gracefulShutdown: { signal: "SIGTERM", timeout: 2_000 },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
