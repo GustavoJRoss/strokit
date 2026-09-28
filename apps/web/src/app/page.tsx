@@ -4,6 +4,7 @@ import { Comparison } from "@/components/home/comparison";
 import { GallerySection } from "@/components/home/gallery";
 import { Hero } from "@/components/home/hero";
 import { HowItWorks } from "@/components/home/how-it-works";
+import { OpenSource } from "@/components/home/open-source";
 import { PlaygroundSection } from "@/components/home/playground-section";
 import { Problem } from "@/components/home/problem";
 import { SiteFooter } from "@/components/home/site-footer";
@@ -31,6 +32,7 @@ export default function Home() {
         <GallerySection />
         <CodeSection />
         <Comparison />
+        <OpenSource />
         <Support />
       </main>
       <SiteFooter />

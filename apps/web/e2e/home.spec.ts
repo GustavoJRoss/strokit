@@ -184,6 +184,7 @@ test("nav anchors lead to their sections", async ({ page }) => {
     ["Como funciona", "como-funciona"],
     ["Exemplos", "exemplos"],
     ["Código", "codigo"],
+    ["Open source", "open-source"],
     ["Apoiar", "apoie"],
   ] as const) {
     await page

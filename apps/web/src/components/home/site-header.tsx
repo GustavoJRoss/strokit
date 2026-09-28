@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { GithubIcon } from "@/components/github-icon";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -16,12 +17,15 @@ export function SiteHeader() {
         <Link href="/" aria-label={t.common.home}>
           <Wordmark />
         </Link>
-        <nav aria-label={t.home.navLabel} className="ml-4 hidden gap-5 md:flex">
+        <nav
+          aria-label={t.home.navLabel}
+          className="ml-2 hidden items-center gap-4 xl:gap-5 lg:flex"
+        >
           {site.nav.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="font-mono text-muted-foreground text-xs uppercase tracking-widest hover:text-foreground"
+              className="whitespace-nowrap font-mono text-[0.6875rem] text-muted-foreground uppercase leading-none tracking-wider xl:tracking-widest hover:text-foreground"
             >
               {t.home.nav[item.key]}
             </a>
@@ -30,6 +34,17 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-2">
           <LanguageSwitcher />
           <ThemeToggle />
+          <Button asChild size="icon-sm" variant="ghost">
+            <a
+              href={site.repo.url}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={t.home.openSource.repoLabel}
+              title={t.home.openSource.repoLabel}
+            >
+              <GithubIcon className="size-4" />
+            </a>
+          </Button>
           <Button asChild size="sm" className="hidden sm:inline-flex">
             <Link href="/editor">{t.home.openEditor}</Link>
           </Button>

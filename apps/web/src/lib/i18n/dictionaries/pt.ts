@@ -329,7 +329,13 @@ export const pt = {
   },
 
   home: {
-    nav: { how: "Como funciona", examples: "Exemplos", code: "Código", support: "Apoiar" },
+    nav: {
+      how: "Como funciona",
+      examples: "Exemplos",
+      code: "Código",
+      support: "Apoiar",
+      openSource: "Open source",
+    },
     navLabel: "Seções",
     openEditor: "Abrir editor",
     hero: {
@@ -449,6 +455,20 @@ export const pt = {
         { label: "Animações complexas", values: ["Não é o foco", "Sim", "Sim", "Sim"] },
       ],
     },
+    openSource: {
+      eyebrow: "Open source",
+      title: "Código aberto. Vem olhar por dentro.",
+      body: "O strokit é público no GitHub sob a licença MIT: use, copie, modifique e redistribua, inclusive comercialmente. O @strokit/core também serve de base para gerar animações de SVG fora do editor.",
+      repoButton: "Ver no GitHub",
+      issuesButton: "Reportar um problema",
+      cards: [
+        { title: "Dê uma estrela", body: "Ajuda outras pessoas a encontrarem o projeto." },
+        { title: "Abra uma issue", body: "Bugs, ideias de preset e sugestões são bem-vindos." },
+        { title: "Contribua", body: "Fluxo de trabalho e regras do projeto estão no README." },
+      ],
+      license: "Licença MIT",
+      repoLabel: "Repositório no GitHub",
+    },
     support: {
       eyebrow: "Apoie",
       title: "Gostou? Ajude o strokit a crescer.",
@@ -459,6 +479,7 @@ export const pt = {
     },
     footer: {
       label: "Rodapé",
+      github: "GitHub",
       editor: "Editor",
       exported: "Componentes exportados",
       top: "Topo",

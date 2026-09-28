@@ -15,7 +15,7 @@ export function Support() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-24 sm:px-6 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <Reveal from="left" className="flex flex-col gap-6">
           <p className="font-mono text-background/60 text-xs uppercase tracking-[0.2em]">
-            07 — {copy.eyebrow}
+            08 — {copy.eyebrow}
           </p>
           <h2 className="text-balance font-display text-[clamp(2rem,8vw,3.75rem)] uppercase leading-[0.92]">
             {copy.title}

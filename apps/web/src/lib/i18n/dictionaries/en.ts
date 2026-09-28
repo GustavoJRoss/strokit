@@ -317,7 +317,13 @@ export const en: Dictionary = {
   },
 
   home: {
-    nav: { how: "How it works", examples: "Examples", code: "Code", support: "Support" },
+    nav: {
+      how: "How it works",
+      examples: "Examples",
+      code: "Code",
+      support: "Support",
+      openSource: "Open source",
+    },
     navLabel: "Sections",
     openEditor: "Open editor",
     hero: {
@@ -437,6 +443,20 @@ export const en: Dictionary = {
         { label: "Complex animations", values: ["Not the focus", "Yes", "Yes", "Yes"] },
       ],
     },
+    openSource: {
+      eyebrow: "Open source",
+      title: "Open code. Come take a look inside.",
+      body: "strokit is public on GitHub under the MIT license: use, copy, modify and redistribute it, commercially too. @strokit/core also works as a base for generating SVG animations outside the editor.",
+      repoButton: "View on GitHub",
+      issuesButton: "Report a problem",
+      cards: [
+        { title: "Star it", body: "Helps other people find the project." },
+        { title: "Open an issue", body: "Bugs, preset ideas and suggestions are welcome." },
+        { title: "Contribute", body: "The workflow and project rules are in the README." },
+      ],
+      license: "MIT license",
+      repoLabel: "GitHub repository",
+    },
     support: {
       eyebrow: "Support",
       title: "Like it? Help strokit grow.",
@@ -447,6 +467,7 @@ export const en: Dictionary = {
     },
     footer: {
       label: "Footer",
+      github: "GitHub",
       editor: "Editor",
       exported: "Exported components",
       top: "Top",

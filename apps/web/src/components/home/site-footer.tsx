@@ -22,6 +22,14 @@ export function SiteFooter() {
           <Link href="/exemplos" className="hover:text-foreground">
             {copy.exported}
           </Link>
+          <a
+            href={site.repo.url}
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-foreground"
+          >
+            {copy.github}
+          </a>
           <a href="#topo" className="hover:text-foreground">
             {copy.top}
           </a>

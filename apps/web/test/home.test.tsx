@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Hero } from "@/components/home/hero";
+import { OpenSource } from "@/components/home/open-source";
 import { Reveal } from "@/components/home/reveal";
 import { Support } from "@/components/home/support";
 import { site } from "@/lib/site";
@@ -16,6 +17,26 @@ describe("Hero", () => {
     expect(
       screen.getByRole("button", { name: "Reiniciar a animação da marca" }),
     ).toBeInTheDocument();
+  });
+});
+
+describe("OpenSource", () => {
+  it("links to the public repository, its issues and the license", () => {
+    render(<OpenSource />);
+    expect(screen.getByRole("link", { name: "Ver no GitHub" })).toHaveAttribute(
+      "href",
+      site.repo.url,
+    );
+    expect(screen.getByRole("link", { name: "Reportar um problema" })).toHaveAttribute(
+      "href",
+      site.repo.issuesUrl,
+    );
+    expect(screen.getByRole("link", { name: "Licença MIT" })).toHaveAttribute(
+      "href",
+      site.repo.licenseUrl,
+    );
+    for (const link of screen.getAllByRole("link"))
+      expect(link).toHaveAttribute("rel", "noreferrer");
   });
 });
 
