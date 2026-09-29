@@ -2,6 +2,9 @@ import { getPreset } from "../presets";
 import type { AnimationSpec, PresetId, Track } from "./schema";
 import type { Timing } from "./timing";
 
+/** Preset given to layers that have none (fresh import, layers added by a re-import). */
+export const DEFAULT_PRESET: PresetId = "draw-fill";
+
 export function createEmptySpec(name = "Minha animação"): AnimationSpec {
   return {
     version: 1,

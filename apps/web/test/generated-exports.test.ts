@@ -50,7 +50,7 @@ const COMPONENTS: ComponentConfig[] = [
     component: "OrbitaLogo",
     svg: "examples/orbita.svg",
     name: "Órbita",
-    preset: "stagger-draw",
+    preset: "pulse",
     exporter: "react",
     configure: loop(),
   },
@@ -101,7 +101,7 @@ const COMPONENTS: ComponentConfig[] = [
     component: "SupportHeart",
     svg: "brand/heart.svg",
     name: "Apoie o strokit",
-    preset: "draw",
+    preset: "draw-fill",
     exporter: "react",
     configure: loop({ direction: "alternate", duration: 1800 }),
   },
@@ -110,28 +110,12 @@ const COMPONENTS: ComponentConfig[] = [
 /** One card per preset (the home gallery). Each also ships as a plain `.svg` in `public/showcase/`. */
 const GALLERY: GalleryItem[] = [
   {
-    id: "assinatura-draw",
-    component: "AssinaturaDraw",
-    svg: "examples/assinatura.svg",
-    name: "Assinatura",
-    preset: "draw",
-    configure: loop({ direction: "alternate", duration: 2200 }),
-  },
-  {
     id: "pico-draw-fill",
     component: "PicoDrawFill",
     svg: "examples/pico.svg",
     name: "Pico",
     preset: "draw-fill",
     configure: loop({ direction: "alternate", duration: 2600 }),
-  },
-  {
-    id: "orbita-stagger",
-    component: "OrbitaStagger",
-    svg: "examples/orbita.svg",
-    name: "Órbita",
-    preset: "stagger-draw",
-    configure: loop(),
   },
   {
     id: "anel-comet",

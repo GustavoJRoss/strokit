@@ -202,15 +202,10 @@ export const pt = {
     },
   },
   presets: {
-    draw: { label: "Desenhar", description: "A logo se desenha do início ao fim." },
     "draw-fill": {
       label: "Desenhar e preencher",
       description:
         "Desenha o contorno e depois preenche. Recomendado para logos só com preenchimento.",
-    },
-    "stagger-draw": {
-      label: "Desenhar em sequência",
-      description: "Cada camada se desenha com um atraso em relação à anterior.",
     },
     comet: { label: "Cometa", description: "Um traço curto percorre o contorno em loop." },
     yoyo: {
@@ -225,18 +220,13 @@ export const pt = {
   },
   presetParams: {
     length: "Comprimento do traço",
-    step: "Intervalo",
-    order: "Ordem",
-    seed: "Semente (aleatória)",
     fillAt: "Início do preenchimento",
     scale: "Escala máxima",
     minOpacity: "Opacidade mínima",
     dash: "Traço",
     gap: "Espaço",
   },
-  presetOptions: {
-    order: { document: "Do documento", reverse: "Reversa", random: "Aleatória" },
-  },
+  presetOptions: {},
   exportPanel: {
     title: "Exportar",
     hints: {
@@ -370,11 +360,11 @@ export const pt = {
         {
           title: "Arraste o SVG",
           text: "Solte a logo, escolha um arquivo ou cole o markup. Tudo é sanitizado e nada sai do seu navegador.",
-          alt: "Assinatura se desenhando",
+          alt: "Pico se desenhando e se preenchendo",
         },
         {
           title: "Escolha e ajuste",
-          text: "Sete presets de traço, com duração, atraso, easing e curva personalizada. O preview é exatamente o código exportado.",
+          text: "Cinco presets de traço, com duração, atraso, easing e curva personalizada. O preview é exatamente o código exportado.",
           alt: "Ondas com riscos indo e voltando",
         },
         {
@@ -491,7 +481,7 @@ export const pt = {
     body: "Estes componentes saíram direto dos exportadores do strokit e são compilados pelo próprio Next.js deste site. Nenhuma linha foi editada à mão.",
     create: "Criar o seu no editor",
     cards: {
-      orbitaReact: "React · Desenhar em sequência, em loop",
+      orbitaReact: "React · Pulsar, em loop",
       ondaReact: "React · Cometa, speed={2}",
       picoMotion: 'Motion · Vai e vem, role="status"',
       orbitaMotion: "Motion · Desenhar e preencher, loop",

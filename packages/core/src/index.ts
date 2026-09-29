@@ -46,6 +46,7 @@ export {
   applyPreset,
   createEmptySpec,
   createTrack,
+  DEFAULT_PRESET,
   findTrackForElement,
   updateTrackParams,
   updateTrackTiming,

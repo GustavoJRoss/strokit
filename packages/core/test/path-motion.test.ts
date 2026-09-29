@@ -60,31 +60,28 @@ describe("path motion helpers", () => {
 });
 
 describe("start point and direction (sampled like the video frames)", () => {
-  it.each(["draw", "draw-fill", "stagger-draw"] as const)(
-    "%s draws from the start point",
-    (preset) => {
-      // Half of the stroke: draw-fill finishes the stroke at 60% of its duration.
-      const half = preset === "draw-fill" ? 0.3 : 0.5;
-      expect(coverage(frameAt(preset, { start: 0.3 }, 0))).toBe(expected([]));
-      expect(coverage(frameAt(preset, { start: 0.3 }, half))).toBe(expected([[0.3, 0.8]]));
-    },
-  );
+  // draw-fill finishes the stroke at 60% of its duration (fillAt), so a fraction `f` of the
+  // stroke is drawn at progress `f * 0.6`.
+  it("draws from the start point", () => {
+    expect(coverage(frameAt("draw-fill", { start: 0.3 }, 0))).toBe(expected([]));
+    expect(coverage(frameAt("draw-fill", { start: 0.3 }, 0.3))).toBe(expected([[0.3, 0.8]]));
+  });
 
   it("wraps around closed shapes and draws backwards when reversed", () => {
-    expect(coverage(frameAt("draw", { start: 0.7 }, 0.5))).toBe(
+    expect(coverage(frameAt("draw-fill", { start: 0.7 }, 0.3))).toBe(
       expected([
         [0.7, 1],
         [0, 0.2],
       ]),
     );
-    expect(coverage(frameAt("draw", { start: 0.3, reverse: true }, 0.5))).toBe(
+    expect(coverage(frameAt("draw-fill", { start: 0.3, reverse: true }, 0.3))).toBe(
       expected([
         [0, 0.3],
         [0.8, 1],
       ]),
     );
-    expect(coverage(frameAt("draw", { reverse: true }, 0.25))).toBe(expected([[0.75, 1]]));
-    expect(coverage(frameAt("draw", { start: 0.3 }, 1))).toBe(expected([[0, 1]]));
+    expect(coverage(frameAt("draw-fill", { reverse: true }, 0.15))).toBe(expected([[0.75, 1]]));
+    expect(coverage(frameAt("draw-fill", { start: 0.3 }, 1))).toBe(expected([[0, 1]]));
   });
 
   it("starts the comet at the start point and runs it the other way when reversed", () => {
@@ -113,10 +110,10 @@ describe("start point and direction (sampled like the video frames)", () => {
 
   it("shows the whole outline under reduced motion", () => {
     const { document } = importSvg(fixture("simple-stroke.svg"), { parser });
-    const spec = updateLayers(applyPreset(createEmptySpec(), ["sk-0"], "draw"), ["sk-0"], {
+    const spec = updateLayers(applyPreset(createEmptySpec(), ["sk-0"], "draw-fill"), ["sk-0"], {
       start: 0.5,
     });
-    expect(compile(document, spec).rules[0]?.reducedMotion).toEqual({
+    expect(compile(document, spec).rules[0]?.reducedMotion).toMatchObject({
       "stroke-dasharray": "none",
     });
   });

@@ -1,71 +1,87 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`exporters.css × draw > illustrator-classes.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-5c3z5x" role="img" aria-label="Logo"><style>
-.sk-5c3z5x-0 {
+exports[`exporters.css × draw-fill > illustrator-classes.svg 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-fjvjft" role="img" aria-label="Logo"><style>
+.sk-fjvjft-0 {
   stroke-dasharray: 1 1;
-  animation: sk-5c3z5x-t0-draw 1500ms ease-in-out 0ms 1 normal both;
+  animation: sk-fjvjft-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
 }
-.sk-5c3z5x-1 {
+.sk-fjvjft-1 {
   stroke: var(--sk-stroke, #1D1D1B);
   stroke-dasharray: 1 1;
-  animation: sk-5c3z5x-t0-draw 1500ms ease-in-out 0ms 1 normal both;
+  animation: sk-fjvjft-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
 }
-.sk-5c3z5x-2 {
+.sk-fjvjft-2 {
   stroke: var(--sk-stroke, #10b981);
   stroke-dasharray: 1 1;
-  animation: sk-5c3z5x-t0-draw 1500ms ease-in-out 0ms 1 normal both;
+  animation: sk-fjvjft-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
 }
-@keyframes sk-5c3z5x-t0-draw {
+@keyframes sk-fjvjft-t0-draw-fill {
   0% {
     stroke-dashoffset: 1;
+    fill-opacity: 0;
+  }
+  60% {
+    stroke-dashoffset: 0;
+    fill-opacity: 0;
   }
   100% {
     stroke-dashoffset: 0;
+    fill-opacity: 1;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-5c3z5x * {
+  .sk-fjvjft * {
     animation: none;
   }
-  .sk-5c3z5x-0 {
+  .sk-fjvjft-0 {
     stroke-dashoffset: 0;
+    fill-opacity: 1;
   }
-  .sk-5c3z5x-1 {
+  .sk-fjvjft-1 {
     stroke-dashoffset: 0;
+    fill-opacity: 1;
   }
-  .sk-5c3z5x-2 {
+  .sk-fjvjft-2 {
     stroke-dashoffset: 0;
+    fill-opacity: 1;
   }
 }
-</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-5c3z5x-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-5c3z5x-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-5c3z5x-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-5c3z5x-0"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-5c3z5x-2"/></svg>
+</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-fjvjft-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-fjvjft-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-fjvjft-1"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-fjvjft-0"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-fjvjft-2"/></svg>
 "
 `;
 
-exports[`exporters.css × draw > simple-stroke.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-v3qky6" role="img" aria-label="Logo"><style>
-.sk-v3qky6-0 {
+exports[`exporters.css × draw-fill > simple-stroke.svg 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-1ek2zig" role="img" aria-label="Logo"><style>
+.sk-1ek2zig-0 {
   stroke: var(--sk-stroke, #1d4ed8);
   stroke-dasharray: 1 1;
-  animation: sk-v3qky6-t0-draw 1500ms ease-in-out 0ms 1 normal both;
+  animation: sk-1ek2zig-t0-draw-fill 2000ms ease-in-out 0ms 1 normal both;
 }
-@keyframes sk-v3qky6-t0-draw {
+@keyframes sk-1ek2zig-t0-draw-fill {
   0% {
     stroke-dashoffset: 1;
+    fill-opacity: 0;
+  }
+  60% {
+    stroke-dashoffset: 0;
+    fill-opacity: 0;
   }
   100% {
     stroke-dashoffset: 0;
+    fill-opacity: 1;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-v3qky6 * {
+  .sk-1ek2zig * {
     animation: none;
   }
-  .sk-v3qky6-0 {
+  .sk-1ek2zig-0 {
     stroke-dashoffset: 0;
+    fill-opacity: 1;
   }
 }
-</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-v3qky6-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-v3qky6-0"/></g></svg>
+</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-1ek2zig-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-1ek2zig-0"/></g></svg>
 "
 `;
 
@@ -388,102 +404,6 @@ exports[`exporters.css × every preset > pulse × simple-stroke.svg 1`] = `
   }
 }
 </style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" class="sk-qlcd7t-0"/><path d="M36 64 L56 84 L88 40" class="sk-qlcd7t-0"/></g></svg>
-"
-`;
-
-exports[`exporters.css × every preset > stagger-draw × illustrator-classes.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-l0nhtc" role="img" aria-label="Logo"><style>
-.sk-l0nhtc-0 {
-  stroke: var(--sk-stroke, #E30613);
-  stroke-width: 2;
-  stroke-dasharray: 1 1;
-  animation: sk-l0nhtc-t0-stagger-draw 900ms ease-in-out 0ms 1 normal both;
-}
-.sk-l0nhtc-1 {
-  stroke: var(--sk-stroke, #1D1D1B);
-  stroke-dasharray: 1 1;
-  animation: sk-l0nhtc-t0-stagger-draw 900ms ease-in-out 150ms 1 normal both;
-}
-.sk-l0nhtc-2 {
-  stroke: var(--sk-stroke, #1D1D1B);
-  stroke-dasharray: 1 1;
-  animation: sk-l0nhtc-t0-stagger-draw 900ms ease-in-out 300ms 1 normal both;
-}
-.sk-l0nhtc-3 {
-  stroke: var(--sk-stroke, #2563eb);
-  stroke-width: 2;
-  stroke-dasharray: 1 1;
-  animation: sk-l0nhtc-t0-stagger-draw 900ms ease-in-out 450ms 1 normal both;
-}
-.sk-l0nhtc-4 {
-  stroke: var(--sk-stroke, #10b981);
-  stroke-dasharray: 1 1;
-  animation: sk-l0nhtc-t0-stagger-draw 900ms ease-in-out 600ms 1 normal both;
-}
-@keyframes sk-l0nhtc-t0-stagger-draw {
-  0% {
-    stroke-dashoffset: 1;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sk-l0nhtc * {
-    animation: none;
-  }
-  .sk-l0nhtc-0 {
-    stroke-dashoffset: 0;
-  }
-  .sk-l0nhtc-1 {
-    stroke-dashoffset: 0;
-  }
-  .sk-l0nhtc-2 {
-    stroke-dashoffset: 0;
-  }
-  .sk-l0nhtc-3 {
-    stroke-dashoffset: 0;
-  }
-  .sk-l0nhtc-4 {
-    stroke-dashoffset: 0;
-  }
-}
-</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" pathLength="1" class="sk-l0nhtc-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-l0nhtc-1"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" pathLength="1" class="sk-l0nhtc-2"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" pathLength="1" class="sk-l0nhtc-3"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" pathLength="1" class="sk-l0nhtc-4"/></svg>
-"
-`;
-
-exports[`exporters.css × every preset > stagger-draw × simple-stroke.svg 1`] = `
-"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-1o37z" role="img" aria-label="Logo"><style>
-.sk-1o37z-0 {
-  stroke: var(--sk-stroke, #1d4ed8);
-  stroke-dasharray: 1 1;
-  animation: sk-1o37z-t0-stagger-draw 900ms ease-in-out 0ms 1 normal both;
-}
-.sk-1o37z-1 {
-  stroke: var(--sk-stroke, #1d4ed8);
-  stroke-dasharray: 1 1;
-  animation: sk-1o37z-t0-stagger-draw 900ms ease-in-out 150ms 1 normal both;
-}
-@keyframes sk-1o37z-t0-stagger-draw {
-  0% {
-    stroke-dashoffset: 1;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sk-1o37z * {
-    animation: none;
-  }
-  .sk-1o37z-0 {
-    stroke-dashoffset: 0;
-  }
-  .sk-1o37z-1 {
-    stroke-dashoffset: 0;
-  }
-}
-</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" pathLength="1" class="sk-1o37z-0"/><path d="M36 64 L56 84 L88 40" pathLength="1" class="sk-1o37z-1"/></g></svg>
 "
 `;
 

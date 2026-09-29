@@ -4,7 +4,7 @@ import { clearDraft, DRAFT_KEY, readDraft, writeDraft } from "@/lib/draft";
 
 const shared = () => ({
   svg: '<svg viewBox="0 0 1 1"><path d="M0 0"/></svg>',
-  spec: applyPreset(createEmptySpec("x"), ["sk-0"], "draw"),
+  spec: applyPreset(createEmptySpec("x"), ["sk-0"], "draw-fill"),
 });
 
 beforeEach(() => window.localStorage.clear());

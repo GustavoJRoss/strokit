@@ -30,7 +30,7 @@ function source(shape: string): string {
 
 function animated(shape: string, iterations: number | "infinite" = 1): string {
   const { document } = importSvg(source(shape), { parser });
-  const spec = applyPreset(createEmptySpec(), ["sk-0"], "draw");
+  const spec = applyPreset(createEmptySpec(), ["sk-0"], "draw-fill");
   const track = spec.tracks[0];
   if (track) track.timing = { ...track.timing, duration: DURATION, easing: "linear", iterations };
   return exporters.css(compile(document, spec));
@@ -99,9 +99,10 @@ test.describe("pathLength spike", () => {
       await seek(browserPage, 0);
       expect(await ink(browserPage), "nothing is drawn at t=0").toBeLessThan(reference * 0.02);
 
-      await seek(browserPage, DURATION / 2);
+      // draw-fill finishes the stroke at 60% of the duration, so half of it is drawn at 30%.
+      await seek(browserPage, DURATION * 0.3);
       const half = (await ink(browserPage)) / reference;
-      expect(half, "about half is drawn at 50%").toBeGreaterThan(0.3);
+      expect(half, "about half is drawn at 30%").toBeGreaterThan(0.3);
       expect(half).toBeLessThan(0.7);
 
       await seek(browserPage, DURATION);

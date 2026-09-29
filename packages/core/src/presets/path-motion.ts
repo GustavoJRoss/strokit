@@ -24,7 +24,7 @@ export type Reveal = {
 };
 
 /**
- * The stroke being drawn by `draw`, `stagger-draw` and `draw-fill`.
+ * The stroke being drawn by `draw-fill`.
  *
  * By default it is the ARCHITECTURE §6 technique: `dasharray: 1 1`, `dashoffset: 1 → 0`.
  * From another start point `s`, a periodic dash `p (1-p)` grows from `0 1` to `1 0` with

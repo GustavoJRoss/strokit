@@ -197,14 +197,9 @@ export const en: Dictionary = {
     },
   },
   presets: {
-    draw: { label: "Draw", description: "The logo draws itself from start to end." },
     "draw-fill": {
       label: "Draw and fill",
       description: "Draws the outline, then fills it. Recommended for fill-only logos.",
-    },
-    "stagger-draw": {
-      label: "Staggered draw",
-      description: "Each layer draws with a delay after the previous one.",
     },
     comet: { label: "Comet", description: "A short dash travels around the outline in a loop." },
     yoyo: {
@@ -219,18 +214,13 @@ export const en: Dictionary = {
   },
   presetParams: {
     length: "Dash length",
-    step: "Interval",
-    order: "Order",
-    seed: "Seed (random)",
     fillAt: "Fill starts at",
     scale: "Maximum scale",
     minOpacity: "Minimum opacity",
     dash: "Dash",
     gap: "Gap",
   },
-  presetOptions: {
-    order: { document: "Document order", reverse: "Reverse", random: "Random" },
-  },
+  presetOptions: {},
   exportPanel: {
     title: "Export",
     hints: {
@@ -358,11 +348,11 @@ export const en: Dictionary = {
         {
           title: "Drop the SVG",
           text: "Drop your logo, pick a file or paste the markup. Everything is sanitized and nothing leaves your browser.",
-          alt: "A signature drawing itself",
+          alt: "A peak drawing itself, then filling in",
         },
         {
           title: "Pick and tweak",
-          text: "Seven stroke presets with duration, delay, easing and a custom curve. The preview is exactly the exported code.",
+          text: "Five stroke presets with duration, delay, easing and a custom curve. The preview is exactly the exported code.",
           alt: "Waves with dashes going back and forth",
         },
         {
@@ -479,7 +469,7 @@ export const en: Dictionary = {
     body: "These components came straight out of strokit's exporters and are compiled by this site's own Next.js. Not a single line was edited by hand.",
     create: "Create yours in the editor",
     cards: {
-      orbitaReact: "React · Staggered draw, looping",
+      orbitaReact: "React · Pulse, looping",
       ondaReact: "React · Comet, speed={2}",
       picoMotion: 'Motion · Back and forth, role="status"',
       orbitaMotion: "Motion · Draw and fill, loop",

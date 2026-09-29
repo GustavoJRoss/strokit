@@ -107,7 +107,7 @@ test("sections: Preset open, the rest closed with a summary; opening shows the f
   );
   const timing = page.getByRole("button", { name: /^Animação/ });
   await expect(timing).toHaveAttribute("aria-expanded", "false");
-  await expect(timing).toContainText("1500 ms · Acelerar e desacelerar · 1x");
+  await expect(timing).toContainText("2000 ms · Acelerar e desacelerar · 1x");
   await expect(page.getByRole("button", { name: /^Geral/ })).toContainText(
     "Traço automático desligado",
   );
@@ -115,7 +115,7 @@ test("sections: Preset open, the rest closed with a summary; opening shows the f
 
   await timing.click();
   await expect(page.getByRole("spinbutton", { name: "Duração" })).toBeVisible();
-  await expect(timing).not.toContainText("1500 ms ·");
+  await expect(timing).not.toContainText("2000 ms ·");
 });
 
 test("a closed Geral section still signals layers without stroke", async ({ page }) => {

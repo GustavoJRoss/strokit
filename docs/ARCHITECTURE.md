@@ -176,7 +176,7 @@ O `compile()` aplica `spec.layers` por cima do documento: monta a cor do traço 
 
 - `svg/layers.ts` → `layerTree()`: árvore de grupos para o painel de camadas.
 - `dom/nearest-point.ts` → `pickPathFraction()`/`pickNearestOutline()`/`pointAtFraction()`: o clique no preview vira fração do contorno. Trabalha sobre qualquer objeto com a forma de `SVGGeometryElement`, testado com geometria sintética.
-- `spec/reconcile.ts` → `reconcileSpec()`: ao editar o markup (RF16), mantém tracks e edições dos ids que continuam existindo, remove os que sumiram e aplica `draw` aos novos.
+- `spec/reconcile.ts` → `reconcileSpec()`: ao editar o markup (RF16), mantém tracks e edições dos ids que continuam existindo, remove os que sumiram e aplica o preset padrão (`draw-fill`) aos novos.
 
 ### Preview
 
@@ -202,9 +202,9 @@ Definir `pathLength="1"` em cada elemento animado faz `stroke-dasharray` e `stro
 
 - elimina medição com `getTotalLength()` para gerar código;
 - torna o CSS exportado **independente de escala e responsivo**;
-- deixa os presets triviais (`draw`: `dasharray: 1 1; dashoffset 1 → 0`).
+- deixa os presets triviais (`draw-fill`: `dasharray: 1 1; dashoffset 1 → 0`).
 
-**Resultado do spike (Fase 1):** `e2e/path-length.spec.ts` mede a "tinta" de `rect`, `circle`, `ellipse`, `line`, `polyline`, `polygon` e `path` em t=0, 50% e 100% do `draw`. Passa em Chromium, Firefox e WebKit (Playwright). O mesmo teste falha se o `pathLength` for removido, ou seja, ele detecta o problema. **Não é preciso converter formas em `<path>`.** Falta só a confirmação manual no Safari real (galeria em `apps/web/e2e/.spike/index.html`).
+**Resultado do spike (Fase 1):** `e2e/path-length.spec.ts` mede a "tinta" de `rect`, `circle`, `ellipse`, `line`, `polyline`, `polygon` e `path` em t=0, 30% (metade do traço, já que o `draw-fill` termina o contorno aos 60%) e 100% do `draw-fill`. Passa em Chromium, Firefox e WebKit (Playwright). O mesmo teste falha se o `pathLength` for removido, ou seja, ele detecta o problema. **Não é preciso converter formas em `<path>`.** Falta só a confirmação manual no Safari real (galeria em `apps/web/e2e/.spike/index.html`).
 
 **Risco (original):** historicamente o Safari teve inconsistências com `pathLength` em alguns elementos básicos (`rect`, `circle`). Na Fase 1, validar em Safari real. Plano B: converter formas básicas em `<path>` na normalização e/ou usar `length` medido para emitir valores absolutos. O `DrawableElement.length` já existe para isso.
 
@@ -359,6 +359,7 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-26 | Caminhos de binário resolvidos via `require.resolve` (`typescript/package.json`, `serve/package.json`) em vez de `node_modules/.bin/…` fixo | O pnpm cria um `node_modules/.bin` por pacote; o npm eleva (hoist) os binários dos workspaces para a raiz do repo. `tsx-typecheck.test.ts` e `playwright.config.ts` dependiam do caminho antigo |
 | 2026-09-26 | `allowBuilds`/`minimumReleaseAgeExclude` do pnpm não têm equivalente direto no npm: scripts de instalação de dependências nativas (ex.: `sharp`) rodam normalmente | O npm não tem o modelo "nega por padrão" de scripts de instalação do pnpm; nenhuma dependência do projeto exige isso hoje (`next.config.ts` usa `images.unoptimized: true`), mas fica registrado como diferença de comportamento |
 | 2026-09-26 | `apps/web` passa a usar o diretório `src/` do Next (`app/`, `components/`, `lib/`, `store/` dentro de `apps/web/src/`; `package.json`, `next.config.ts`, `public/`, `e2e/` e `test/` continuam na raiz do pacote), a pedido do autor | Padrão oficial do Next para separar código-fonte de configuração/artefatos. O apontamento anterior ("estrutura de pastas não muda") ficou superado por este pedido posterior. `tsconfig.json` (`paths: "@/*": ["./src/*"]`) e `vitest.config.ts` (alias `@`) passam a apontar para `./src`; `components.json` (`css`) e `test/generated-exports.test.ts` (caminhos dos arquivos gerados) seguem junto |
+| 2026-09-28 | Presets `draw` e `stagger-draw` removidos (resultado visual fraco); `draw-fill` passa a ser o preset padrão (`DEFAULT_PRESET`) de import e de camadas novas; `util/random.ts` e os params `step`/`order`/`seed` saem junto | `draw-fill` cobre o desenho do contorno e também logos só com preenchimento. Links e projetos `.strokit` antigos que usam `draw`/`stagger-draw` deixam de validar (`invalid-spec`); as snapshots de exportadores foram regeneradas conscientemente |
 
 ### Pendências abertas (decidir até a fase indicada)
 

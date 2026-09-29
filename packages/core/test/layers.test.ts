@@ -51,7 +51,7 @@ describe("colorSchema", () => {
 });
 
 describe("layer overrides", () => {
-  const base = applyPreset(createEmptySpec(), ["sk-0", "sk-1"], "draw");
+  const base = applyPreset(createEmptySpec(), ["sk-0", "sk-1"], "draw-fill");
 
   it("leaves `layers` out of specs without edits", () => {
     expect("layers" in base).toBe(false);

@@ -71,7 +71,7 @@ describe("editor store", () => {
   it("applies presets to the selection, or to everything without one", () => {
     store().loadSvg(example("orbita.svg"), "Órbita");
     store().select("sk-2");
-    store().applyPresetToSelection("draw");
+    store().applyPresetToSelection("comet");
     expect(store().spec.tracks.map((track) => track.targets)).toEqual([
       ["sk-0", "sk-1", "sk-3"],
       ["sk-2"],
@@ -79,7 +79,7 @@ describe("editor store", () => {
     expect(selectActiveTrack(store())?.id).toBe("track-1");
 
     store().clearSelection();
-    store().applyPresetToSelection("draw");
+    store().applyPresetToSelection("comet");
     expect(store().spec.tracks).toHaveLength(1);
     expect(selectActiveTrack(store())?.targets).toHaveLength(4);
   });
@@ -195,7 +195,7 @@ describe("selectors", () => {
     const result = store().replaceSvg(markup);
     expect(result.removed).toEqual(["sk-3"]);
     expect(store().doc?.elements).toHaveLength(3);
-    expect(store().spec.tracks.map((track) => track.preset)).toEqual(["draw"]);
+    expect(store().spec.tracks.map((track) => track.preset)).toEqual(["draw-fill"]);
     expect(store().spec.layers).toBeUndefined();
     expect(store().selection).toEqual([]);
 

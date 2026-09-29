@@ -16,7 +16,7 @@ import { fixture, parser } from "./helpers";
 function shared() {
   const { document } = importSvg(fixture("illustrator-classes.svg"), { parser });
   let spec = applyPreset(createEmptySpec("Onda"), ["sk-0", "sk-1"], "yoyo");
-  spec = applyPreset(spec, ["sk-2"], "stagger-draw");
+  spec = applyPreset(spec, ["sk-2"], "comet");
   spec = updateTrackTiming(spec, "track-1", { easing: { cubicBezier: [0.2, -0.4, 0.3, 1.4] } });
   return { document, value: { svg: document.raw, spec } };
 }

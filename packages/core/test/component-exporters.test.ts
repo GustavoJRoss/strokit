@@ -49,8 +49,8 @@ describe("exporters.react", () => {
   });
 
   it("drives speed, loop and pause through CSS custom properties", () => {
-    const output = exportReact(compiledFor("simple-stroke.svg", "draw"));
-    expect(output).toContain("calc(1500ms / var(--sk-speed, 1))");
+    const output = exportReact(compiledFor("simple-stroke.svg", "draw-fill"));
+    expect(output).toContain("calc(2000ms / var(--sk-speed, 1))");
     expect(output).toContain("var(--sk-iterations, 1)");
     expect(output).toContain("animation-play-state: var(--sk-play-state, running);");
   });

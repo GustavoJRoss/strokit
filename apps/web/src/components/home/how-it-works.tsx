@@ -4,13 +4,13 @@ import type { ComponentType } from "react";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils";
 import { AnelComet } from "./generated/AnelComet";
-import { AssinaturaDraw } from "./generated/AssinaturaDraw";
 import { OndaYoyo } from "./generated/OndaYoyo";
+import { PicoDrawFill } from "./generated/PicoDrawFill";
 import { Reveal } from "./reveal";
 import { SectionHeading } from "./section-heading";
 
 const VISUALS: ComponentType<{ size?: number | string; label?: string }>[] = [
-  AssinaturaDraw,
+  PicoDrawFill,
   OndaYoyo,
   AnelComet,
 ];

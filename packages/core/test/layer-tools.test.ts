@@ -127,14 +127,14 @@ describe("reconcileSpec", () => {
     expect(result.removed).toEqual([]);
     expect(result.spec.tracks.map((track) => [track.preset, track.targets])).toEqual([
       ["comet", ["sk-0", "sk-1"]],
-      ["draw", ["sk-2"]],
+      ["draw-fill", ["sk-2"]],
     ]);
     expect(result.spec.tracks[0]?.timing.duration).toBe(999);
     expect(result.spec.global.autoStroke.enabled).toBe(false);
   });
 
   it("drops what disappeared and turns auto-stroke on for new fill-only elements", () => {
-    let spec = applyPreset(createEmptySpec(), ["sk-0", "sk-1", "sk-2"], "draw");
+    let spec = applyPreset(createEmptySpec(), ["sk-0", "sk-1", "sk-2"], "draw-fill");
     spec = updateLayers(spec, ["sk-2"], { hidden: true });
     const result = reconcileSpec(spec, svg('<path d="M0 0 L1 1" stroke="red"/>'));
     expect(result.removed).toEqual(["sk-1", "sk-2"]);

@@ -122,7 +122,7 @@ test("the playground renders exactly the CSS it shows", async ({ page }) => {
   const previewCss = () =>
     preview.evaluate((host) => host.shadowRoot?.querySelector("svg > style")?.textContent ?? null);
 
-  await expect.poll(shownCss).toContain("stagger-draw");
+  await expect.poll(shownCss).toContain("draw-fill");
   await page.getByRole("radio", { name: "Vai e vem" }).click();
   await expect.poll(shownCss).toContain("-yoyo");
   expect(await previewCss()).toBe(await shownCss());
@@ -135,7 +135,7 @@ test.describe("gallery", () => {
   test("every card animates with CSS and links to a real .svg", async ({ page }) => {
     await page.goto("/");
     const cards = page.locator('[data-testid^="gallery-"]');
-    await expect(cards).toHaveCount(7);
+    await expect(cards).toHaveCount(5);
     for (const card of await cards.all()) {
       const running = await card.evaluate(
         (element) =>

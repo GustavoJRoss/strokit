@@ -198,15 +198,10 @@ export const es: Dictionary = {
     },
   },
   presets: {
-    draw: { label: "Dibujar", description: "El logo se dibuja de principio a fin." },
     "draw-fill": {
       label: "Dibujar y rellenar",
       description:
         "Dibuja el contorno y después lo rellena. Recomendado para logos solo con relleno.",
-    },
-    "stagger-draw": {
-      label: "Dibujar en secuencia",
-      description: "Cada capa se dibuja con un retraso respecto a la anterior.",
     },
     comet: { label: "Cometa", description: "Un trazo corto recorre el contorno en bucle." },
     yoyo: {
@@ -221,18 +216,13 @@ export const es: Dictionary = {
   },
   presetParams: {
     length: "Longitud del trazo",
-    step: "Intervalo",
-    order: "Orden",
-    seed: "Semilla (aleatoria)",
     fillAt: "Inicio del relleno",
     scale: "Escala máxima",
     minOpacity: "Opacidad mínima",
     dash: "Trazo",
     gap: "Espacio",
   },
-  presetOptions: {
-    order: { document: "Del documento", reverse: "Inversa", random: "Aleatoria" },
-  },
+  presetOptions: {},
   exportPanel: {
     title: "Exportar",
     hints: {
@@ -365,11 +355,11 @@ export const es: Dictionary = {
         {
           title: "Arrastra el SVG",
           text: "Suelta el logo, elige un archivo o pega el markup. Todo se sanitiza y nada sale de tu navegador.",
-          alt: "Una firma dibujándose",
+          alt: "Un pico dibujándose y rellenándose",
         },
         {
           title: "Elige y ajusta",
-          text: "Siete presets de trazo, con duración, retraso, easing y curva personalizada. El preview es exactamente el código exportado.",
+          text: "Cinco presets de trazo, con duración, retraso, easing y curva personalizada. El preview es exactamente el código exportado.",
           alt: "Ondas con trazos que van y vuelven",
         },
         {
@@ -494,7 +484,7 @@ export const es: Dictionary = {
     body: "Estos componentes salieron directamente de los exportadores de strokit y los compila el propio Next.js de este sitio. Ninguna línea se editó a mano.",
     create: "Crea el tuyo en el editor",
     cards: {
-      orbitaReact: "React · Dibujar en secuencia, en bucle",
+      orbitaReact: "React · Pulsar, en bucle",
       ondaReact: "React · Cometa, speed={2}",
       picoMotion: 'Motion · Ida y vuelta, role="status"',
       orbitaMotion: "Motion · Dibujar y rellenar, loop",

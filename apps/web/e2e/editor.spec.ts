@@ -36,12 +36,12 @@ test("example → change duration → CSS changes → copy; preview equals expor
   await loadExample(page, "Órbita");
 
   const code = page.getByTestId("export-code");
-  await expect(code).toContainText("1500ms");
+  await expect(code).toContainText("2000ms");
 
   await openSection(page, "Animação");
   await page.getByRole("spinbutton", { name: "Duração" }).fill("2400");
   await expect(code).toContainText("2400ms");
-  await expect(code).not.toContainText("1500ms");
+  await expect(code).not.toContainText("2000ms");
 
   const { preview, exported } = await styles(page);
   expect(preview).not.toBeNull();
@@ -135,7 +135,7 @@ test.describe("fill-only logo (acceptance, phase 3)", () => {
   test("draw-fill draws the auto-stroke outline, then fills", async ({ page }) => {
     await page.goto("/editor");
     await loadExample(page, "Pico");
-    await page.getByRole("button", { name: /Desenhar e preencher/ }).click();
+    // draw-fill is the default preset of a fresh import.
     await expect(page.getByTestId("export-code")).toContainText("fill-opacity");
     await expect(page.getByText(/camadas? sem traço/)).toHaveCount(0);
 

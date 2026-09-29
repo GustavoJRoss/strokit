@@ -2,7 +2,7 @@
 
 ## O que é
 
-Ferramenta web **code-first** para devs React criarem animações de logo e telas de carregamento a partir de um SVG. O usuário arrasta a logo, escolhe um preset (desenhar, cometa, vai-e-vem, stagger, desenhar-e-preencher…), ajusta parâmetros com sliders e **exporta código pronto**: CSS puro, componente React tipado ou componente Motion.
+Ferramenta web **code-first** para devs React criarem animações de logo e telas de carregamento a partir de um SVG. O usuário arrasta a logo, escolhe um preset (desenhar-e-preencher, cometa, vai-e-vem, formigas marchando, pulsar), ajusta parâmetros com sliders e **exporta código pronto**: CSS puro, componente React tipado ou componente Motion.
 
 Diferencial: não é uma timeline genérica para designers. É uma ferramenta que gera **código limpo, sem runtime, que respeita tokens do tema e `prefers-reduced-motion`**, distribuível via registry do shadcn.
 

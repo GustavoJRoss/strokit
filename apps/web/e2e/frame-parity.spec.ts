@@ -41,9 +41,7 @@ async function browserState(page: Page, time: number) {
 }
 
 const PRESETS = [
-  ["Desenhar", "draw"],
   ["Desenhar e preencher", "draw-fill"],
-  ["Desenhar em sequência", "stagger-draw"],
   ["Cometa", "comet"],
   ["Vai e vem", "yoyo"],
   ["Formigas marchando", "march"],
@@ -54,8 +52,7 @@ for (const [preset, presetId] of PRESETS) {
   test(`video frames match the CSS preview: ${preset}`, async ({ page }) => {
     await page.goto("/editor");
     await loadExample(page, "Órbita");
-    // Preset cards are named "<label> <description>"; descriptions start with a capital letter,
-    // which tells "Desenhar" apart from "Desenhar e preencher".
+    // Preset cards are named "<label> <description>"; descriptions start with a capital letter.
     await page.getByRole("button", { name: new RegExp(`^${preset} [A-ZÀ-Ú]`) }).click();
     const compiled = await compiledFromDraft(page, presetId);
 

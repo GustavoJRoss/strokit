@@ -37,8 +37,8 @@ import { shareHash } from "@/lib/project";
  */
 export function Playground() {
   const [exampleId, setExampleId] = useState("orbita");
-  const [preset, setPreset] = useState<PresetId>("stagger-draw");
-  const [duration, setDuration] = useState(getPreset("stagger-draw").defaults.timing.duration);
+  const [preset, setPreset] = useState<PresetId>("draw-fill");
+  const [duration, setDuration] = useState(getPreset("draw-fill").defaults.timing.duration);
   const [themed, setThemed] = useState(true);
   const [repeat, setRepeat] = useState(true);
   const [markups, setMarkups] = useState<Record<string, string>>({});

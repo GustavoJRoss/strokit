@@ -10,7 +10,7 @@ import { fixture, parser } from "./helpers";
 function exportFixture(
   name: string,
   configure?: (spec: ReturnType<typeof createEmptySpec>) => void,
-  preset: PresetId = "draw",
+  preset: PresetId = "draw-fill",
 ) {
   const { document } = importSvg(fixture(name), { parser });
   const spec = applyPreset(
@@ -26,7 +26,7 @@ function styleOf(svg: string): string {
   return /<style>([\s\S]*)<\/style>/.exec(svg)?.[1] ?? "";
 }
 
-describe("exporters.css × draw", () => {
+describe("exporters.css × draw-fill", () => {
   it.each(["simple-stroke.svg", "illustrator-classes.svg"])("%s", (name) => {
     const output = exportFixture(name);
     expect(output).toMatchSnapshot();
@@ -52,7 +52,7 @@ describe("exporters.css × draw", () => {
 
   it("keeps element ids for the editor preview when asked", () => {
     const { document } = importSvg(fixture("simple-stroke.svg"), { parser });
-    const spec = applyPreset(createEmptySpec(), ["sk-0"], "draw");
+    const spec = applyPreset(createEmptySpec(), ["sk-0"], "draw-fill");
     const output = exportCss(compile(document, spec), { includeElementIds: true });
     expect(output).toContain('data-sk-id="sk-0"');
     expect(output).toContain('data-sk-id="sk-1"');
@@ -73,7 +73,7 @@ describe("exporters.css × draw", () => {
       }),
     );
     expect(css).toMatch(
-      /animation: sk-[0-9a-z]+-t0-draw 900ms cubic-bezier\(0\.3333, 0, 0\.2, 1\) 250ms infinite alternate both;/,
+      /animation: sk-[0-9a-z]+-t0-draw-fill 900ms cubic-bezier\(0\.3333, 0, 0\.2, 1\) 250ms infinite alternate both;/,
     );
   });
 
@@ -90,11 +90,9 @@ describe("exporters.css × draw", () => {
 });
 
 describe("exporters.css × every preset", () => {
-  const cases = presetIds
-    .filter((id) => id !== "draw")
-    .flatMap((id) =>
-      ["simple-stroke.svg", "illustrator-classes.svg"].map((name) => [id, name] as const),
-    );
+  const cases = presetIds.flatMap((id) =>
+    ["simple-stroke.svg", "illustrator-classes.svg"].map((name) => [id, name] as const),
+  );
 
   it.each(cases)("%s × %s", (preset, name) => {
     const output = exportFixture(

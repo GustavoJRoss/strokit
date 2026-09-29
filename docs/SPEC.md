@@ -28,16 +28,14 @@ Devs front-end React/Next que precisam de um loader ou reveal de marca e não qu
 
 | Preset | Efeito | Técnica |
 |---|---|---|
-| `draw` | A logo se desenha do início ao fim | `dasharray: 1 1`, `dashoffset: 1 → 0` com `pathLength="1"` |
 | `comet` | Um traço curto percorre o contorno em loop | `dasharray: L (1-L)`, `dashoffset: 1 → 0`, `infinite` |
 | `yoyo` | Riscos que vão e voltam (o caso da tela de loading) | `comet` com `animation-direction: alternate` |
-| `stagger-draw` | Cada path desenha com atraso incremental | `draw` + `animation-delay: i * stagger` |
-| `draw-fill` | Desenha o contorno e depois preenche | keyframes combinando `dashoffset` e `fill-opacity` |
+| `draw-fill` | Desenha o contorno e depois preenche (preset padrão) | `dasharray: 1 1`, `dashoffset: 1 → 0` com `pathLength="1"`, combinado com `fill-opacity` |
 | `pulse` | Estado de espera: opacidade/escala suave | `opacity` e `transform: scale` com `transform-box: fill-box` |
 | `march` | "Formigas marchando" contínuo | `dasharray` curto repetido + `dashoffset` linear infinito |
 
 Parâmetros comuns: `duration` (ms), `delay` (ms), `easing` (presets + cubic-bezier customizado), `iterations` (número ou infinito), `direction`, `strokeWidth`, `color` (token ou valor).
-Parâmetros específicos: `comet.length` (0–1), `stagger.step` (ms), `stagger.order` (documento, reverso, aleatório com seed), `draw-fill.fillAt` (0–1 do tempo total), `march.dash` e `march.gap`.
+Parâmetros específicos: `comet.length` (0–1), `draw-fill.fillAt` (0–1 do tempo total), `march.dash` e `march.gap`.
 
 ## 5. Requisitos funcionais
 

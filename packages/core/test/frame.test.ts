@@ -127,21 +127,21 @@ describe("values", () => {
 
 describe("sampleAnimation / renderFrame", () => {
   it("draws from nothing to the full stroke", () => {
-    const animation = compiled("draw", { easing: "linear", duration: 1000 });
+    const animation = compiled("draw-fill", { easing: "linear", duration: 1000 });
     expect(sampleAnimation(animation, 0).get("sk-0")).toMatchObject({
       "stroke-dashoffset": "1",
       "stroke-dasharray": "1 1",
     });
-    expect(sampleAnimation(animation, 250).get("sk-0")?.["stroke-dashoffset"]).toBe("0.75");
+    expect(sampleAnimation(animation, 300).get("sk-0")?.["stroke-dashoffset"]).toBe("0.5");
     expect(sampleAnimation(animation, 5000).get("sk-0")?.["stroke-dashoffset"]).toBe("0");
   });
 
   it("renders a static SVG with inline state and no animation", () => {
-    const animation = compiled("draw", { easing: "linear", duration: 1000 });
-    const svg = renderFrame(animation, 500, { width: 400, height: 400, strokeColor: "#ffffff" });
+    const animation = compiled("draw-fill", { easing: "linear", duration: 1000 });
+    const svg = renderFrame(animation, 300, { width: 400, height: 400, strokeColor: "#ffffff" });
     expect(svg).not.toMatch(/<style|animation|@keyframes|data-sk-id/);
     expect(svg).toContain(
-      'style="stroke:var(--sk-stroke, #1d4ed8);stroke-dasharray:1 1;stroke-dashoffset:0.5"',
+      'style="stroke:var(--sk-stroke, #1d4ed8);stroke-dasharray:1 1;stroke-dashoffset:0.5;fill-opacity:0"',
     );
     expect(svg).toContain('width="400" height="400"');
     expect(svg).toContain('style="--sk-stroke:#ffffff"');
@@ -162,10 +162,10 @@ describe("sampleAnimation / renderFrame", () => {
   });
 
   it("measures one full pass: finite runs to the end, infinite shows one (or two alternate) cycles", () => {
-    expect(animationLength(compiled("draw", { duration: 1500, delay: 200 }))).toBe(1700);
-    expect(animationLength(compiled("draw", { duration: 1000, iterations: 3 }))).toBe(3000);
+    expect(animationLength(compiled("draw-fill", { duration: 1500, delay: 200 }))).toBe(1700);
+    expect(animationLength(compiled("draw-fill", { duration: 1000, iterations: 3 }))).toBe(3000);
     expect(animationLength(compiled("comet", { duration: 1600 }))).toBe(1600);
     expect(animationLength(compiled("yoyo", { duration: 1200 }))).toBe(2400);
-    expect(animationLength(compiled("draw", { duration: 50 }))).toBe(100);
+    expect(animationLength(compiled("draw-fill", { duration: 50 }))).toBe(100);
   });
 });

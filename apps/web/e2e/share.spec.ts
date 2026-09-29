@@ -49,7 +49,7 @@ test("a broken link shows a friendly error and an empty editor", async ({ page }
 test("project file: download .strokit.json and open it again", async ({ page, browser }) => {
   await page.goto("/editor");
   await loadExample(page, "Pico");
-  await page.getByRole("button", { name: /Desenhar e preencher/ }).click();
+  await page.getByRole("button", { name: /Cometa/ }).click();
   const before = await exportedCss(page);
 
   await page.getByRole("button", { name: "Compartilhar" }).click();
@@ -64,7 +64,7 @@ test("project file: download .strokit.json and open it again", async ({ page, br
   await fresh
     .getByTestId("project-input")
     .setInputFiles({ name: download.suggestedFilename(), mimeType: "application/json", buffer });
-  await expect(fresh.getByRole("button", { name: /sk-0, Desenhar e preencher/ })).toBeVisible();
+  await expect(fresh.getByRole("button", { name: /sk-0, Cometa/ })).toBeVisible();
   expect(await exportedCss(fresh)).toBe(before);
 });
 

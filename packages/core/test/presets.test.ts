@@ -5,7 +5,6 @@ import { cometPreset } from "../src/presets/comet";
 import { drawFillPreset } from "../src/presets/draw-fill";
 import { fitPattern, marchPreset } from "../src/presets/march";
 import { pulsePreset } from "../src/presets/pulse";
-import { staggerDrawPreset } from "../src/presets/stagger-draw";
 import { yoyoPreset } from "../src/presets/yoyo";
 import { applyPreset, createEmptySpec } from "../src/spec/defaults";
 import { parseSpec } from "../src/spec/migrate";
@@ -13,7 +12,6 @@ import type { Timing } from "../src/spec/timing";
 import { importSvg } from "../src/svg/import";
 import { serializeSvg } from "../src/svg/serialize";
 import type { DrawableElement } from "../src/svg/types";
-import { createRandom, shuffledIndices } from "../src/util/random";
 import { parser } from "./helpers";
 
 const element: DrawableElement = {
@@ -30,15 +28,7 @@ function context<P>(params: P, timing: Timing, index = 0, total = 1) {
 
 describe("preset registry", () => {
   it("registers every MVP preset, in editor order", () => {
-    expect(presetIds).toEqual([
-      "draw",
-      "draw-fill",
-      "stagger-draw",
-      "comet",
-      "yoyo",
-      "march",
-      "pulse",
-    ]);
+    expect(presetIds).toEqual(["draw-fill", "comet", "yoyo", "march", "pulse"]);
   });
 
   it.each(presetIds)("%s: defaults satisfy its schema and a spec with it validates", (id) => {
@@ -71,50 +61,6 @@ describe("yoyo", () => {
       "-0.75",
     ]);
     expect(output.rule.animations[0]?.direction).toBe("alternate");
-  });
-});
-
-describe("stagger-draw", () => {
-  const params = { step: 100, order: "document" as const, seed: 1 };
-  const once = { ...staggerDrawPreset.defaults.timing, duration: 800, delay: 50 };
-
-  it("uses animation-delay when it plays once", () => {
-    const delays = [0, 1, 2].map(
-      (index) =>
-        staggerDrawPreset.compile(context(params, once, index, 3)).rule.animations[0]?.delay,
-    );
-    expect(delays).toEqual([50, 150, 250]);
-  });
-
-  it("supports reverse and seeded random order", () => {
-    const reverse = [0, 1, 2].map(
-      (index) =>
-        staggerDrawPreset.compile(context({ ...params, order: "reverse" as const }, once, index, 3))
-          .rule.animations[0]?.delay,
-    );
-    expect(reverse).toEqual([250, 150, 50]);
-    const random = (seed: number) =>
-      [0, 1, 2, 3].map(
-        (index) =>
-          staggerDrawPreset.compile(
-            context({ ...params, order: "random" as const, seed }, once, index, 4),
-          ).rule.animations[0]?.delay,
-      );
-    expect(random(7)).toEqual(random(7));
-    expect([...random(7)].sort((a = 0, b = 0) => a - b)).toEqual([50, 150, 250, 350]);
-    expect(random(7)).not.toEqual(random(8));
-  });
-
-  it("embeds the offset in keyframes when it loops, so every cycle stays in sync", () => {
-    const loop: Timing = { ...once, iterations: "infinite" };
-    const first = staggerDrawPreset.compile(context(params, loop, 0, 3));
-    const last = staggerDrawPreset.compile(context(params, loop, 2, 3));
-    // cycle = 800 + 2·100 = 1000ms for every element
-    expect(first.rule.animations[0]).toMatchObject({ duration: 1000, delay: 50 });
-    expect(last.rule.animations[0]).toMatchObject({ duration: 1000, delay: 50 });
-    expect(first.keyframes[0]?.stops.map((stop) => stop.offset)).toEqual([0, 0.8, 1]);
-    expect(last.keyframes[0]?.stops.map((stop) => stop.offset)).toEqual([0, 0.2, 1]);
-    expect(first.keyframes[0]?.name).not.toBe(last.keyframes[0]?.name);
   });
 });
 
@@ -179,22 +125,5 @@ describe("march", () => {
       "-0.1",
     ]);
     expect(output.rule.reducedMotion).toEqual({});
-  });
-});
-
-describe("random", () => {
-  it("is deterministic per seed and stays in [0, 1)", () => {
-    const a = createRandom(42);
-    const b = createRandom(42);
-    const values = Array.from({ length: 50 }, () => a());
-    expect(values).toEqual(Array.from({ length: 50 }, () => b()));
-    expect(values.every((value) => value >= 0 && value < 1)).toBe(true);
-  });
-
-  it("shuffles into a permutation", () => {
-    expect([...shuffledIndices(10, 3)].sort((x, y) => x - y)).toEqual([
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-    ]);
-    expect(shuffledIndices(0, 3)).toEqual([]);
   });
 });

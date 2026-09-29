@@ -11,17 +11,17 @@ const load = (name: string) => importSvg(fixture(name), { parser }).document;
 describe("compile", () => {
   it("produces rules, namespaced keyframes and pathLength for every target", () => {
     const document = load("simple-stroke.svg");
-    const spec = applyPreset(createEmptySpec(), ["sk-0", "sk-1"], "draw");
+    const spec = applyPreset(createEmptySpec(), ["sk-0", "sk-1"], "draw-fill");
     const compiled = compile(document, spec);
 
     expect(compiled.id).toMatch(/^sk-[0-9a-z]+$/);
-    expect(compiled.keyframes.map((definition) => definition.name)).toEqual(["t0-draw"]);
+    expect(compiled.keyframes.map((definition) => definition.name)).toEqual(["t0-draw-fill"]);
     expect(compiled.rules).toHaveLength(2);
     expect(compiled.rules[0]).toMatchObject({
       elementId: "sk-0",
       trackId: "track-0",
       props: { stroke: "var(--sk-stroke, #1d4ed8)", "stroke-dasharray": "1 1" },
-      animations: [{ keyframes: "t0-draw", duration: 1500 }],
+      animations: [{ keyframes: "t0-draw-fill", duration: 2000 }],
     });
     expect(serializeSvg(compiled.root)).toContain('data-sk-id="sk-0" pathLength="1"');
     expect(compiled.warnings).toEqual([]);
@@ -31,14 +31,14 @@ describe("compile", () => {
 
   it("is deterministic and changes id when the spec changes", () => {
     const document = load("simple-stroke.svg");
-    const spec = applyPreset(createEmptySpec(), ["sk-0"], "draw");
+    const spec = applyPreset(createEmptySpec(), ["sk-0"], "draw-fill");
     expect(compile(document, spec).id).toBe(compile(document, spec).id);
     expect(compile(document, { ...spec, name: "outra" }).id).not.toBe(compile(document, spec).id);
   });
 
   it("warns about fill-only elements when auto-stroke is off", () => {
     const document = load("fill-only.svg");
-    const compiled = compile(document, applyPreset(createEmptySpec(), ["sk-0"], "draw"));
+    const compiled = compile(document, applyPreset(createEmptySpec(), ["sk-0"], "draw-fill"));
     expect(compiled.warnings).toEqual([
       { code: "missing-stroke", trackId: "track-0", elementId: "sk-0" },
     ]);
@@ -47,7 +47,7 @@ describe("compile", () => {
 
   it("adds a stroke from the fill color when auto-stroke is on (RF4)", () => {
     const document = load("fill-only.svg");
-    const spec = applyPreset(createEmptySpec(), ["sk-0", "sk-1"], "draw");
+    const spec = applyPreset(createEmptySpec(), ["sk-0", "sk-1"], "draw-fill");
     spec.global.autoStroke = { enabled: true, width: 3 };
     const compiled = compile(document, spec);
     expect(compiled.warnings).toEqual([]);
@@ -59,7 +59,10 @@ describe("compile", () => {
 
   it("skips targets that do not exist in the document", () => {
     const document = load("simple-stroke.svg");
-    const compiled = compile(document, applyPreset(createEmptySpec(), ["sk-9", "sk-1"], "draw"));
+    const compiled = compile(
+      document,
+      applyPreset(createEmptySpec(), ["sk-9", "sk-1"], "draw-fill"),
+    );
     expect(compiled.rules.map((rule) => rule.elementId)).toEqual(["sk-1"]);
     expect(compiled.warnings).toEqual([
       { code: "unknown-target", trackId: "track-0", elementId: "sk-9" },
@@ -74,7 +77,7 @@ describe("canonical hashing", () => {
       '{"a":{"c":2,"d":[3,{"e":2,"f":1}]},"b":1}',
     );
     const document = load("simple-stroke.svg");
-    const spec = applyPreset(createEmptySpec(), ["sk-0"], "draw");
+    const spec = applyPreset(createEmptySpec(), ["sk-0"], "draw-fill");
     const reverseKeys = (value: unknown): unknown =>
       Array.isArray(value)
         ? value.map(reverseKeys)

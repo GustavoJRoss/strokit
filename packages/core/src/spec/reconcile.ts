@@ -1,5 +1,5 @@
 import type { SvgDocument } from "../svg/types";
-import { applyPreset } from "./defaults";
+import { applyPreset, DEFAULT_PRESET } from "./defaults";
 import { pickLayers } from "./layers";
 import type { AnimationSpec } from "./schema";
 
@@ -33,7 +33,7 @@ export function reconcileSpec(spec: AnimationSpec, document: SvgDocument): Recon
 
   let next = pickLayers({ ...spec, tracks }, exists);
   if (added.length > 0) {
-    next = applyPreset(next, added, "draw");
+    next = applyPreset(next, added, DEFAULT_PRESET);
     const needsStroke = document.elements.some(
       (element) => added.includes(element.id) && !element.hasStroke,
     );
