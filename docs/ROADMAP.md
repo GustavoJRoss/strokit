@@ -51,7 +51,7 @@ Regra: uma fase por vez. Ao terminar, rode `npm run lint && npm run typecheck &&
 
 ## Fase 3 — Presets completos e auto-stroke
 
-- [x] `comet`, `yoyo`, `stagger-draw`, `draw-fill`, `pulse`, `march` (`draw` e `stagger-draw` foram removidos em 2026-09-28, ver "Decisões" na ARCHITECTURE)
+- [x] `comet`, `yoyo`, `stagger-draw`, `draw-fill`, `pulse`, `march`, `fade` (`draw` e `stagger-draw` foram removidos em 2026-09-28, ver "Decisões" na ARCHITECTURE)
 - [x] Auto-stroke para elementos só com fill (RF4), com aviso na UI quando um preset exige stroke
 - [x] Easing: presets + editor de cubic-bezier com curva visual
 - [x] ~~`stagger.order` com seed determinística~~ (removido junto com `stagger-draw`)

@@ -212,8 +212,14 @@ export const en: Dictionary = {
       description: "A short dashed line that keeps moving along the outline.",
     },
     pulse: { label: "Pulse", description: "Waiting state: soft opacity and scale." },
+    fade: {
+      label: "Fade in",
+      description: "The whole piece fades in, sliding in the chosen direction.",
+    },
   },
   presetParams: {
+    direction: "Direction",
+    distance: "Distance",
     length: "Dash length",
     fillAt: "Fill starts at",
     scale: "Maximum scale",
@@ -221,7 +227,9 @@ export const en: Dictionary = {
     dash: "Dash",
     gap: "Gap",
   },
-  presetOptions: {},
+  presetOptions: {
+    direction: { up: "Up", down: "Down", left: "Left", right: "Right", none: "No movement" },
+  },
   exportPanel: {
     title: "Export",
     hints: {
@@ -488,6 +496,10 @@ export const en: Dictionary = {
     seo: {
       title: "Better sharing and search",
       body: "The site now shows a proper preview when shared (LinkedIn, WhatsApp) and is ready for Google indexing: sitemap, robots.txt and structured data.",
+    },
+    "fade-preset": {
+      title: "New preset: Fade in",
+      body: "The whole logo fades in, no outline, sliding up, down or sideways. You pick the direction and the distance.",
     },
     "leaner-presets": {
       title: "Leaner presets",

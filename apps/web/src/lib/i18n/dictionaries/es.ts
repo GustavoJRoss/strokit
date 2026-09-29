@@ -214,8 +214,14 @@ export const es: Dictionary = {
       description: "Un discontinuo corto que avanza sin parar por el contorno.",
     },
     pulse: { label: "Pulsar", description: "Estado de espera: opacidad y escala suaves." },
+    fade: {
+      label: "Aparecer",
+      description: "La pieza entera aparece con fundido, deslizándose en la dirección elegida.",
+    },
   },
   presetParams: {
+    direction: "Dirección",
+    distance: "Distancia",
     length: "Longitud del trazo",
     fillAt: "Inicio del relleno",
     scale: "Escala máxima",
@@ -223,7 +229,15 @@ export const es: Dictionary = {
     dash: "Trazo",
     gap: "Espacio",
   },
-  presetOptions: {},
+  presetOptions: {
+    direction: {
+      up: "Hacia arriba",
+      down: "Hacia abajo",
+      left: "Hacia la izquierda",
+      right: "Hacia la derecha",
+      none: "Sin desplazamiento",
+    },
+  },
   exportPanel: {
     title: "Exportar",
     hints: {
@@ -503,6 +517,10 @@ export const es: Dictionary = {
     seo: {
       title: "Mejor búsqueda y para compartir",
       body: "El sitio ahora muestra una vista previa correcta al compartir (LinkedIn, WhatsApp) y está listo para la indexación de Google: sitemap, robots.txt y datos estructurados.",
+    },
+    "fade-preset": {
+      title: "Nuevo preset: Aparecer",
+      body: "El logo entero aparece con fundido, sin contorno, deslizándose hacia arriba, abajo o a los lados. Tú eliges la dirección y la distancia.",
     },
     "leaner-presets": {
       title: "Presets más ajustados",

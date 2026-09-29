@@ -218,8 +218,14 @@ export const pt = {
       description: "Tracejado curto que anda sem parar pelo contorno.",
     },
     pulse: { label: "Pulsar", description: "Estado de espera: opacidade e escala suaves." },
+    fade: {
+      label: "Aparecer",
+      description: "A peça inteira aparece com fade, deslizando na direção escolhida.",
+    },
   },
   presetParams: {
+    direction: "Direção",
+    distance: "Distância",
     length: "Comprimento do traço",
     fillAt: "Início do preenchimento",
     scale: "Escala máxima",
@@ -227,7 +233,15 @@ export const pt = {
     dash: "Traço",
     gap: "Espaço",
   },
-  presetOptions: {},
+  presetOptions: {
+    direction: {
+      up: "Para cima",
+      down: "Para baixo",
+      left: "Para a esquerda",
+      right: "Para a direita",
+      none: "Sem deslocamento",
+    },
+  },
   exportPanel: {
     title: "Exportar",
     hints: {
@@ -500,6 +514,10 @@ export const pt = {
     seo: {
       title: "Compartilhamento e busca melhorados",
       body: "O site agora aparece com preview correto ao compartilhar (LinkedIn, WhatsApp) e está pronto para indexação no Google: sitemap, robots.txt e dados estruturados.",
+    },
+    "fade-preset": {
+      title: "Novo preset: Aparecer",
+      body: "A logo inteira aparece com fade, sem contorno, deslizando para cima, para baixo ou para os lados. Você escolhe a direção e a distância.",
     },
     "leaner-presets": {
       title: "Presets mais enxutos",
