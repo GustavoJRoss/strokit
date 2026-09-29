@@ -22,6 +22,9 @@ export function SiteFooter() {
           <Link href="/exemplos" className="hover:text-foreground">
             {copy.exported}
           </Link>
+          <Link href="/changelog" className="hover:text-foreground">
+            {copy.changelog}
+          </Link>
           <a
             href={site.repo.url}
             target="_blank"
@@ -30,9 +33,9 @@ export function SiteFooter() {
           >
             {copy.github}
           </a>
-          <a href="#topo" className="hover:text-foreground">
+          <Link href="/#topo" className="hover:text-foreground">
             {copy.top}
-          </a>
+          </Link>
         </nav>
         <p className="text-muted-foreground text-sm sm:ml-auto">{copy.madeBy(site.author)}</p>
       </div>

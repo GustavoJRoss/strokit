@@ -11,10 +11,17 @@ import { SiteFooter } from "@/components/home/site-footer";
 import { SiteHeader } from "@/components/home/site-header";
 import { Support } from "@/components/home/support";
 import { DocumentTitle } from "@/lib/i18n/provider";
+import { BASE_OPEN_GRAPH, BASE_TWITTER } from "@/lib/seo";
+
+const DESCRIPTION =
+  "Ferramenta code-first para animar logos e loaders em SVG. Exporte CSS puro, componente React tipado ou Motion, sem runtime e respeitando prefers-reduced-motion.";
+const TITLE = "strokit — anime sua logo SVG e exporte código";
 
 export const metadata: Metadata = {
-  description:
-    "Ferramenta code-first para animar logos e loaders em SVG. Exporte CSS puro, componente React tipado ou Motion, sem runtime e respeitando prefers-reduced-motion.",
+  description: DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: { ...BASE_OPEN_GRAPH, title: TITLE, description: DESCRIPTION, url: "/" },
+  twitter: { ...BASE_TWITTER, title: TITLE, description: DESCRIPTION },
 };
 
 export default function Home() {

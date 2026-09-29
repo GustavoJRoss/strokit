@@ -3,6 +3,8 @@
 [![CI](https://github.com/GustavoJRoss/strokit/actions/workflows/ci.yml/badge.svg)](https://github.com/GustavoJRoss/strokit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+**[strokit.dev](https://strokit.dev)** — teste ao vivo.
+
 Ferramenta web **code-first** para devs React criarem animações de logo e telas de carregamento a partir de um SVG: arraste a logo, escolha um preset (desenhar-e-preencher, cometa, vai-e-vem, formigas marchando, pulsar), ajuste com sliders vendo o resultado ao vivo e exporte **código pronto** — CSS puro, componente React tipado ou componente Motion. Sem runtime, respeitando tokens do tema e `prefers-reduced-motion`.
 
 O porquê do projeto e o problema que ele resolve estão em [`docs/SPEC.md`](docs/SPEC.md).

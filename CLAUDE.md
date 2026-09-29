@@ -54,6 +54,16 @@ npm run build
 - Se uma decisão da ARCHITECTURE se mostrar errada na prática, **não contorne em silêncio**: proponha a mudança, atualize o documento e registre em "Decisões" no fim de `docs/ARCHITECTURE.md`.
 - Não adicione dependências fora da stack sem justificar.
 
+## Changelog
+
+O site tem uma página `/changelog` (timeline pública, ver `apps/web/src/app/changelog/`) com o histórico do que já foi implementado. Ela não lê o Git — os dados vivem em código.
+
+- **Ao terminar qualquer mudança visível pra quem usa o strokit** (feature nova, preset adicionado ou removido, mudança de comportamento, correção notável), adicione uma entrada:
+  1. Um item em `apps/web/src/lib/changelog.ts` (`{ id, date }`, `date` no formato `YYYY-MM-DD`, mais recente primeiro).
+  2. O título e o corpo desse `id` em `t.changelog` nos **três** dicionários (`pt.ts` é a fonte da verdade; `en.ts` e `es.ts` precisam da mesma chave, com tradução de verdade, não um placeholder — `test/i18n.test.ts` garante que as chaves batem, mas não garante qualidade da tradução).
+- **Não registre** refactors, mudança de ferramenta interna (ex.: gerenciador de pacotes), ajuste de teste ou qualquer coisa que quem usa o site não perceberia. O changelog é para quem usa o produto, não um espelho do `git log`.
+- Escreva a entrada do ponto de vista de quem usa, não do ponto de vista do commit (evite "refactor(web): ..."; prefira "Presets mais enxutos" + uma frase do que mudou na prática).
+
 ## Convenções
 
 - Código, nomes e commits em inglês; documentação em português.

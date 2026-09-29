@@ -22,13 +22,13 @@ export function SiteHeader() {
           className="ml-2 hidden items-center gap-4 xl:gap-5 lg:flex"
         >
           {site.nav.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className="whitespace-nowrap font-mono text-[0.6875rem] text-muted-foreground uppercase leading-none tracking-wider xl:tracking-widest hover:text-foreground"
             >
               {t.home.nav[item.key]}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">

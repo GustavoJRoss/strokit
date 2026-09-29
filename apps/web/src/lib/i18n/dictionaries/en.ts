@@ -8,6 +8,7 @@ export const en: Dictionary = {
       home: "strokit — animate your SVG logo and export code",
       editor: "Editor · strokit",
       examples: "Exported components · strokit",
+      changelog: "Changelog · strokit",
     },
   },
   common: {
@@ -313,6 +314,7 @@ export const en: Dictionary = {
       code: "Code",
       support: "Support",
       openSource: "Open source",
+      changelog: "Changelog",
     },
     navLabel: "Sections",
     openEditor: "Open editor",
@@ -460,6 +462,7 @@ export const en: Dictionary = {
       github: "GitHub",
       editor: "Editor",
       exported: "Exported components",
+      changelog: "Changelog",
       top: "Top",
       madeBy: (author) => `Made by ${author}.`,
     },
@@ -473,6 +476,54 @@ export const en: Dictionary = {
       ondaReact: "React · Comet, speed={2}",
       picoMotion: 'Motion · Back and forth, role="status"',
       orbitaMotion: "Motion · Draw and fill, loop",
+    },
+  },
+  changelogPage: {
+    eyebrow: "Changelog",
+    title: "What's changed",
+    lead: "A record of what's been built in strokit, from the first commit to now: presets that shipped, features that landed, decisions that changed direction.",
+    fullHistory: "See the full commit history on GitHub",
+  },
+  changelog: {
+    seo: {
+      title: "Better sharing and search",
+      body: "The site now shows a proper preview when shared (LinkedIn, WhatsApp) and is ready for Google indexing: sitemap, robots.txt and structured data.",
+    },
+    "leaner-presets": {
+      title: "Leaner presets",
+      body: 'The "Draw" and "Staggered draw" presets are gone — the visual result was weak. "Draw and fill" is now the default preset when you import an SVG.',
+    },
+    "open-source-section": {
+      title: "Open source section on the home page",
+      body: "A link to the repository, to open an issue, and to the MIT license, right on the home page. The header and footer also got a GitHub link.",
+    },
+    "layer-editing": {
+      title: "Layer editing",
+      body: "Stroke color, width and start point, adjustable per layer — with selection right on the canvas and editing of the SVG markup.",
+    },
+    "three-languages": {
+      title: "Interface in three languages",
+      body: "strokit is now available in Portuguese, English and Spanish.",
+    },
+    "open-source-license": {
+      title: "Open source project",
+      body: "strokit is released under the MIT license, with a README covering the stack, the commands and how to contribute.",
+    },
+    "react-motion-export": {
+      title: "React, Motion export and sharing",
+      body: "A typed React component, a Motion component, a share link and a project file download (.strokit.json).",
+    },
+    "video-export": {
+      title: "Video export",
+      body: "A transparent .webm video, rendered right in the editor from the compiled animation.",
+    },
+    "complete-presets": {
+      title: "The full preset set",
+      body: "Comet, back and forth, marching ants, draw and fill, and pulse — with an automatic stroke for fill-only logos.",
+    },
+    "editor-mvp": {
+      title: "Editor MVP",
+      body: "Import an SVG, apply a preset, see a live preview and export plain CSS with zero runtime.",
     },
   },
 };

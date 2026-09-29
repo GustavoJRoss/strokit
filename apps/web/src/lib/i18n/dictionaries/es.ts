@@ -8,6 +8,7 @@ export const es: Dictionary = {
       home: "strokit — anima tu logo SVG y exporta código",
       editor: "Editor · strokit",
       examples: "Componentes exportados · strokit",
+      changelog: "Changelog · strokit",
     },
   },
   common: {
@@ -320,6 +321,7 @@ export const es: Dictionary = {
       code: "Código",
       support: "Apoyar",
       openSource: "Open source",
+      changelog: "Changelog",
     },
     navLabel: "Secciones",
     openEditor: "Abrir editor",
@@ -475,6 +477,7 @@ export const es: Dictionary = {
       github: "GitHub",
       editor: "Editor",
       exported: "Componentes exportados",
+      changelog: "Changelog",
       top: "Arriba",
       madeBy: (author) => `Hecho por ${author}.`,
     },
@@ -488,6 +491,54 @@ export const es: Dictionary = {
       ondaReact: "React · Cometa, speed={2}",
       picoMotion: 'Motion · Ida y vuelta, role="status"',
       orbitaMotion: "Motion · Dibujar y rellenar, loop",
+    },
+  },
+  changelogPage: {
+    eyebrow: "Changelog",
+    title: "Qué cambió",
+    lead: "Un registro de lo que se construyó en strokit, desde el primer commit hasta ahora: presets que salieron, funcionalidades nuevas, decisiones de rumbo.",
+    fullHistory: "Ver el historial completo de commits en GitHub",
+  },
+  changelog: {
+    seo: {
+      title: "Mejor búsqueda y para compartir",
+      body: "El sitio ahora muestra una vista previa correcta al compartir (LinkedIn, WhatsApp) y está listo para la indexación de Google: sitemap, robots.txt y datos estructurados.",
+    },
+    "leaner-presets": {
+      title: "Presets más ajustados",
+      body: 'Los presets "Dibujar" y "Dibujar en secuencia" salieron — el resultado visual era débil. "Dibujar y rellenar" pasa a ser el preset por defecto al importar un SVG.',
+    },
+    "open-source-section": {
+      title: "Sección Open Source en la home",
+      body: "Enlace al repositorio, para abrir una issue y a la licencia MIT, directo en la home. El menú y el pie de página también tienen el enlace de GitHub.",
+    },
+    "layer-editing": {
+      title: "Edición de capas",
+      body: "Color, grosor y punto de partida del trazo, ajustables por capa — con selección directo en el canvas y edición del markup del SVG.",
+    },
+    "three-languages": {
+      title: "Interfaz en tres idiomas",
+      body: "strokit ya está disponible en portugués, inglés y español.",
+    },
+    "open-source-license": {
+      title: "Proyecto open source",
+      body: "strokit se libera bajo la licencia MIT, con un README que explica el stack, los comandos y cómo contribuir.",
+    },
+    "react-motion-export": {
+      title: "Exportación a React, Motion y compartir",
+      body: "Componente React tipado, componente Motion, enlace para compartir y descarga del archivo de proyecto (.strokit.json).",
+    },
+    "video-export": {
+      title: "Exportación de video",
+      body: "Video .webm transparente, generado directo en el editor a partir de la animación compilada.",
+    },
+    "complete-presets": {
+      title: "Presets completos",
+      body: "Cometa, ida y vuelta, hormigas en marcha, dibujar y rellenar, y pulsar — con trazo automático para logos que solo tienen relleno.",
+    },
+    "editor-mvp": {
+      title: "MVP del editor",
+      body: "Importar un SVG, aplicar un preset, ver el preview en vivo y exportar CSS puro con cero runtime.",
     },
   },
 };
