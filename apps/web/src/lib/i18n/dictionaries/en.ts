@@ -216,8 +216,14 @@ export const en: Dictionary = {
       label: "Fade in",
       description: "The whole piece fades in, sliding in the chosen direction.",
     },
+    spin: {
+      label: "Spin",
+      description: "The logo rotates around its center. Great for loading screens.",
+    },
   },
   presetParams: {
+    angle: "Angle",
+    pivot: "Pivot",
     direction: "Direction",
     distance: "Distance",
     length: "Dash length",
@@ -228,7 +234,16 @@ export const en: Dictionary = {
     gap: "Gap",
   },
   presetOptions: {
-    direction: { up: "Up", down: "Down", left: "Left", right: "Right", none: "No movement" },
+    direction: {
+      cw: "Clockwise",
+      ccw: "Counterclockwise",
+      up: "Up",
+      down: "Down",
+      left: "Left",
+      right: "Right",
+      none: "No movement",
+    },
+    pivot: { logo: "Whole logo", piece: "Each piece" },
   },
   exportPanel: {
     title: "Export",
@@ -498,8 +513,8 @@ export const en: Dictionary = {
       body: "The site now shows a proper preview when shared (LinkedIn, WhatsApp) and is ready for Google indexing: sitemap, robots.txt and structured data.",
     },
     "fade-preset": {
-      title: "New preset: Fade in",
-      body: "The whole logo fades in, no outline, sliding up, down or sideways. You pick the direction and the distance.",
+      title: "New presets: Fade in and Spin",
+      body: "Fade in makes the whole logo appear, no outline, sliding up, down or sideways. Spin rotates the logo around its center, great for loading screens. Both let you pick the direction and tweak the settings; with Spin you also choose whether the whole logo turns or each piece.",
     },
     "leaner-presets": {
       title: "Leaner presets",

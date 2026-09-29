@@ -32,6 +32,7 @@ Devs front-end React/Next que precisam de um loader ou reveal de marca e não qu
 | `yoyo` | Riscos que vão e voltam (o caso da tela de loading) | `comet` com `animation-direction: alternate` |
 | `draw-fill` | Desenha o contorno e depois preenche (preset padrão) | `dasharray: 1 1`, `dashoffset: 1 → 0` com `pathLength="1"`, combinado com `fill-opacity` |
 | `fade` | A peça inteira aparece com fade e desliza na direção escolhida (cima, baixo, esquerda, direita ou nenhuma) | `opacity` e `transform: translate` (distância em % do viewBox) |
+| `spin` | A logo gira em torno do centro (ou cada peça no seu centro), horário ou anti-horário | `transform: rotate` com `transform-origin` no centro do viewBox em coordenadas locais |
 | `pulse` | Estado de espera: opacidade/escala suave | `opacity` e `transform: scale` com `transform-box: fill-box` |
 | `march` | "Formigas marchando" contínuo | `dasharray` curto repetido + `dashoffset` linear infinito |
 

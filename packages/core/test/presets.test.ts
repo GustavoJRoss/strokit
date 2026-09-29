@@ -6,6 +6,7 @@ import { drawFillPreset } from "../src/presets/draw-fill";
 import { fadePreset } from "../src/presets/fade";
 import { fitPattern, marchPreset } from "../src/presets/march";
 import { pulsePreset } from "../src/presets/pulse";
+import { spinPreset } from "../src/presets/spin";
 import { yoyoPreset } from "../src/presets/yoyo";
 import { applyPreset, createEmptySpec } from "../src/spec/defaults";
 import { parseSpec } from "../src/spec/migrate";
@@ -29,7 +30,7 @@ function context<P>(params: P, timing: Timing, index = 0, total = 1) {
 
 describe("preset registry", () => {
   it("registers every MVP preset, in editor order", () => {
-    expect(presetIds).toEqual(["draw-fill", "comet", "yoyo", "march", "pulse", "fade"]);
+    expect(presetIds).toEqual(["draw-fill", "comet", "yoyo", "march", "pulse", "fade", "spin"]);
   });
 
   it.each(presetIds)("%s: defaults satisfy its schema and a spec with it validates", (id) => {
@@ -68,6 +69,50 @@ describe("fade", () => {
     ["none", "translate(0px, 0px)"],
   ] as const)("%s starts at %s (10%% of the viewBox)", (direction, transform) => {
     expect(start(run(direction))).toEqual({ opacity: "0", transform });
+  });
+});
+
+describe("spin", () => {
+  const run = (
+    params: Partial<Parameters<typeof spinPreset.compile>[0]["params"]> = {},
+    extra = {},
+  ) =>
+    spinPreset.compile({
+      ...context(
+        { direction: "cw", angle: 360, pivot: "logo", ...params } as const,
+        spinPreset.defaults.timing,
+      ),
+      ...extra,
+    });
+  const end = (output: ReturnType<typeof run>) => output.keyframes[0]?.stops[1]?.props.transform;
+
+  it("turns clockwise or counterclockwise by the given angle", () => {
+    expect(end(run())).toBe("rotate(360deg)");
+    expect(end(run({ direction: "ccw", angle: 90 }))).toBe("rotate(-90deg)");
+  });
+
+  it("flips the direction in a mirrored space", () => {
+    expect(end(run({}, { mirrored: true }))).toBe("rotate(-360deg)");
+  });
+
+  it("pivots on the local viewBox center for pivot logo", () => {
+    expect(run({}, { origin: [50.5, 40] }).rule.props).toEqual({
+      "transform-box": "view-box",
+      "transform-origin": "50.5px 40px",
+    });
+  });
+
+  it("pivots on each piece for pivot piece, or without an origin", () => {
+    const piece = { "transform-box": "fill-box", "transform-origin": "center" };
+    expect(run({ pivot: "piece" }, { origin: [1, 1] }).rule.props).toEqual(piece);
+    expect(run().rule.props).toEqual(piece);
+  });
+
+  it("loops linearly and stops under reduced motion", () => {
+    const output = run();
+    expect(output.rule.animations[0]).toMatchObject({ iterations: "infinite", easing: "linear" });
+    expect(output.rule.reducedMotion).toEqual({ transform: "none" });
+    expect(spinPreset.requiresStroke).toBe(false);
   });
 });
 

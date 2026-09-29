@@ -218,8 +218,14 @@ export const es: Dictionary = {
       label: "Aparecer",
       description: "La pieza entera aparece con fundido, deslizándose en la dirección elegida.",
     },
+    spin: {
+      label: "Girar",
+      description: "El logo gira alrededor del centro. Ideal para pantallas de carga.",
+    },
   },
   presetParams: {
+    angle: "Ángulo",
+    pivot: "Pivote",
     direction: "Dirección",
     distance: "Distancia",
     length: "Longitud del trazo",
@@ -231,12 +237,15 @@ export const es: Dictionary = {
   },
   presetOptions: {
     direction: {
+      cw: "Horario",
+      ccw: "Antihorario",
       up: "Hacia arriba",
       down: "Hacia abajo",
       left: "Hacia la izquierda",
       right: "Hacia la derecha",
       none: "Sin desplazamiento",
     },
+    pivot: { logo: "Logo entero", piece: "Cada pieza" },
   },
   exportPanel: {
     title: "Exportar",
@@ -519,8 +528,8 @@ export const es: Dictionary = {
       body: "El sitio ahora muestra una vista previa correcta al compartir (LinkedIn, WhatsApp) y está listo para la indexación de Google: sitemap, robots.txt y datos estructurados.",
     },
     "fade-preset": {
-      title: "Nuevo preset: Aparecer",
-      body: "El logo entero aparece con fundido, sin contorno, deslizándose hacia arriba, abajo o a los lados. Tú eliges la dirección y la distancia.",
+      title: "Nuevos presets: Aparecer y Girar",
+      body: "Aparecer hace surgir el logo entero con fundido, sin contorno, deslizándose hacia arriba, abajo o a los lados. Girar hace rotar el logo alrededor de su centro, ideal para pantallas de carga. En ambos eliges la dirección y los ajustes; en Girar, también si gira el logo entero o cada pieza.",
     },
     "leaner-presets": {
       title: "Presets más ajustados",

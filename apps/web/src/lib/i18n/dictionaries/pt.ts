@@ -222,8 +222,14 @@ export const pt = {
       label: "Aparecer",
       description: "A peça inteira aparece com fade, deslizando na direção escolhida.",
     },
+    spin: {
+      label: "Girar",
+      description: "A logo gira em torno do centro. Ótimo para telas de carregamento.",
+    },
   },
   presetParams: {
+    angle: "Ângulo",
+    pivot: "Pivô",
     direction: "Direção",
     distance: "Distância",
     length: "Comprimento do traço",
@@ -235,12 +241,15 @@ export const pt = {
   },
   presetOptions: {
     direction: {
+      cw: "Horário",
+      ccw: "Anti-horário",
       up: "Para cima",
       down: "Para baixo",
       left: "Para a esquerda",
       right: "Para a direita",
       none: "Sem deslocamento",
     },
+    pivot: { logo: "Logo inteira", piece: "Cada peça" },
   },
   exportPanel: {
     title: "Exportar",
@@ -516,8 +525,8 @@ export const pt = {
       body: "O site agora aparece com preview correto ao compartilhar (LinkedIn, WhatsApp) e está pronto para indexação no Google: sitemap, robots.txt e dados estruturados.",
     },
     "fade-preset": {
-      title: "Novo preset: Aparecer",
-      body: "A logo inteira aparece com fade, sem contorno, deslizando para cima, para baixo ou para os lados. Você escolhe a direção e a distância.",
+      title: "Novos presets: Aparecer e Girar",
+      body: "Aparecer faz a logo inteira surgir com fade, sem contorno, deslizando para cima, para baixo ou para os lados. Girar faz a logo rodar em torno do centro, ótima para telas de carregamento. Em ambos você escolhe direção e ajustes; no Girar, também se gira a logo inteira ou cada peça.",
     },
     "leaner-presets": {
       title: "Presets mais enxutos",

@@ -4,6 +4,7 @@ import { drawFillParamsSchema } from "../presets/draw-fill";
 import { fadeParamsSchema } from "../presets/fade";
 import { marchParamsSchema } from "../presets/march";
 import { pulseParamsSchema } from "../presets/pulse";
+import { spinParamsSchema } from "../presets/spin";
 import { yoyoParamsSchema } from "../presets/yoyo";
 import { layerOverrideSchema } from "./layers";
 import { timingSchema } from "./timing";
@@ -22,6 +23,7 @@ export const trackSchema = z.discriminatedUnion("preset", [
   trackBase.extend({ preset: z.literal("march"), params: marchParamsSchema }),
   trackBase.extend({ preset: z.literal("pulse"), params: pulseParamsSchema }),
   trackBase.extend({ preset: z.literal("fade"), params: fadeParamsSchema }),
+  trackBase.extend({ preset: z.literal("spin"), params: spinParamsSchema }),
 ]);
 
 export const animationSpecSchema = z

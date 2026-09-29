@@ -161,6 +161,11 @@ describe("sampleAnimation / renderFrame", () => {
     });
   });
 
+  it("samples a rotation halfway through a linear spin", () => {
+    const spin = compiled("spin", { easing: "linear", duration: 1000 });
+    expect(sampleAnimation(spin, 500).get("sk-0")).toMatchObject({ transform: "rotate(180deg)" });
+  });
+
   it("measures one full pass: finite runs to the end, infinite shows one (or two alternate) cycles", () => {
     expect(animationLength(compiled("draw-fill", { duration: 1500, delay: 200 }))).toBe(1700);
     expect(animationLength(compiled("draw-fill", { duration: 1000, iterations: 3 }))).toBe(3000);

@@ -16,6 +16,62 @@ function specFor(preset: PresetId, targets = ["sk-0", "sk-1"]): AnimationSpec {
   return applyPreset(createEmptySpec(), targets, preset);
 }
 
+const spinSpec = (targets: string[], pivot: "logo" | "piece" = "logo"): AnimationSpec => {
+  const spec = specFor("spin", targets);
+  return {
+    ...spec,
+    tracks: spec.tracks.map((track) =>
+      track.preset === "spin" ? { ...track, params: { ...track.params, pivot } } : track,
+    ),
+  };
+};
+
+const svgWith = (body: string) =>
+  importSvg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60">${body}</svg>`, {
+    parser,
+  }).document;
+
+describe("compile × spin pivot", () => {
+  const origin = (document: ReturnType<typeof svgWith>, spec: AnimationSpec, index = 0) =>
+    compile(document, spec).rules[index]?.props["transform-origin"];
+
+  it("uses the viewBox center when nothing is transformed", () => {
+    const document = svgWith('<path d="M0 0h10v10z" fill="red"/>');
+    expect(origin(document, spinSpec(["sk-0"]))).toBe("50px 30px");
+  });
+
+  it("maps the center through the element's own and ancestor transforms", () => {
+    const document = svgWith(
+      '<g transform="translate(10 0)"><path d="M0 0h10v10z" fill="red" transform="scale(0.5)"/></g>',
+    );
+    // center (50,30) → inverse of translate(10 0)·scale(0.5) → ((50-10)/0.5, 30/0.5)
+    expect(origin(document, spinSpec(["sk-0"]))).toBe("80px 60px");
+    const compiled = compile(document, spinSpec(["sk-0"]));
+    const wrapper = JSON.stringify(compiled.root);
+    expect(wrapper).toContain('"transform":"scale(0.5)"');
+  });
+
+  it("reverses the sense in a mirrored space", () => {
+    const document = svgWith('<path d="M0 0h10v10z" fill="red" transform="scale(-1 1)"/>');
+    const stops = compile(document, spinSpec(["sk-0"])).keyframes[0]?.stops;
+    expect(stops?.[1]?.props.transform).toBe("rotate(-360deg)");
+  });
+
+  it("falls back to each piece and warns on skewed transforms", () => {
+    const document = svgWith('<path d="M0 0h10v10z" fill="red" transform="skewX(20)"/>');
+    const compiled = compile(document, spinSpec(["sk-0"]));
+    expect(compiled.rules[0]?.props["transform-box"]).toBe("fill-box");
+    expect(compiled.warnings).toEqual([
+      { code: "spin-skewed-transform", trackId: "track-0", elementId: "sk-0" },
+    ]);
+  });
+
+  it("does not warn for pivot piece", () => {
+    const document = svgWith('<path d="M0 0h10v10z" fill="red" transform="skewX(20)"/>');
+    expect(compile(document, spinSpec(["sk-0"], "piece")).warnings).toEqual([]);
+  });
+});
+
 describe("compile × layer overrides", () => {
   it("recolors a stroke through its own token chained to --sk-stroke", () => {
     const spec = updateLayers(specFor("draw-fill"), ["sk-1"], {

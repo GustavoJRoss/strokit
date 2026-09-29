@@ -15,6 +15,10 @@ export type PresetContext<P> = {
   path?: PathMotion;
   /** Document viewBox, for presets that move things by a fraction of the canvas. */
   viewBox?: [number, number, number, number];
+  /** Center of the viewBox in the element's own coordinates (after ancestor and own transforms). */
+  origin?: [number, number];
+  /** True when the element's coordinates are mirrored relative to the viewport. */
+  mirrored?: boolean;
 };
 
 export type PresetOutput = {

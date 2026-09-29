@@ -46,6 +46,7 @@ const PRESETS = [
   ["Vai e vem", "yoyo"],
   ["Formigas marchando", "march"],
   ["Pulsar", "pulse"],
+  ["Girar", "spin"],
 ] as const;
 
 for (const [preset, presetId] of PRESETS) {

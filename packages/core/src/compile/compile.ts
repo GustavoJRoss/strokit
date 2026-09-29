@@ -3,6 +3,16 @@ import type { PathMotion } from "../presets/path-motion";
 import type { PresetOutput } from "../presets/types";
 import { type LayerOverride, layerTokens } from "../spec/layers";
 import type { AnimationSpec, PresetId } from "../spec/schema";
+import {
+  apply,
+  determinant,
+  IDENTITY,
+  invert,
+  isSimilarity,
+  type Matrix,
+  multiply,
+  parseTransform,
+} from "../svg/transform";
 import { cloneNode, type SvgElementNode, walkElements } from "../svg/tree";
 import type { DrawableElement, SvgDocument } from "../svg/types";
 import { canonicalJson, hashString } from "../util/hash";
@@ -15,11 +25,58 @@ function runPreset<K extends PresetId>(
   total: number,
   path: PathMotion,
   viewBox: SvgDocument["viewBox"],
+  space: Space,
 ): PresetOutput {
   const preset = presets[track.preset];
   // `track.params` widens to the union of all params; the discriminant guarantees the match.
   const params = track.params as TrackOf<K>["params"];
-  return preset.compile({ element, index, total, params, timing: track.timing, path, viewBox });
+  return preset.compile({
+    element,
+    index,
+    total,
+    params,
+    timing: track.timing,
+    path,
+    viewBox,
+    ...space,
+  });
+}
+
+type Space = { origin?: [number, number]; mirrored?: boolean };
+
+/**
+ * Where the center of the viewBox falls in each drawable's own coordinates: the inverse of the
+ * accumulated `transform` (ancestors, then the element itself). Elements whose space is not a
+ * plain rotation + uniform scale (skew, non-uniform scale, unparseable) get `skewed` instead.
+ */
+function coordinateSpaces(
+  root: SvgElementNode,
+  viewBox: SvgDocument["viewBox"],
+): Map<string, Space & { skewed?: boolean }> {
+  const [x, y, width, height] = viewBox;
+  const center: [number, number] = [x + width / 2, y + height / 2];
+  const spaces = new Map<string, Space & { skewed?: boolean }>();
+  const inherited = new Map<SvgElementNode, Matrix | null>();
+  walkElements(root, (element, ancestors) => {
+    const parent = ancestors[ancestors.length - 1];
+    const before = parent ? inherited.get(parent) : IDENTITY;
+    const own = parseTransform(element.attrs.transform);
+    const matrix = before && own ? multiply(before, own) : null;
+    inherited.set(element, matrix);
+    const id = element.attrs["data-sk-id"];
+    if (id === undefined) return undefined;
+    const inverse = matrix && isSimilarity(matrix) ? invert(matrix) : null;
+    if (!matrix || !inverse) {
+      spaces.set(id, { skewed: true });
+    } else {
+      spaces.set(id, {
+        origin: apply(inverse, center[0], center[1]),
+        mirrored: determinant(matrix) < 0,
+      });
+    }
+    return undefined;
+  });
+  return spaces;
 }
 
 /** Properties the element's animations set, from its rule or its keyframes. */
@@ -164,6 +221,7 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
   const moved = new Map<string, string[]>();
   const animated = new Set<string>();
   const warnings: CompileWarning[] = [];
+  const spaces = coordinateSpaces(document.root, document.viewBox);
 
   spec.tracks.forEach((track, trackIndex) => {
     const preset = presets[track.preset];
@@ -178,6 +236,10 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
     targets.forEach((target, index) => {
       const element = elementsById.get(target) as DrawableElement;
       const layer = layerOf(target);
+      const { skewed, ...space } = spaces.get(target) ?? {};
+      if (skewed && track.preset === "spin" && track.params.pivot === "logo") {
+        warnings.push({ code: "spin-skewed-transform", trackId: track.id, elementId: target });
+      }
       const output = runPreset(
         track,
         element,
@@ -188,6 +250,7 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
           reverse: layer.override.reverse ?? false,
         },
         document.viewBox,
+        space,
       );
       for (const definition of output.keyframes) {
         const name = namespace(definition.name);

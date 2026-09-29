@@ -463,6 +463,60 @@ exports[`exporters.css × every preset > pulse × simple-stroke.svg 1`] = `
 "
 `;
 
+exports[`exporters.css × every preset > spin × illustrator-classes.svg 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-pqdy25" role="img" aria-label="Logo"><style>
+.sk-pqdy25-0 {
+  transform-box: view-box;
+  transform-origin: 100px 50px;
+  animation: sk-pqdy25-t0-spin 1500ms linear 0ms infinite normal both;
+}
+@keyframes sk-pqdy25-t0-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-pqdy25 * {
+    animation: none;
+  }
+  .sk-pqdy25-0 {
+    transform: none;
+  }
+}
+</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613" class="sk-pqdy25-0"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10" class="sk-pqdy25-0"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10" class="sk-pqdy25-0"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb" class="sk-pqdy25-0"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10" class="sk-pqdy25-0"/></svg>
+"
+`;
+
+exports[`exporters.css × every preset > spin × simple-stroke.svg 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-jxp1w8" role="img" aria-label="Logo"><style>
+.sk-jxp1w8-0 {
+  transform-box: view-box;
+  transform-origin: 60px 60px;
+  animation: sk-jxp1w8-t0-spin 1500ms linear 0ms infinite normal both;
+}
+@keyframes sk-jxp1w8-t0-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-jxp1w8 * {
+    animation: none;
+  }
+  .sk-jxp1w8-0 {
+    transform: none;
+  }
+}
+</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44" class="sk-jxp1w8-0"/><path d="M36 64 L56 84 L88 40" class="sk-jxp1w8-0"/></g></svg>
+"
+`;
+
 exports[`exporters.css × every preset > yoyo × illustrator-classes.svg 1`] = `
 "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-1xkr75m" role="img" aria-label="Logo"><style>
 .sk-1xkr75m-0 {

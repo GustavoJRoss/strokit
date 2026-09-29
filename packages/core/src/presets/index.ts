@@ -4,6 +4,7 @@ import { drawFillPreset } from "./draw-fill";
 import { fadePreset } from "./fade";
 import { marchPreset } from "./march";
 import { pulsePreset } from "./pulse";
+import { spinPreset } from "./spin";
 import type { Preset } from "./types";
 import { yoyoPreset } from "./yoyo";
 
@@ -19,6 +20,7 @@ export const presets: PresetRegistry = {
   march: marchPreset,
   pulse: pulsePreset,
   fade: fadePreset,
+  spin: spinPreset,
 };
 
 export const presetIds = Object.keys(presets) as PresetId[];
