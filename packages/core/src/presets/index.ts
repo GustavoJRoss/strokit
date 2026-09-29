@@ -1,6 +1,7 @@
 import type { PresetId, Track } from "../spec/schema";
 import { cometPreset } from "./comet";
 import { drawFillPreset } from "./draw-fill";
+import { fadePreset } from "./fade";
 import { marchPreset } from "./march";
 import { pulsePreset } from "./pulse";
 import type { Preset } from "./types";
@@ -17,6 +18,7 @@ export const presets: PresetRegistry = {
   yoyo: yoyoPreset,
   march: marchPreset,
   pulse: pulsePreset,
+  fade: fadePreset,
 };
 
 export const presetIds = Object.keys(presets) as PresetId[];

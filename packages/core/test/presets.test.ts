@@ -3,6 +3,7 @@ import { compile } from "../src/compile/compile";
 import { presetIds, presets } from "../src/presets";
 import { cometPreset } from "../src/presets/comet";
 import { drawFillPreset } from "../src/presets/draw-fill";
+import { fadePreset } from "../src/presets/fade";
 import { fitPattern, marchPreset } from "../src/presets/march";
 import { pulsePreset } from "../src/presets/pulse";
 import { yoyoPreset } from "../src/presets/yoyo";
@@ -28,7 +29,7 @@ function context<P>(params: P, timing: Timing, index = 0, total = 1) {
 
 describe("preset registry", () => {
   it("registers every MVP preset, in editor order", () => {
-    expect(presetIds).toEqual(["draw-fill", "comet", "yoyo", "march", "pulse"]);
+    expect(presetIds).toEqual(["draw-fill", "comet", "yoyo", "march", "pulse", "fade"]);
   });
 
   it.each(presetIds)("%s: defaults satisfy its schema and a spec with it validates", (id) => {
@@ -36,6 +37,37 @@ describe("preset registry", () => {
     expect(preset.paramsSchema.safeParse(preset.defaults.params).success).toBe(true);
     expect(() => parseSpec(applyPreset(createEmptySpec(), ["sk-0"], id))).not.toThrow();
     expect(preset.label).not.toBe("");
+  });
+});
+
+describe("fade", () => {
+  const viewBox: [number, number, number, number] = [0, 0, 200, 100];
+  const run = (direction: "up" | "down" | "left" | "right" | "none", distance = 10) =>
+    fadePreset.compile({
+      ...context({ direction, distance }, fadePreset.defaults.timing),
+      viewBox,
+    });
+  const start = (output: ReturnType<typeof run>) => output.keyframes[0]?.stops[0]?.props;
+
+  it("fades from 0 to 1 with no stroke and no pathLength", () => {
+    const output = run("up");
+    expect(fadePreset.requiresStroke).toBe(false);
+    expect(output.rule.attrs).toBeUndefined();
+    expect(output.keyframes[0]?.stops[1]?.props).toEqual({
+      opacity: "1",
+      transform: "translate(0px, 0px)",
+    });
+    expect(output.rule.reducedMotion).toEqual({ opacity: "1", transform: "none" });
+  });
+
+  it.each([
+    ["up", "translate(0px, 10px)"],
+    ["down", "translate(0px, -10px)"],
+    ["left", "translate(20px, 0px)"],
+    ["right", "translate(-20px, 0px)"],
+    ["none", "translate(0px, 0px)"],
+  ] as const)("%s starts at %s (10%% of the viewBox)", (direction, transform) => {
+    expect(start(run(direction))).toEqual({ opacity: "0", transform });
   });
 });
 

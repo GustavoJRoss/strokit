@@ -13,6 +13,8 @@ export type PresetContext<P> = {
   timing: Timing;
   /** Start point and direction on the outline (layer editor). Defaults to `DEFAULT_PATH`. */
   path?: PathMotion;
+  /** Document viewBox, for presets that move things by a fraction of the canvas. */
+  viewBox?: [number, number, number, number];
 };
 
 export type PresetOutput = {

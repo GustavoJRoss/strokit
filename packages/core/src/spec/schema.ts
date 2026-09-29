@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { cometParamsSchema } from "../presets/comet";
 import { drawFillParamsSchema } from "../presets/draw-fill";
+import { fadeParamsSchema } from "../presets/fade";
 import { marchParamsSchema } from "../presets/march";
 import { pulseParamsSchema } from "../presets/pulse";
 import { yoyoParamsSchema } from "../presets/yoyo";
@@ -20,6 +21,7 @@ export const trackSchema = z.discriminatedUnion("preset", [
   trackBase.extend({ preset: z.literal("yoyo"), params: yoyoParamsSchema }),
   trackBase.extend({ preset: z.literal("march"), params: marchParamsSchema }),
   trackBase.extend({ preset: z.literal("pulse"), params: pulseParamsSchema }),
+  trackBase.extend({ preset: z.literal("fade"), params: fadeParamsSchema }),
 ]);
 
 export const animationSpecSchema = z
