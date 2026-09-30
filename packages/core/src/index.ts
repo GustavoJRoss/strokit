@@ -90,6 +90,7 @@ export {
   trackSchema,
 } from "./spec/schema";
 export { type Easing, type EasingPreset, easingPresetSchema, type Timing } from "./spec/timing";
+export { type DeleteLayersResult, deleteLayers } from "./svg/delete";
 export { type ImportWarning, SvgImportError, type SvgImportErrorCode } from "./svg/errors";
 export { type ImportOptions, type ImportResult, importSvg, sanitizeSvg } from "./svg/import";
 export { type LayerNode, layerTree } from "./svg/layers";

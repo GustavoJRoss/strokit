@@ -15,7 +15,7 @@ import {
   multiply,
   parseTransform,
 } from "../svg/transform";
-import { cloneNode, type SvgElementNode, walkElements } from "../svg/tree";
+import { cloneNode, removeElements, type SvgElementNode, walkElements } from "../svg/tree";
 import type { DrawableElement, SvgDocument } from "../svg/types";
 import { canonicalJson, hashString } from "../util/hash";
 import type { CompiledAnimation, CompileWarning, ElementRule, KeyframesDef } from "./types";
@@ -112,15 +112,6 @@ function wrapAnimatedAttrs(element: SvgElementNode, moved: ReadonlyMap<string, s
     wrapAnimatedAttrs(child, moved);
     return child;
   });
-}
-
-function removeElements(element: SvgElementNode, ids: ReadonlySet<string>): void {
-  element.children = element.children.filter(
-    (child) => child.type !== "element" || !ids.has(child.attrs["data-sk-id"] ?? ""),
-  );
-  for (const child of element.children) {
-    if (child.type === "element") removeElements(child, ids);
-  }
 }
 
 /** Fill opacity of "ghost" fills: dim enough for a same-color dash to read on top. */
