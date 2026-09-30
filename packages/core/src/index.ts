@@ -19,6 +19,7 @@ export {
 } from "./dom/nearest-point";
 export { appendDrawnPaths, BLANK_VIEWBOX, type DrawnPath } from "./draw/append";
 export { freehandPath, simplify, smoothPath } from "./draw/freehand";
+export { type PenAnchor, penPath } from "./draw/pen";
 export { type DrawPoint, type ShapeKind, type ShapeOptions, shapePath } from "./draw/shapes";
 export * as exporters from "./exporters";
 export { toComponentName } from "./exporters/jsx";

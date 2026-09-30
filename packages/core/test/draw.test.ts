@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { appendDrawnPaths, BLANK_VIEWBOX } from "../src/draw/append";
 import { freehandPath, simplify, smoothPath } from "../src/draw/freehand";
+import { penPath } from "../src/draw/pen";
 import { shapePath } from "../src/draw/shapes";
 import { importSvg } from "../src/svg/import";
 import { fixture, parser } from "./helpers";
@@ -200,5 +201,50 @@ describe("freehand", () => {
       },
     );
     expect(document.elements).toHaveLength(1);
+  });
+});
+
+describe("penPath", () => {
+  const a = { point: { x: 0, y: 0 } };
+  const b = { point: { x: 10, y: 0 } };
+  const c = { point: { x: 10, y: 10 } };
+
+  it("joins plain points with straight segments", () => {
+    expect(penPath([a, b, c])).toBe("M0 0L10 0L10 10");
+  });
+
+  it("curves a segment when an anchor has a handle, mirroring it on arrival", () => {
+    const smooth = { point: { x: 10, y: 0 }, handle: { x: 14, y: 4 } };
+    // Leaving `a` is straight (no handle), arriving at `smooth` uses the mirror (6, -4).
+    expect(penPath([a, smooth])).toBe("M0 0C0 0 6 -4 10 0");
+    // Leaving `smooth` uses its handle.
+    expect(penPath([smooth, c])).toBe("M10 0C14 4 10 10 10 10");
+  });
+
+  it("closes the shape back to the first anchor", () => {
+    expect(penPath([a, b, c], true)).toBe("M0 0L10 0L10 10L0 0Z");
+  });
+
+  it("curves the closing segment when the first anchor has a handle", () => {
+    const first = { point: { x: 0, y: 0 }, handle: { x: 0, y: 5 } };
+    expect(penPath([first, b, c], true)).toBe("M0 0C0 5 10 0 10 0L10 10C10 10 0 -5 0 0Z");
+  });
+
+  it("stays open with fewer than three anchors", () => {
+    expect(penPath([a, b], true)).toBe("M0 0L10 0");
+  });
+
+  it("returns null without two distinct anchors", () => {
+    expect(penPath([])).toBeNull();
+    expect(penPath([a])).toBeNull();
+    expect(penPath([a, { point: { x: 0, y: 0 } }])).toBeNull();
+  });
+
+  it("ignores the duplicate a double click leaves behind", () => {
+    expect(penPath([a, b, { point: { x: 10, y: 0 } }])).toBe("M0 0L10 0");
+  });
+
+  it("skips anchors with invalid coordinates", () => {
+    expect(penPath([a, { point: { x: Number.NaN, y: 0 } }, b])).toBe("M0 0L10 0");
   });
 });
