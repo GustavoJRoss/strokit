@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { appendDrawnPaths, BLANK_VIEWBOX } from "../src/draw/append";
+import { freehandPath, simplify, smoothPath } from "../src/draw/freehand";
 import { shapePath } from "../src/draw/shapes";
 import { importSvg } from "../src/svg/import";
 import { fixture, parser } from "./helpers";
@@ -97,5 +98,107 @@ describe("appendDrawnPaths", () => {
     expect(markup).not.toContain("script");
     expect(markup).toContain('stroke="currentColor"');
     expect(markup.match(/<path/g)).toHaveLength(1);
+  });
+});
+
+describe("freehand", () => {
+  const line = Array.from({ length: 50 }, (_, index) => ({ x: index, y: index * 0.5 }));
+
+  it("collapses a straight stroke to its two ends", () => {
+    expect(simplify(line, 0.1)).toEqual([line[0], line.at(-1)]);
+  });
+
+  it("keeps the corner of an L-shaped stroke", () => {
+    const corner = [
+      ...Array.from({ length: 20 }, (_, index) => ({ x: index, y: 0 })),
+      ...Array.from({ length: 20 }, (_, index) => ({ x: 19, y: index + 1 })),
+    ];
+    expect(simplify(corner, 0.5)).toEqual([
+      { x: 0, y: 0 },
+      { x: 19, y: 0 },
+      { x: 19, y: 20 },
+    ]);
+  });
+
+  it("stays within the tolerance of the original stroke", () => {
+    const wave = Array.from({ length: 200 }, (_, index) => ({
+      x: index,
+      y: Math.sin(index / 12) * 30,
+    }));
+    const simple = simplify(wave, 1);
+    expect(simple.length).toBeLessThan(wave.length / 3);
+    // Every original point is near the simplified polyline.
+    for (const point of wave) {
+      const near = simple.slice(1).some((end, index) => {
+        const start = simple[index] as { x: number; y: number };
+        const dx = end.x - start.x;
+        const dy = end.y - start.y;
+        const t = Math.max(
+          0,
+          Math.min(1, ((point.x - start.x) * dx + (point.y - start.y) * dy) / (dx * dx + dy * dy)),
+        );
+        return Math.hypot(point.x - (start.x + t * dx), point.y - (start.y + t * dy)) <= 1.0001;
+      });
+      expect(near).toBe(true);
+    }
+  });
+
+  it("does not overflow the stack on a very long stroke", () => {
+    const long = Array.from({ length: 50_000 }, (_, index) => ({
+      x: index,
+      y: Math.sin(index / 50) * 100,
+    }));
+    expect(() => simplify(long, 0.5)).not.toThrow();
+  });
+
+  it("draws curves through the points", () => {
+    const d = smoothPath([
+      { x: 0, y: 0 },
+      { x: 10, y: 10 },
+      { x: 20, y: 0 },
+    ]);
+    expect(d).toBe("M0 0C1.67 1.67 6.67 10 10 10C13.33 10 18.33 1.67 20 0");
+  });
+
+  it("makes a straight line from two points and nothing from fewer", () => {
+    expect(
+      smoothPath([
+        { x: 0, y: 0 },
+        { x: 5, y: 5 },
+      ]),
+    ).toBe("M0 0L5 5");
+    expect(smoothPath([{ x: 0, y: 0 }])).toBeNull();
+  });
+
+  it("returns null for a stroke that never moved or has invalid points", () => {
+    expect(freehandPath([{ x: 3, y: 3 }], 1)).toBeNull();
+    expect(
+      freehandPath(
+        [
+          { x: 3, y: 3 },
+          { x: 3, y: 3 },
+        ],
+        1,
+      ),
+    ).toBeNull();
+    expect(freehandPath([{ x: Number.NaN, y: 0 }], 1)).toBeNull();
+  });
+
+  it("makes path data the import accepts", () => {
+    const d = freehandPath(
+      Array.from({ length: 80 }, (_, index) => ({
+        x: index * 3,
+        y: Math.cos(index / 7) * 40 + 100,
+      })),
+      1,
+    );
+    expect(d).toMatch(/^M[\d.\s-]+(C[\d.\s-]+)+$/);
+    const { document } = importSvg(
+      appendDrawnPaths(null, [{ d: d ?? "", stroke: "#000", strokeWidth: 4 }]),
+      {
+        parser,
+      },
+    );
+    expect(document.elements).toHaveLength(1);
   });
 });
