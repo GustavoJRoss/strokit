@@ -217,3 +217,88 @@ describe("selectors", () => {
     ]);
   });
 });
+
+describe("draw mode", () => {
+  beforeEach(() => useEditorStore.setState(getInitialState()));
+
+  it("starts inactive and leaves the document alone when entered and exited", () => {
+    expect(store().draw.active).toBe(false);
+    store().enterDraw();
+    expect(store().draw.active).toBe(true);
+    expect(store().doc).toBeNull();
+    store().exitDraw();
+    expect(store().draw.active).toBe(false);
+    expect(store().doc).toBeNull();
+  });
+
+  it("creates a blank SVG on the first shape, animated with the default preset", () => {
+    store().enterDraw();
+    store().addDrawnShapes(["M0 0H100V100H0Z"], "Desenho");
+    const { doc, spec, selection, fileName } = store();
+    expect(fileName).toBe("Desenho");
+    expect(doc?.viewBox).toEqual([0, 0, 512, 512]);
+    expect(doc?.elements).toHaveLength(1);
+    expect(spec.tracks[0]?.targets).toEqual(["sk-0"]);
+    expect(selection).toEqual(["sk-0"]);
+    // 2% of the larger side of the blank canvas.
+    expect(doc?.elements[0]?.strokeWidth).toBeCloseTo(10.24);
+  });
+
+  it("adds shapes on top of an imported SVG and keeps its animation", () => {
+    store().loadSvg(example("orbita.svg"), "Órbita");
+    const before = store().doc?.elements.length ?? 0;
+    const firstTrack = store().spec.tracks[0];
+    store().enterDraw();
+    store().addDrawnShapes(["M0 0L10 10", "M5 5L20 20"], "Desenho");
+    const { doc, spec, selection } = store();
+    expect(doc?.elements).toHaveLength(before + 2);
+    expect(selection).toEqual([`sk-${before}`, `sk-${before + 1}`]);
+    expect(spec.tracks.flatMap((track) => track.targets)).toContain(`sk-${before + 1}`);
+    expect(spec.tracks[0]?.preset).toBe(firstTrack?.preset);
+  });
+
+  it("measures new strokes in the same unit as the width slider", () => {
+    store().loadSvg(example("pico.svg"), "Pico");
+    const [, , width, height] = store().doc?.viewBox ?? [0, 0, 0, 0];
+    store().enterDraw();
+    store().setDrawStyle({ width: 10, color: "#ff0000" });
+    store().addDrawnShapes(["M0 0L10 10"], "Desenho");
+    const drawn = store().doc?.elements.at(-1);
+    expect(drawn?.stroke).toBe("#ff0000");
+    expect(drawn?.strokeWidth).toBeCloseTo(Math.max(width, height) * 0.1);
+  });
+
+  it("undoes and redoes shapes, back to a blank canvas", () => {
+    store().enterDraw();
+    store().addDrawnShapes(["M0 0H10V10H0Z"], "Desenho");
+    store().addDrawnShapes(["M20 20L30 30"], "Desenho");
+    expect(store().doc?.elements).toHaveLength(2);
+
+    store().undoDraw();
+    expect(store().doc?.elements).toHaveLength(1);
+    store().undoDraw();
+    expect(store().doc).toBeNull();
+    expect(store().draw.past).toHaveLength(0);
+
+    store().redoDraw();
+    store().redoDraw();
+    expect(store().doc?.elements).toHaveLength(2);
+    expect(store().draw.future).toHaveLength(0);
+  });
+
+  it("drops the redo stack when something new is drawn", () => {
+    store().enterDraw();
+    store().addDrawnShapes(["M0 0H10V10H0Z"], "Desenho");
+    store().undoDraw();
+    expect(store().draw.future).toHaveLength(1);
+    store().addDrawnShapes(["M0 0L5 5"], "Desenho");
+    expect(store().draw.future).toHaveLength(0);
+  });
+
+  it("ignores undo and redo when there is nothing to do", () => {
+    store().enterDraw();
+    store().undoDraw();
+    store().redoDraw();
+    expect(store().doc).toBeNull();
+  });
+});

@@ -1,7 +1,9 @@
 import {
   type AnimationSpec,
+  appendDrawnPaths,
   appendStep,
   applyPreset,
+  BLANK_VIEWBOX,
   createEmptySpec,
   DEFAULT_PRESET,
   type ImportWarning,
@@ -17,9 +19,11 @@ import {
   type SvgDocument,
   setStepPreset,
   type Timing,
+  toUserWidth,
   updateLayers,
   updateTrackParams,
   updateTrackTiming,
+  visualUnit,
 } from "@strokit/core";
 import { create } from "zustand";
 
@@ -28,6 +32,29 @@ export type ExportTab = "css" | "react" | "motion";
 export type SelectMode = "replace" | "toggle" | "range";
 /** What a click on the canvas does: select layers, or set the start point of a layer. */
 export type CanvasTool = "select" | "start";
+
+/** Shapes the draw mode can make. */
+export type DrawTool = "line" | "rect" | "ellipse";
+
+/** What undo brings back: the document and everything derived from it by the drawing. */
+export type DrawSnapshot = {
+  doc: SvgDocument | null;
+  fileName: string | null;
+  spec: AnimationSpec;
+  selection: string[];
+};
+
+/** Draw mode: UI state plus an undo stack of its own (until the editor gets a general one). */
+export type DrawState = {
+  active: boolean;
+  tool: DrawTool;
+  /** Stroke width of new shapes, in the same visual units (%) as the width sliders. */
+  width: number;
+  /** Stroke color of new shapes. */
+  color: string;
+  past: DrawSnapshot[];
+  future: DrawSnapshot[];
+};
 
 /** Preview-only state. Never part of the AnimationSpec, never exported. */
 export type Playback = {
@@ -52,6 +79,7 @@ export type EditorState = {
   playback: Playback;
   exportTab: ExportTab;
   tool: CanvasTool;
+  draw: DrawState;
 };
 
 export type EditorActions = {
@@ -86,6 +114,15 @@ export type EditorActions = {
   /** Replaces the SVG, keeping animations and edits of the elements that remain. Throws `SvgImportError`. */
   replaceSvg: (markup: string) => ReconcileResult;
   setTool: (tool: CanvasTool) => void;
+  /** Enters draw mode (creating a blank SVG on the first shape when there is none). */
+  enterDraw: () => void;
+  exitDraw: () => void;
+  setDrawTool: (tool: DrawTool) => void;
+  setDrawStyle: (patch: Partial<Pick<DrawState, "width" | "color">>) => void;
+  /** Adds shapes (path data in viewBox units) to the SVG, styled with the draw settings. */
+  addDrawnShapes: (shapes: string[], untitledName: string) => void;
+  undoDraw: () => void;
+  redoDraw: () => void;
   togglePlaying: () => void;
   setRate: (rate: number) => void;
   setReducedMotion: (reducedMotion: boolean) => void;
@@ -113,8 +150,18 @@ export function getInitialState(): EditorState {
     },
     exportTab: "css",
     tool: "select",
+    draw: initialDraw(),
   };
 }
+
+/** Readable on light, dark and checker backgrounds; exports still theme it through `--sk-stroke`. */
+export const DEFAULT_DRAW_COLOR = "#3b82f6";
+
+function initialDraw(): DrawState {
+  return { active: false, tool: "rect", width: 2, color: DEFAULT_DRAW_COLOR, past: [], future: [] };
+}
+
+const DRAW_HISTORY_LIMIT = 100;
 
 export const useEditorStore = create<EditorState & EditorActions>()((set, get) => ({
   ...getInitialState(),
@@ -136,6 +183,7 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
       hovered: null,
       activeStepId: null,
       tool: "select",
+      draw: { ...state.draw, past: [], future: [] },
       playback: { ...state.playback, playing: true, restartToken: state.playback.restartToken + 1 },
     }));
   },
@@ -152,6 +200,7 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
       hovered: null,
       activeStepId: null,
       tool: "select",
+      draw: { ...state.draw, past: [], future: [] },
       playback: { ...state.playback, playing: true, restartToken: state.playback.restartToken + 1 },
     }));
   },
@@ -296,6 +345,83 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
   },
 
   setTool: (tool) => set({ tool }),
+
+  enterDraw: () =>
+    set((state) => ({
+      tool: "select",
+      selection: [],
+      selectionAnchor: null,
+      hovered: null,
+      draw: { ...state.draw, active: true, past: [], future: [] },
+    })),
+
+  exitDraw: () =>
+    set((state) => ({
+      draw: { ...state.draw, active: false, past: [], future: [] },
+      playback: { ...state.playback, restartToken: state.playback.restartToken + 1 },
+    })),
+
+  setDrawTool: (tool) => set((state) => ({ draw: { ...state.draw, tool } })),
+
+  setDrawStyle: (patch) => set((state) => ({ draw: { ...state.draw, ...patch } })),
+
+  addDrawnShapes: (shapes, untitledName) => {
+    const before = get();
+    const { doc, draw } = before;
+    const unit = visualUnit(doc?.viewBox ?? BLANK_VIEWBOX);
+    // Shapes go on the root, where no transform scales them: visual units map straight to viewBox units.
+    const width = toUserWidth(draw.width, unit, 1);
+    const markup = appendDrawnPaths(
+      doc?.root ?? null,
+      shapes.map((d) => ({ d, stroke: draw.color, strokeWidth: width })),
+    );
+    const snapshot: DrawSnapshot = {
+      doc,
+      fileName: before.fileName,
+      spec: before.spec,
+      selection: before.selection,
+    };
+    if (doc) get().replaceSvg(markup);
+    else get().loadSvg(markup, untitledName);
+    const { doc: next } = get();
+    if (!next) return;
+    const added = next.elements.slice(-shapes.length).map((element) => element.id);
+    set((state) => ({
+      selection: added,
+      selectionAnchor: added.at(-1) ?? null,
+      draw: {
+        ...state.draw,
+        past: [...state.draw.past, snapshot].slice(-DRAW_HISTORY_LIMIT),
+        future: [],
+      },
+    }));
+  },
+
+  undoDraw: () => {
+    const { draw, doc, fileName, spec, selection } = get();
+    const previous = draw.past.at(-1);
+    if (!previous) return;
+    const current: DrawSnapshot = { doc, fileName, spec, selection };
+    set((state) => ({
+      ...previous,
+      hovered: null,
+      draw: { ...state.draw, past: draw.past.slice(0, -1), future: [...draw.future, current] },
+      playback: { ...state.playback, restartToken: state.playback.restartToken + 1 },
+    }));
+  },
+
+  redoDraw: () => {
+    const { draw, doc, fileName, spec, selection } = get();
+    const next = draw.future.at(-1);
+    if (!next) return;
+    const current: DrawSnapshot = { doc, fileName, spec, selection };
+    set((state) => ({
+      ...next,
+      hovered: null,
+      draw: { ...state.draw, past: [...draw.past, current], future: draw.future.slice(0, -1) },
+      playback: { ...state.playback, restartToken: state.playback.restartToken + 1 },
+    }));
+  },
 
   togglePlaying: () =>
     set((state) => ({ playback: { ...state.playback, playing: !state.playback.playing } })),
