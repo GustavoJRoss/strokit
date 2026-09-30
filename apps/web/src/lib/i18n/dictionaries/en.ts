@@ -144,6 +144,10 @@ export const en: Dictionary = {
       auto: "Automatic",
       noColor: "None",
       invalidColor: "Invalid color. Use #hex, rgb(), hsl() or a color name.",
+      delete: (n: number) => (n > 1 ? `Delete ${n} layers` : "Delete layer"),
+      deleted: (n: number) => (n > 1 ? `${n} layers deleted` : "Layer deleted"),
+      undoDelete: "Undo",
+      deleteHint: "Delete or Backspace also work.",
       strokeWidth: "Stroke width",
       opacity: "Opacity",
       linecap: "Line caps",
@@ -548,6 +552,10 @@ export const en: Dictionary = {
     fullHistory: "See the full commit history on GitHub",
   },
   changelog: {
+    "delete-layers": {
+      title: "Delete layers",
+      body: 'You can now delete the selected layers with the trash button in the "Layer" panel or with Delete/Backspace. The other layers keep their animations and settings, and a notice with "Undo" brings everything back. In Draw mode, Ctrl/Cmd+Z undoes it too.',
+    },
     "pen-tool": {
       title: "Pen for precise curves",
       body: "Draw mode now has the pen: click to place points, drag to pull out handles and curve, and click the first point to close the shape. Enter or double-click finishes, Backspace removes the last point and Esc discards. Shortcut: B.",

@@ -147,6 +147,10 @@ export const pt = {
       auto: "Automático",
       noColor: "Nenhum",
       invalidColor: "Cor inválida. Use #hex, rgb(), hsl() ou um nome de cor.",
+      delete: (n: number) => (n > 1 ? `Excluir ${n} camadas` : "Excluir camada"),
+      deleted: (n: number) => (n > 1 ? `${n} camadas excluídas` : "Camada excluída"),
+      undoDelete: "Desfazer",
+      deleteHint: "Delete ou Backspace também excluem.",
       strokeWidth: "Espessura do traço",
       opacity: "Opacidade",
       linecap: "Pontas do traço",
@@ -560,6 +564,10 @@ export const pt = {
     fullHistory: "Ver o histórico completo de commits no GitHub",
   },
   changelog: {
+    "delete-layers": {
+      title: "Excluir camadas",
+      body: 'Agora dá para excluir as camadas selecionadas com o botão de lixeira no painel "Camada" ou com Delete/Backspace. As outras camadas mantêm suas animações e ajustes, e um aviso com "Desfazer" traz tudo de volta. No modo Desenhar, Ctrl/Cmd+Z também desfaz.',
+    },
     "pen-tool": {
       title: "Caneta para curvas precisas",
       body: 'No modo "Desenhar" agora há a caneta: clique para pôr pontos, arraste para puxar as alças e curvar, e clique no primeiro ponto para fechar a forma. Enter ou duplo clique termina, Backspace remove o último ponto e Esc descarta. Atalho: B.',

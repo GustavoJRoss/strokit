@@ -144,6 +144,10 @@ export const es: Dictionary = {
       auto: "Automático",
       noColor: "Ninguno",
       invalidColor: "Color no válido. Usa #hex, rgb(), hsl() o un nombre de color.",
+      delete: (n: number) => (n > 1 ? `Eliminar ${n} capas` : "Eliminar capa"),
+      deleted: (n: number) => (n > 1 ? `${n} capas eliminadas` : "Capa eliminada"),
+      undoDelete: "Deshacer",
+      deleteHint: "Delete o Backspace también funcionan.",
       strokeWidth: "Grosor del trazo",
       opacity: "Opacidad",
       linecap: "Extremos del trazo",
@@ -563,6 +567,10 @@ export const es: Dictionary = {
     fullHistory: "Ver el historial completo de commits en GitHub",
   },
   changelog: {
+    "delete-layers": {
+      title: "Eliminar capas",
+      body: 'Ahora puedes eliminar las capas seleccionadas con el botón de papelera en el panel "Capa" o con Delete/Backspace. Las demás capas conservan sus animaciones y ajustes, y un aviso con "Deshacer" lo devuelve todo. En el modo Dibujar, Ctrl/Cmd+Z también lo deshace.',
+    },
     "pen-tool": {
       title: "Pluma para curvas precisas",
       body: 'El modo "Dibujar" ahora tiene la pluma: haz clic para poner puntos, arrastra para sacar los tiradores y curvar, y haz clic en el primer punto para cerrar la forma. Enter o doble clic termina, Backspace quita el último punto y Esc descarta. Atajo: B.',
