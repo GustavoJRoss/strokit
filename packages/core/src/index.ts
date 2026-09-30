@@ -17,6 +17,8 @@ export {
   pickPathFraction,
   pointAtFraction,
 } from "./dom/nearest-point";
+export { appendDrawnPaths, BLANK_VIEWBOX, type DrawnPath } from "./draw/append";
+export { type DrawPoint, type ShapeKind, type ShapeOptions, shapePath } from "./draw/shapes";
 export * as exporters from "./exporters";
 export { toComponentName } from "./exporters/jsx";
 export { getPreset, presetIds, presets } from "./presets";
