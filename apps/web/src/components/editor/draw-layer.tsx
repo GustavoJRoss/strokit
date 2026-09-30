@@ -12,6 +12,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { isEditableTarget } from "@/lib/dom";
 import { useI18n } from "@/lib/i18n/provider";
+import { cn } from "@/lib/utils";
 import { type DrawTool, useEditorStore } from "@/store/editor-store";
 
 /** A drag shorter than this (screen px) is a click and draws nothing. */
@@ -53,7 +54,7 @@ function distance(a: DrawPoint, b: DrawPoint): number {
  * Transparent SVG over the preview while drawing. It has the viewBox of the document (or the
  * blank canvas), so a pointer position converts to viewBox units through its own screen matrix.
  */
-export function DrawLayer() {
+export function DrawLayer({ disabled = false }: { disabled?: boolean }) {
   const doc = useEditorStore((state) => state.doc);
   const draw = useEditorStore((state) => state.draw);
   const { t } = useI18n();
@@ -222,7 +223,10 @@ export function DrawLayer() {
       aria-label={t.draw.canvas}
       viewBox={viewBox.join(" ")}
       preserveAspectRatio={preserveAspectRatio}
-      className="absolute inset-0 size-full cursor-crosshair touch-none select-none text-foreground"
+      className={cn(
+        "absolute inset-0 size-full cursor-crosshair touch-none select-none text-foreground",
+        disabled && "pointer-events-none",
+      )}
       onPointerDown={(event) => {
         if (event.button !== 0) return;
         if (draw.tool === "pen") {

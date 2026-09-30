@@ -40,6 +40,13 @@ export const en: Dictionary = {
     label: "SVG markup",
     submit: "Import",
   },
+  view: {
+    zoomIn: "Zoom in",
+    zoomOut: "Zoom out",
+    zoom: "Zoom",
+    center: "Center",
+    hint: "Scroll to zoom, drag the background (or hold Space) to move.",
+  },
   draw: {
     select: "Select",
     createFromScratch: "Start from scratch",
@@ -551,6 +558,10 @@ export const en: Dictionary = {
     fullHistory: "See the full commit history on GitHub",
   },
   changelog: {
+    "canvas-zoom-pan": {
+      title: "Zoom and pan the canvas",
+      body: 'The canvas now zooms and moves: scroll (or pinch) to zoom in and out, drag the background — or hold Space, or use the middle button — to move it, and use the + and − buttons or keys. The "Center" button (or the 0 key) puts everything back. It works while drawing too, and the drawing lands exactly where you drag.',
+    },
     "leaner-editor": {
       title: "A leaner editor",
       body: "The top bar is cleaner: the SVG name moved to the top of the layers panel, language and theme now share a single preferences button (on every page) and share became an icon. The drawing tools float at the bottom of the canvas, always within reach like in design editors, and every layer got a trash button in the list. The simulate reduced motion switch was removed.",

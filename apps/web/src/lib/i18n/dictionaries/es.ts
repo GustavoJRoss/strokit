@@ -40,6 +40,13 @@ export const es: Dictionary = {
     label: "Markup del SVG",
     submit: "Importar",
   },
+  view: {
+    zoomIn: "Acercar",
+    zoomOut: "Alejar",
+    zoom: "Zoom",
+    center: "Centrar",
+    hint: "Desplaza para hacer zoom, arrastra el fondo (o mantén Espacio) para mover.",
+  },
   draw: {
     select: "Seleccionar",
     createFromScratch: "Crear desde cero",
@@ -566,6 +573,10 @@ export const es: Dictionary = {
     fullHistory: "Ver el historial completo de commits en GitHub",
   },
   changelog: {
+    "canvas-zoom-pan": {
+      title: "Zoom y movimiento del lienzo",
+      body: 'El lienzo ahora hace zoom y se mueve: desplaza (o haz el gesto de pinza) para acercar y alejar, arrastra el fondo —o mantén Espacio, o usa el botón central— para moverlo, y usa los botones + y − o las teclas + y −. El botón "Centrar" (o la tecla 0) lo devuelve todo a su sitio. También funciona mientras dibujas, y el dibujo cae exactamente donde arrastras.',
+    },
     "leaner-editor": {
       title: "Un editor más liviano",
       body: "La barra superior quedó más limpia: el nombre del SVG pasó a la parte superior del panel de capas, idioma y tema ahora comparten un único botón de preferencias (en todas las páginas) y compartir se volvió un ícono. Las herramientas de dibujo flotan al pie del lienzo, siempre a mano como en los editores de diseño, y cada capa tiene una papelera en la lista. Se eliminó el interruptor de simular reduced motion.",

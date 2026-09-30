@@ -75,7 +75,7 @@ function IconAction({
  * draw mode on; the pointer goes back to editing layers. While drawing, the same bar also
  * carries color, width and undo/redo.
  */
-export function ToolDock() {
+export function ToolDock({ extra }: { extra?: ReactNode }) {
   const draw = useEditorStore((state) => state.draw);
   const enterDraw = useEditorStore((state) => state.enterDraw);
   const exitDraw = useEditorStore((state) => state.exitDraw);
@@ -99,81 +99,84 @@ export function ToolDock() {
   };
 
   return (
-    <div className="pointer-events-none absolute inset-x-2 bottom-3 z-10 flex flex-col items-center gap-2">
-      {draw.active && (
-        <p className="hidden rounded-md bg-foreground/85 px-2 py-1 text-background text-xs sm:block">
-          {draw.tool === "pen" ? copy.penHint : copy.hint}
-        </p>
-      )}
-      <div
-        role="toolbar"
-        aria-label={copy.toolbar}
-        className="pointer-events-auto flex max-w-full flex-wrap items-center justify-center gap-1.5 rounded-xl border bg-background/95 p-1.5 shadow-lg backdrop-blur"
-      >
-        <ToggleGroup
-          type="single"
-          variant="outline"
-          size="sm"
-          value={value}
-          onValueChange={choose}
-          aria-label={copy.toolbar}
-        >
-          {ITEMS.map((item) => {
-            const Icon = ICONS[item];
-            const label = draw.active ? `${names[item]} (${SHORTCUTS[item]})` : names[item];
-            return (
-              <Tooltip key={item}>
-                <TooltipTrigger asChild>
-                  {/* The tooltip trigger overwrites `data-state`, so the active tool is styled by `aria-checked`. */}
-                  <ToggleGroupItem
-                    value={item}
-                    aria-label={label}
-                    className="aria-checked:bg-primary aria-checked:text-primary-foreground aria-checked:hover:bg-primary/90"
-                  >
-                    <Icon />
-                  </ToggleGroupItem>
-                </TooltipTrigger>
-                <TooltipContent>{label}</TooltipContent>
-              </Tooltip>
-            );
-          })}
-        </ToggleGroup>
-
+    <div className="pointer-events-none absolute inset-x-2 bottom-3 z-10 flex flex-wrap items-end justify-center gap-2">
+      <div className="flex max-w-full flex-col items-center gap-2">
         {draw.active && (
-          <>
-            <Separator orientation="vertical" className="h-6" />
-            <input
-              type="color"
-              aria-label={copy.color}
-              title={copy.color}
-              value={toHexColor(draw.color) ?? DEFAULT_DRAW_COLOR}
-              onChange={(event) => setDrawStyle({ color: event.target.value })}
-              className="size-7 cursor-pointer rounded border bg-transparent p-0.5"
-            />
-            <div className="flex items-center gap-2 px-1">
-              <Slider
-                aria-label={copy.width}
-                className="w-24"
-                min={0.5}
-                max={100}
-                step={0.5}
-                value={[draw.width]}
-                onValueChange={([width]) => width !== undefined && setDrawStyle({ width })}
-              />
-              <output className="w-10 text-right text-muted-foreground text-xs tabular-nums">
-                {draw.width}%
-              </output>
-            </div>
-            <Separator orientation="vertical" className="h-6" />
-            <IconAction label={copy.undo} disabled={draw.past.length === 0} onClick={undoDraw}>
-              <Undo2Icon />
-            </IconAction>
-            <IconAction label={copy.redo} disabled={draw.future.length === 0} onClick={redoDraw}>
-              <Redo2Icon />
-            </IconAction>
-          </>
+          <p className="hidden rounded-md bg-foreground/85 px-2 py-1 text-background text-xs sm:block">
+            {draw.tool === "pen" ? copy.penHint : copy.hint}
+          </p>
         )}
+        <div
+          role="toolbar"
+          aria-label={copy.toolbar}
+          className="pointer-events-auto flex max-w-full flex-wrap items-center justify-center gap-1.5 rounded-xl border bg-background/95 p-1.5 shadow-lg backdrop-blur"
+        >
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            size="sm"
+            value={value}
+            onValueChange={choose}
+            aria-label={copy.toolbar}
+          >
+            {ITEMS.map((item) => {
+              const Icon = ICONS[item];
+              const label = draw.active ? `${names[item]} (${SHORTCUTS[item]})` : names[item];
+              return (
+                <Tooltip key={item}>
+                  <TooltipTrigger asChild>
+                    {/* The tooltip trigger overwrites `data-state`, so the active tool is styled by `aria-checked`. */}
+                    <ToggleGroupItem
+                      value={item}
+                      aria-label={label}
+                      className="aria-checked:bg-primary aria-checked:text-primary-foreground aria-checked:hover:bg-primary/90"
+                    >
+                      <Icon />
+                    </ToggleGroupItem>
+                  </TooltipTrigger>
+                  <TooltipContent>{label}</TooltipContent>
+                </Tooltip>
+              );
+            })}
+          </ToggleGroup>
+
+          {draw.active && (
+            <>
+              <Separator orientation="vertical" className="h-6" />
+              <input
+                type="color"
+                aria-label={copy.color}
+                title={copy.color}
+                value={toHexColor(draw.color) ?? DEFAULT_DRAW_COLOR}
+                onChange={(event) => setDrawStyle({ color: event.target.value })}
+                className="size-7 cursor-pointer rounded border bg-transparent p-0.5"
+              />
+              <div className="flex items-center gap-2 px-1">
+                <Slider
+                  aria-label={copy.width}
+                  className="w-24"
+                  min={0.5}
+                  max={100}
+                  step={0.5}
+                  value={[draw.width]}
+                  onValueChange={([width]) => width !== undefined && setDrawStyle({ width })}
+                />
+                <output className="w-10 text-right text-muted-foreground text-xs tabular-nums">
+                  {draw.width}%
+                </output>
+              </div>
+              <Separator orientation="vertical" className="h-6" />
+              <IconAction label={copy.undo} disabled={draw.past.length === 0} onClick={undoDraw}>
+                <Undo2Icon />
+              </IconAction>
+              <IconAction label={copy.redo} disabled={draw.future.length === 0} onClick={redoDraw}>
+                <Redo2Icon />
+              </IconAction>
+            </>
+          )}
+        </div>
       </div>
+      {extra}
     </div>
   );
 }

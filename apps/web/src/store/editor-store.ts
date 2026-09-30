@@ -80,6 +80,8 @@ export type EditorState = {
   exportTab: ExportTab;
   tool: CanvasTool;
   draw: DrawState;
+  /** Bumped when a document is loaded (import, link, reset): the canvas view recenters. */
+  loadToken: number;
 };
 
 export type EditorActions = {
@@ -155,6 +157,7 @@ export function getInitialState(): EditorState {
     exportTab: "css",
     tool: "select",
     draw: initialDraw(),
+    loadToken: 0,
   };
 }
 
@@ -195,6 +198,7 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
       activeStepId: null,
       tool: "select",
       draw: { ...state.draw, past: [], future: [] },
+      loadToken: state.loadToken + 1,
       playback: { ...state.playback, playing: true, restartToken: state.playback.restartToken + 1 },
     }));
   },
@@ -212,6 +216,7 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
       activeStepId: null,
       tool: "select",
       draw: { ...state.draw, past: [], future: [] },
+      loadToken: state.loadToken + 1,
       playback: { ...state.playback, playing: true, restartToken: state.playback.restartToken + 1 },
     }));
   },
@@ -443,7 +448,11 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
       selection: before.selection,
     };
     if (doc) get().replaceSvg(markup);
-    else get().loadSvg(markup, untitledName);
+    else {
+      // The first shape creates the document, but must not recenter the canvas under the pen.
+      get().loadSvg(markup, untitledName);
+      set({ loadToken: before.loadToken });
+    }
     const { doc: next } = get();
     if (!next) return;
     const added = next.elements.slice(-shapes.length).map((element) => element.id);
