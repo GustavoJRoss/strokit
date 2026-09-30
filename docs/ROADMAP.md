@@ -141,19 +141,17 @@ Plano completo em fases A–D. Um modo "Desenhar" no próprio preview, sem paine
 - [x] Sliders de largura até 100 (%), com dica; textos nos 3 dicionários; entrada no changelog
 - [x] Testes: `stroke-scale.test.ts` (viewBox 24 × 2000, `scale(0.1,-0.1)`, migração v1→v2), snapshots revisados
 
-**B. Infraestrutura do modo desenhar**
+**B. Modo desenhar e formas**
 
-- [ ] Slice `draw` no store, documento em branco, `addDrawnPaths` via `replaceSvg`, conversão tela → viewBox, undo mínimo do modo
-
-**C. Lápis livre**
-
-- [ ] `core/src/draw/freehand.ts` (Ramer-Douglas-Peucker + Catmull-Rom → Bézier), `DrawLayer` com pointer events
-
-**D. Barra de ferramentas e demais ferramentas**
-
-- [ ] Barra flutuante (lápis, caneta, linha, retângulo, elipse, cor, espessura, desfazer), atalhos, i18n, changelog
+- [x] Slice `draw` no store (`active`, `tool`, `width`, `color`, pilha de desfazer/refazer própria do modo); `enterDraw`/`exitDraw`, `addDrawnShapes`, `undoDraw`/`redoDraw`
+- [x] Core: `draw/shapes.ts` (`shapePath`: linha, retângulo e elipse como `<path>`, Shift = proporção/45°, Alt = a partir do centro) e `draw/append.ts` (`appendDrawnPaths`, SVG em branco 512×512); a entrada passa por `importSvg`/`replaceSvg` (sanitize + normalize + reconcile)
+- [x] Botão "Desenhar" na toolbar e "Criar do zero" no estado vazio; barra flutuante sobre o canvas (formas, cor, espessura em %, desfazer/refazer, concluir); atalhos L/R/E, Ctrl/Cmd+Z, Esc
+- [x] Em modo desenhar o preview mostra o estado final da animação (contornos não somem); a forma nova entra com o preset padrão e fica selecionada
+- [x] Testes: `draw.test.ts` (core), modo desenhar em `editor-store.test.ts`; i18n nos 3 idiomas; entrada no changelog
 
 **Aceite (A):** o mesmo valor de largura tem aparência equivalente num ícone 24×24 e num logo 2000×2000, e um projeto antigo abre igual.
+
+**Aceite (B):** criar do zero, arrastar um retângulo e uma linha, desfazer, concluir e ver a animação tocar e o CSS exportado com as duas formas.
 
 ---
 
