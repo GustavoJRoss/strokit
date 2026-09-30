@@ -48,7 +48,7 @@ Parâmetros específicos: `comet.length` (0–1), `draw-fill.fillAt` (0–1 do t
 - **RF4 Logos só com preenchimento:** a maioria das logos não tem `stroke`. Se um elemento só tem `fill`, o editor deve permitir gerar um stroke automático (cor do fill e largura configurável) para os presets de traço funcionarem. O preset `draw-fill` é o caminho recomendado nesse caso.
 - **RF5 Camadas:** lista de elementos com hover que destaca o elemento no canvas, seleção múltipla e aplicação de preset por seleção.
 - **RF6 Parâmetros:** painel com sliders e inputs numéricos sincronizados; mudanças refletem no preview em menos de 50 ms.
-- **RF7 Controles de preview:** play, pause, restart, velocidade (0.25x–2x), fundo claro/escuro/xadrez e toggle "simular reduced motion".
+- **RF7 Controles de preview:** play, pause, restart, velocidade (0.25x–2x), fundo claro/escuro/xadrez. O reduced motion é respeitado pelo código exportado (`prefers-reduced-motion`); o editor não tem toggle de simulação.
 - **RF8 Export:** abas CSS, React e Motion com syntax highlight, botão copiar e download (`.svg` animado, `.tsx`).
 - **RF9 Compartilhar:** a `AnimationSpec` e o SVG comprimidos na URL (hash). Abrir a URL reconstrói o estado. Se o tamanho passar do limite seguro, avisar e oferecer download de um `.strokit.json`.
 - **RF10 Import de projeto:** carregar um `.strokit.json`.

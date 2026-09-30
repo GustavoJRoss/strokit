@@ -41,7 +41,7 @@ Regra: uma fase por vez. Ao terminar, rode `npm run lint && npm run typecheck &&
 - [x] Canvas: preview isolado (Shadow DOM) renderizando a saída do `exporters.css()`
 - [x] Camadas: lista, hover destaca, seleção múltipla, "selecionar tudo"
 - [x] PresetPicker (por enquanto só `draw`) e ParamsPanel gerado a partir do `paramsSchema` + `timing`
-- [x] Controles: play/pause/restart, velocidade, fundo, simular reduced motion (Web Animations API)
+- [x] Controles: play/pause/restart, velocidade, fundo (Web Animations API; o toggle de simular reduced motion foi removido na Fase 7F)
 - [x] ExportPanel: aba CSS com highlight (Shiki), copiar, baixar `.svg`
 - [x] 3 logos de exemplo originais em `apps/web/public/examples/`
 
@@ -167,6 +167,13 @@ Plano completo em fases A–D. Um modo "Desenhar" no próprio preview, sem paine
 - [x] Store: `deleteLayers` (seleção por padrão) e `restoreSnapshot`; no modo desenhar entra no histórico do Ctrl/Cmd+Z, fora dele há aviso com "Desfazer"
 - [x] Editor: botão de lixeira na seção "Camada" e atalhos Delete/Backspace (ignorados em campos de texto, menus e diálogos)
 - [x] Testes: `delete.test.ts` (core) e exclusão em `editor-store.test.ts`; i18n e changelog
+
+**F. Layout do editor**
+
+- [x] Barra superior enxuta: nome do SVG no topo do painel de camadas, compartilhar só com ícone, sem o toggle de simular reduced motion (removido junto com `playback.reducedMotion`)
+- [x] `PreferencesMenu` (idioma + tema num botão com popover, `ui/popover.tsx`) em todos os cabeçalhos, no lugar de `LanguageSwitcher` e `ThemeToggle`
+- [x] Dock de ferramentas flutuante no rodapé do canvas (selecionar, lápis, caneta, linha, retângulo, elipse; cor, espessura e desfazer/refazer aparecem ao desenhar), no lugar do botão "Desenhar" e da barra do topo
+- [x] Lixeira em cada linha do painel de camadas (e nos grupos), visível ao passar o mouse, focar ou selecionar
 
 **Aceite (A):** o mesmo valor de largura tem aparência equivalente num ícone 24×24 e num logo 2000×2000, e um projeto antigo abre igual.
 
