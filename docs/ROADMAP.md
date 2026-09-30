@@ -175,6 +175,14 @@ Plano completo em fases A–D. Um modo "Desenhar" no próprio preview, sem paine
 - [x] Dock de ferramentas flutuante no rodapé do canvas (selecionar, lápis, caneta, linha, retângulo, elipse; cor, espessura e desfazer/refazer aparecem ao desenhar), no lugar do botão "Desenhar" e da barra do topo
 - [x] Lixeira em cada linha do painel de camadas (e nos grupos), visível ao passar o mouse, focar ou selecionar
 
+**G. Zoom e movimento do canvas**
+
+- [x] `lib/view.ts` (`zoomAt`, `panBy`, `wheelZoomFactor`, limites 10%–1000%): só visão do workspace, fora da `AnimationSpec` e de qualquer export
+- [x] Canvas: palco com `transform` (seleção, marcadores e o modo desenhar acompanham; `getScreenCTM` já considera o zoom); roda/pinça dá zoom no cursor, arrastar o fundo, Espaço+arrastar ou botão do meio movem; o xadrez anda junto
+- [x] Controles no rodapé (− / nível / + e "Centralizar", desabilitado quando já está centralizado) ao lado do dock; teclas `+`, `-` e `0`
+- [x] Importar ou abrir um link recentraliza (`loadToken`); a primeira forma desenhada não
+- [x] Testes: `view.test.ts`
+
 **Aceite (A):** o mesmo valor de largura tem aparência equivalente num ícone 24×24 e num logo 2000×2000, e um projeto antigo abre igual.
 
 **Aceite (B):** criar do zero, arrastar um retângulo e uma linha, desfazer, concluir e ver a animação tocar e o CSS exportado com as duas formas.
