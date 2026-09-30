@@ -1,17 +1,21 @@
 import {
   type AnimationSpec,
+  appendStep,
   applyPreset,
   createEmptySpec,
   DEFAULT_PRESET,
   type ImportWarning,
   importSvg,
   type LayerPatch,
+  moveStep,
   type PresetId,
   type ReconcileResult,
   reconcileSpec,
+  removeStep,
   resetLayers,
   type SharedAnimation,
   type SvgDocument,
+  setStepPreset,
   type Timing,
   updateLayers,
   updateTrackParams,
@@ -43,6 +47,8 @@ export type EditorState = {
   selection: string[];
   selectionAnchor: string | null;
   hovered: string | null;
+  /** Step of the selected layers' sequence being edited (UI only); the first one when null. */
+  activeStepId: string | null;
   playback: Playback;
   exportTab: ExportTab;
   tool: CanvasTool;
@@ -61,6 +67,13 @@ export type EditorActions = {
   clearSelection: () => void;
   setHovered: (id: string | null) => void;
   applyPresetToSelection: (preset: PresetId) => void;
+  /** Adds an animation after the ones the selected layers (or all) already have, and edits it. */
+  addStepToSelection: (preset: PresetId) => void;
+  removeStep: (trackId: string) => void;
+  moveStep: (trackId: string, direction: -1 | 1) => void;
+  selectStep: (trackId: string) => void;
+  /** Swaps the preset of one step of a sequence, keeping its place. */
+  replaceStepPreset: (trackId: string, preset: PresetId) => void;
   updateTiming: (trackId: string, patch: Partial<Timing>) => void;
   updateParams: (trackId: string, params: Record<string, unknown>) => void;
   setA11yLabel: (label: string) => void;
@@ -90,6 +103,7 @@ export function getInitialState(): EditorState {
     selection: [],
     selectionAnchor: null,
     hovered: null,
+    activeStepId: null,
     playback: {
       playing: true,
       rate: 1,
@@ -120,6 +134,7 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
       selection: [],
       selectionAnchor: null,
       hovered: null,
+      activeStepId: null,
       tool: "select",
       playback: { ...state.playback, playing: true, restartToken: state.playback.restartToken + 1 },
     }));
@@ -135,6 +150,7 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
       selection: [],
       selectionAnchor: null,
       hovered: null,
+      activeStepId: null,
       tool: "select",
       playback: { ...state.playback, playing: true, restartToken: state.playback.restartToken + 1 },
     }));
@@ -193,8 +209,37 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
     const { doc, spec, selection } = get();
     if (!doc) return;
     const targets = selection.length > 0 ? selection : doc.elements.map((element) => element.id);
-    set({ spec: applyPreset(spec, targets, preset) });
+    set({ spec: applyPreset(spec, targets, preset), activeStepId: null });
   },
+
+  addStepToSelection: (preset) => {
+    const { doc, spec, selection } = get();
+    if (!doc) return;
+    const targets = selection.length > 0 ? selection : doc.elements.map((element) => element.id);
+    const next = appendStep(spec, targets, preset);
+    if (next === spec) return;
+    const known = new Set(spec.tracks.map((track) => track.id));
+    const added = next.tracks.filter((track) => !known.has(track.id)).at(-1);
+    set({ spec: next, activeStepId: added?.id ?? null });
+  },
+
+  removeStep: (trackId) => set({ spec: removeStep(get().spec, trackId), activeStepId: null }),
+
+  moveStep: (trackId, direction) => {
+    const { spec } = get();
+    const track = spec.tracks.find((item) => item.id === trackId);
+    const next = moveStep(spec, trackId, direction);
+    if (next === spec || !track) return;
+    // The animation moved to the neighbouring slot, so the edited step follows it.
+    const slot =
+      direction === -1 ? track.after : spec.tracks.find((item) => item.after === trackId)?.id;
+    set({ spec: next, activeStepId: slot ?? trackId });
+  },
+
+  selectStep: (activeStepId) => set({ activeStepId }),
+
+  replaceStepPreset: (trackId, preset) =>
+    set({ spec: setStepPreset(get().spec, trackId, preset), activeStepId: trackId }),
 
   updateTiming: (trackId, patch) => set({ spec: updateTrackTiming(get().spec, trackId, patch) }),
 

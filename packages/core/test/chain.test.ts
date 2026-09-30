@@ -4,6 +4,7 @@ import { exportCss } from "../src/exporters/css";
 import { exportMotion } from "../src/exporters/motion";
 import { exportReact } from "../src/exporters/react";
 import { animationLength, sampleAnimation } from "../src/render/frame";
+import { decodeShare, encodeShare } from "../src/share";
 import { trackTimes } from "../src/spec/chain";
 import {
   appendStep,
@@ -134,6 +135,13 @@ describe("chained tracks", () => {
         ],
       }),
     ).toThrow(/first step/);
+  });
+
+  it("share links carry the sequence", () => {
+    const spec = drawThenPulse();
+    const restored = decodeShare(encodeShare({ svg: load().raw, spec }));
+    expect(restored.spec).toEqual(spec);
+    expect(restored.spec.tracks[1]?.after).toBe("track-0");
   });
 
   it("reconcile keeps chains and reconnects them when an element goes away", () => {

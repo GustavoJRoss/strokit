@@ -150,6 +150,19 @@ export const es: Dictionary = {
         `Se aplica a ${n} ${plural(n, "capa seleccionada", "capas seleccionadas")}.`,
       appliesToAll: "Sin selección: se aplica a todas las capas.",
     },
+    sequence: {
+      title: "Secuencia",
+      summary: (n: number) => (n <= 1 ? "Una animación" : `${n} animaciones en secuencia`),
+      hint: "Las animaciones se reproducen una tras otra. Solo la última puede repetirse siempre.",
+      step: (n: number, preset: string) => `${n}. ${preset}`,
+      add: "Añadir animación",
+      addLabel: "Después de la última, reproducir:",
+      outlineFirst: "Las animaciones de contorno solo pueden ser la primera etapa.",
+      remove: "Quitar etapa",
+      moveUp: "Subir",
+      moveDown: "Bajar",
+      empty: "Elige un preset para empezar.",
+    },
     timing: {
       title: "Animación",
       noTrackSummary: "Ninguna capa animada seleccionada",
@@ -163,6 +176,8 @@ export const es: Dictionary = {
       delay: "Retraso",
       repetitions: "Repeticiones",
       repeatForever: "Repetir siempre",
+      delayAfterPrevious: "Espera después de la etapa anterior.",
+      loopLast: "Solo la última etapa de la secuencia puede repetirse siempre.",
       direction: "Dirección",
       directions: {
         normal: "Normal",
@@ -534,6 +549,10 @@ export const es: Dictionary = {
     seo: {
       title: "Mejor búsqueda y para compartir",
       body: "El sitio ahora muestra una vista previa correcta al compartir (LinkedIn, WhatsApp) y está listo para la indexación de Google: sitemap, robots.txt y datos estructurados.",
+    },
+    "animation-sequence": {
+      title: "Secuencia de animaciones",
+      body: 'Ahora puedes encadenar animaciones en el mismo logo: por ejemplo, dibujar y rellenar y después un brillo en bucle. En la sección "Secuencia" del editor añades, reordenas y quitas etapas, cada una con sus propios ajustes. Solo la última etapa se repite siempre. El código exportado (CSS, React y Motion), el vídeo y el enlace siguen el mismo orden.',
     },
     "shine-preset": {
       title: "Nuevo preset: Brillo",

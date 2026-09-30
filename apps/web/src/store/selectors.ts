@@ -1,9 +1,9 @@
 import {
   type AnimationSpec,
   type CompiledAnimation,
+  chainOf,
   compile,
   exporters,
-  findTrackForElement,
   type LayerNode,
   layerTree,
   type SvgDocument,
@@ -57,11 +57,36 @@ export const selectPreviewMarkup = (state: EditorState): string | null => {
   return compiled ? previewMemo(compiled) : null;
 };
 
-/** Track being edited: the one animating the first selected element, or the only track. */
+/**
+ * Element whose sequence the panel shows: the first selected one, or, with no selection, any
+ * animated element when they all play the same sequence.
+ */
+function referenceElement(spec: AnimationSpec, selection: string[]): string | undefined {
+  const first = selection[0];
+  if (first !== undefined) return first;
+  const animated = [...new Set(spec.tracks.flatMap((track) => track.targets))];
+  const key = (id: string) =>
+    chainOf(spec, id)
+      .map((track) => track.id)
+      .join(">");
+  const [head] = animated;
+  return head !== undefined && animated.every((id) => key(id) === key(head)) ? head : undefined;
+}
+
+const NO_STEPS: Track[] = [];
+const chainMemo = memoizeLast((spec: AnimationSpec, reference: string | undefined): Track[] => {
+  const chain = reference === undefined ? NO_STEPS : chainOf(spec, reference);
+  return chain.length === 0 ? NO_STEPS : chain;
+});
+
+/** Steps (animations played in sequence) of the selected layers, in playing order. */
+export const selectChain = (state: EditorState): Track[] =>
+  chainMemo(state.spec, referenceElement(state.spec, state.selection));
+
+/** Step being edited: the chosen one, else the first of the sequence. */
 export const selectActiveTrack = (state: EditorState): Track | null => {
-  const first = state.selection[0];
-  if (first !== undefined) return findTrackForElement(state.spec, first) ?? null;
-  return state.spec.tracks.length === 1 ? (state.spec.tracks[0] ?? null) : null;
+  const chain = selectChain(state);
+  return chain.find((track) => track.id === state.activeStepId) ?? chain[0] ?? null;
 };
 
 const NO_LAYERS: LayerNode[] = [];

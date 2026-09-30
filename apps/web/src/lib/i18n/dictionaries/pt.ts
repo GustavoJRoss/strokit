@@ -153,6 +153,19 @@ export const pt = {
         `Aplica ${plural(n, "à", "às")} ${n} ${plural(n, "camada selecionada", "camadas selecionadas")}.`,
       appliesToAll: "Sem seleção: aplica a todas as camadas.",
     },
+    sequence: {
+      title: "Sequência",
+      summary: (n: number) => (n <= 1 ? "Uma animação" : `${n} animações em sequência`),
+      hint: "As animações tocam uma depois da outra. Só a última pode repetir para sempre.",
+      step: (n: number, preset: string) => `${n}. ${preset}`,
+      add: "Adicionar animação",
+      addLabel: "Depois da última, tocar:",
+      outlineFirst: "Desenhos de contorno só podem ser a primeira etapa.",
+      remove: "Remover etapa",
+      moveUp: "Mover para cima",
+      moveDown: "Mover para baixo",
+      empty: "Escolha um preset para começar.",
+    },
     timing: {
       title: "Animação",
       noTrackSummary: "Nenhuma camada animada selecionada",
@@ -167,6 +180,8 @@ export const pt = {
       delay: "Atraso",
       repetitions: "Repetições",
       repeatForever: "Repetir para sempre",
+      delayAfterPrevious: "Espera depois da etapa anterior.",
+      loopLast: "Só a última etapa da sequência pode repetir para sempre.",
       direction: "Direção",
       directions: {
         normal: "Normal",
@@ -530,6 +545,10 @@ export const pt = {
     seo: {
       title: "Compartilhamento e busca melhorados",
       body: "O site agora aparece com preview correto ao compartilhar (LinkedIn, WhatsApp) e está pronto para indexação no Google: sitemap, robots.txt e dados estruturados.",
+    },
+    "animation-sequence": {
+      title: "Sequência de animações",
+      body: 'Agora você pode encadear animações na mesma logo: por exemplo, desenhar e preencher e depois um brilho em loop. Na seção "Sequência" do editor você adiciona, reordena e remove etapas, e cada uma tem seus próprios ajustes. Só a última etapa repete para sempre. O código exportado (CSS, React e Motion), o vídeo e o link seguem a mesma ordem.',
     },
     "shine-preset": {
       title: "Novo preset: Brilho",

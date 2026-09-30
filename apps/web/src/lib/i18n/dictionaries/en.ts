@@ -149,6 +149,19 @@ export const en: Dictionary = {
       appliesToSelection: (n) => `Applies to ${n} selected ${plural(n, "layer", "layers")}.`,
       appliesToAll: "No selection: applies to every layer.",
     },
+    sequence: {
+      title: "Sequence",
+      summary: (n: number) => (n <= 1 ? "One animation" : `${n} animations in sequence`),
+      hint: "Animations play one after the other. Only the last one can repeat forever.",
+      step: (n: number, preset: string) => `${n}. ${preset}`,
+      add: "Add animation",
+      addLabel: "After the last one, play:",
+      outlineFirst: "Outline animations can only be the first step.",
+      remove: "Remove step",
+      moveUp: "Move up",
+      moveDown: "Move down",
+      empty: "Pick a preset to start.",
+    },
     timing: {
       title: "Animation",
       noTrackSummary: "No animated layer selected",
@@ -162,6 +175,8 @@ export const en: Dictionary = {
       delay: "Delay",
       repetitions: "Repetitions",
       repeatForever: "Repeat forever",
+      delayAfterPrevious: "Wait after the previous step.",
+      loopLast: "Only the last step of the sequence can repeat forever.",
       direction: "Direction",
       directions: {
         normal: "Normal",
@@ -519,6 +534,10 @@ export const en: Dictionary = {
     seo: {
       title: "Better sharing and search",
       body: "The site now shows a proper preview when shared (LinkedIn, WhatsApp) and is ready for Google indexing: sitemap, robots.txt and structured data.",
+    },
+    "animation-sequence": {
+      title: "Animation sequences",
+      body: 'You can now chain animations on the same logo: for example, draw and fill and then a looping shine. In the editor\'s "Sequence" section you add, reorder and remove steps, each with its own settings. Only the last step repeats forever. The exported code (CSS, React and Motion), the video and the link all follow the same order.',
     },
     "shine-preset": {
       title: "New preset: Shine",

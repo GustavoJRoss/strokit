@@ -61,7 +61,7 @@ export {
   moveStep,
   pruneTracks,
   removeStep,
-  stepIndex,
+  setStepPreset,
   updateTrackParams,
   updateTrackTiming,
 } from "./spec/defaults";

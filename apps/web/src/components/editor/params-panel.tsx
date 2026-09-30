@@ -1,7 +1,22 @@
 "use client";
 
-import { describeParams, getPreset, presetIds, type Timing, type Track } from "@strokit/core";
-import { PanelRightCloseIcon, TriangleAlertIcon } from "lucide-react";
+import {
+  type AnimationSpec,
+  describeParams,
+  getPreset,
+  moveStep,
+  type PresetId,
+  presetIds,
+  type Timing,
+  type Track,
+} from "@strokit/core";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  PanelRightCloseIcon,
+  Trash2Icon,
+  TriangleAlertIcon,
+} from "lucide-react";
 import { useId } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -12,12 +27,18 @@ import { Switch } from "@/components/ui/switch";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editor-store";
-import { selectActiveTrack, selectCompiled } from "@/store/selectors";
+import { selectActiveTrack, selectChain, selectCompiled } from "@/store/selectors";
 import { CollapsibleSection } from "./collapsible-section";
 import { EasingField, easingLabel } from "./easing-field";
 import { LayerSection } from "./layer-inspector";
 import { NumberField } from "./number-field";
 import { SelectField } from "./select-field";
+
+/** True when swapping the step's preset would break the sequence (outline preset mid-chain). */
+function replaceBlocked(spec: AnimationSpec, trackId: string, preset: PresetId): boolean {
+  const track = spec.tracks.find((item) => item.id === trackId);
+  return track !== undefined && getPreset(preset).kind === "stroke" && track.after !== undefined;
+}
 
 const DIRECTIONS: Timing["direction"][] = ["normal", "reverse", "alternate", "alternate-reverse"];
 
@@ -26,12 +47,119 @@ function lookup(table: Record<string, string> | undefined, key: string, fallback
   return table?.[key] ?? fallback;
 }
 
+function SequenceSection() {
+  const hasDoc = useEditorStore((state) => state.doc !== null);
+  const spec = useEditorStore((state) => state.spec);
+  const chain = useEditorStore(selectChain);
+  const activeTrack = useEditorStore(selectActiveTrack);
+  const addStep = useEditorStore((state) => state.addStepToSelection);
+  const removeStep = useEditorStore((state) => state.removeStep);
+  const moveStepAction = useEditorStore((state) => state.moveStep);
+  const selectStep = useEditorStore((state) => state.selectStep);
+  const { t } = useI18n();
+  const copy = t.params.sequence;
+  // Outline presets only start a sequence; everything else can follow any step.
+  const addable = presetIds.filter((id) => chain.length === 0 || getPreset(id).kind !== "stroke");
+
+  return (
+    <CollapsibleSection
+      id="sequence"
+      title={copy.title}
+      defaultOpen
+      summary={copy.summary(chain.length)}
+    >
+      {chain.length === 0 ? (
+        <p className="text-muted-foreground text-sm">{copy.empty}</p>
+      ) : (
+        <ol className="grid gap-1.5" aria-label={copy.title}>
+          {chain.map((track, index) => (
+            <li
+              key={track.id}
+              className={cn(
+                "flex items-center gap-1 rounded-lg border pr-1 text-sm",
+                track.id === activeTrack?.id ? "border-primary bg-primary/5" : "",
+              )}
+            >
+              <button
+                type="button"
+                aria-pressed={track.id === activeTrack?.id}
+                onClick={() => selectStep(track.id)}
+                className="flex min-w-0 flex-1 items-center justify-between gap-2 rounded-lg px-3 py-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <span className="truncate font-medium">
+                  {copy.step(index + 1, t.presets[track.preset].label)}
+                </span>
+                <span className="shrink-0 text-muted-foreground text-xs">
+                  {track.timing.duration} ms
+                </span>
+              </button>
+              {chain.length > 1 && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    aria-label={copy.moveUp}
+                    title={copy.moveUp}
+                    disabled={moveStep(spec, track.id, -1) === spec}
+                    onClick={() => moveStepAction(track.id, -1)}
+                  >
+                    <ArrowUpIcon />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    aria-label={copy.moveDown}
+                    title={copy.moveDown}
+                    disabled={moveStep(spec, track.id, 1) === spec}
+                    onClick={() => moveStepAction(track.id, 1)}
+                  >
+                    <ArrowDownIcon />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    aria-label={copy.remove}
+                    title={copy.remove}
+                    onClick={() => removeStep(track.id)}
+                  >
+                    <Trash2Icon />
+                  </Button>
+                </>
+              )}
+            </li>
+          ))}
+        </ol>
+      )}
+      {hasDoc && (
+        <SelectField
+          label={copy.addLabel}
+          value=""
+          placeholder={copy.add}
+          options={addable.map((id) => ({ value: id, label: t.presets[id].label }))}
+          onChange={(id) => addStep(id)}
+        />
+      )}
+      <p className="text-muted-foreground text-xs">
+        {copy.hint}
+        {chain.length > 0 ? ` ${copy.outlineFirst}` : ""}
+      </p>
+    </CollapsibleSection>
+  );
+}
+
 function PresetPicker() {
   const hasDoc = useEditorStore((state) => state.doc !== null);
   const selectionCount = useEditorStore((state) => state.selection.length);
   const activeTrack = useEditorStore(selectActiveTrack);
-  const applyPreset = useEditorStore((state) => state.applyPresetToSelection);
+  const chain = useEditorStore(selectChain);
+  const applyToSelection = useEditorStore((state) => state.applyPresetToSelection);
+  const replaceStepPreset = useEditorStore((state) => state.replaceStepPreset);
+  const spec = useEditorStore((state) => state.spec);
   const { t } = useI18n();
+  // Inside a sequence a preset replaces the step being edited, not the whole sequence.
+  const inSequence = activeTrack !== null && chain.length > 1;
+  const applyPreset = (id: PresetId) =>
+    inSequence ? replaceStepPreset(activeTrack.id, id) : applyToSelection(id);
 
   return (
     <CollapsibleSection
@@ -44,11 +172,14 @@ function PresetPicker() {
         {presetIds.map((id) => {
           const preset = t.presets[id];
           const active = activeTrack?.preset === id;
+          // An outline preset cannot be swapped into the middle of a sequence.
+          const blocked =
+            inSequence && spec.tracks.length > 0 && replaceBlocked(spec, activeTrack.id, id);
           return (
             <button
               key={id}
               type="button"
-              disabled={!hasDoc}
+              disabled={!hasDoc || blocked}
               aria-pressed={active}
               onClick={() => applyPreset(id)}
               className={cn(
@@ -62,7 +193,7 @@ function PresetPicker() {
           );
         })}
       </div>
-      {hasDoc && (
+      {hasDoc && !inSequence && (
         <p className="text-muted-foreground text-xs">
           {selectionCount > 0
             ? t.params.preset.appliesToSelection(selectionCount)
@@ -123,6 +254,7 @@ function PresetParamsFields({ track }: { track: Track }) {
 
 function TimingSection() {
   const track = useEditorStore(selectActiveTrack);
+  const spec = useEditorStore((state) => state.spec);
   const hasSelection = useEditorStore((state) => state.selection.length > 0);
   const updateTiming = useEditorStore((state) => state.updateTiming);
   const { t } = useI18n();
@@ -140,6 +272,8 @@ function TimingSection() {
 
   const { timing } = track;
   const infinite = timing.iterations === "infinite";
+  const followed = spec.tracks.some((item) => item.after === track.id);
+  const chained = track.after !== undefined;
   const set = (patch: Partial<Timing>) => updateTiming(track.id, patch);
 
   const repeats = timing.iterations === "infinite" ? copy.forever : copy.times(timing.iterations);
@@ -171,6 +305,7 @@ function TimingSection() {
         step={50}
         onChange={(delay) => set({ delay })}
       />
+      {chained && <p className="-mt-2 text-muted-foreground text-xs">{copy.delayAfterPrevious}</p>}
       <EasingField value={timing.easing} onChange={(easing) => set({ easing })} />
       <NumberField
         label={copy.repetitions}
@@ -187,9 +322,11 @@ function TimingSection() {
         <Switch
           id="iterations-infinite"
           checked={infinite}
+          disabled={followed}
           onCheckedChange={(checked) => set({ iterations: checked ? "infinite" : 1 })}
         />
       </div>
+      {followed && <p className="-mt-2 text-muted-foreground text-xs">{copy.loopLast}</p>}
       <SelectField
         label={copy.direction}
         value={timing.direction}
@@ -301,6 +438,7 @@ export function ParamsPanel({ onCollapse }: { onCollapse?: () => void }) {
       </div>
       <ScrollArea className="min-h-0 flex-1">
         <LayerSection />
+        <SequenceSection />
         <PresetPicker />
         <TimingSection />
         <GlobalSection />

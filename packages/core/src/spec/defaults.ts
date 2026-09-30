@@ -1,5 +1,5 @@
 import { getPreset } from "../presets";
-import { ancestorIds, chainIssues, orderedTracks } from "./chain";
+import { chainIssues, orderedTracks } from "./chain";
 import type { AnimationSpec, PresetId, Track } from "./schema";
 import type { Timing } from "./timing";
 
@@ -124,6 +124,32 @@ export function appendStep(
   return next;
 }
 
+/**
+ * Swaps the animation of one step for another preset (its defaults), keeping its place, targets
+ * and link in the chain. A step that others follow cannot loop forever. Unchanged when the
+ * result would be invalid (an outline preset in the middle of a chain).
+ */
+export function setStepPreset(
+  spec: AnimationSpec,
+  trackId: string,
+  preset: PresetId,
+): AnimationSpec {
+  const current = spec.tracks.find((track) => track.id === trackId);
+  if (!current) return spec;
+  const fresh = createTrack(current.id, preset, current.targets);
+  const followed = spec.tracks.some((track) => track.after === trackId);
+  const replacement: Track = {
+    ...fresh,
+    ...(current.after === undefined ? {} : { after: current.after }),
+    timing:
+      followed && fresh.timing.iterations === "infinite"
+        ? { ...fresh.timing, iterations: 1 }
+        : fresh.timing,
+  };
+  const tracks = spec.tracks.map((track) => (track.id === trackId ? replacement : track));
+  return chainIssues(tracks).length > 0 ? spec : { ...spec, tracks };
+}
+
 /** Removes one step; the steps that followed it now follow what it followed. */
 export function removeStep(spec: AnimationSpec, trackId: string): AnimationSpec {
   return {
@@ -155,11 +181,6 @@ export function moveStep(spec: AnimationSpec, trackId: string, direction: -1 | 1
     return item;
   });
   return chainIssues(tracks).length > 0 ? spec : { ...spec, tracks };
-}
-
-/** Steps a track's chain has before it (used by the editor to number steps). */
-export function stepIndex(spec: AnimationSpec, track: Track): number {
-  return ancestorIds(spec.tracks, track).length;
 }
 
 export function findTrackForElement(spec: AnimationSpec, elementId: string): Track | undefined {
