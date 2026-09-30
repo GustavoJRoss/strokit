@@ -6,6 +6,7 @@ import {
   BLANK_VIEWBOX,
   createEmptySpec,
   DEFAULT_PRESET,
+  deleteLayers as deleteLayersFromSvg,
   type ImportWarning,
   importSvg,
   type LayerPatch,
@@ -36,7 +37,7 @@ export type CanvasTool = "select" | "start";
 /** Shapes the draw mode can make. */
 export type DrawTool = "pencil" | "pen" | "line" | "rect" | "ellipse";
 
-/** What undo brings back: the document and everything derived from it by the drawing. */
+/** What undo brings back: the document and everything derived from it (drawing, deleting). */
 export type DrawSnapshot = {
   doc: SvgDocument | null;
   fileName: string | null;
@@ -114,6 +115,12 @@ export type EditorActions = {
   /** Replaces the SVG, keeping animations and edits of the elements that remain. Throws `SvgImportError`. */
   replaceSvg: (markup: string) => ReconcileResult;
   setTool: (tool: CanvasTool) => void;
+  /**
+   * Deletes layers (the selection by default) from the SVG; the ones left keep their animation
+   * and edits. Returns what `restoreSnapshot` needs to bring them back, `null` if nothing went.
+   */
+  deleteLayers: (ids?: string[]) => DrawSnapshot | null;
+  restoreSnapshot: (snapshot: DrawSnapshot) => void;
   /** Enters draw mode (creating a blank SVG on the first shape when there is none). */
   enterDraw: () => void;
   exitDraw: () => void;
@@ -352,6 +359,56 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
   },
 
   setTool: (tool) => set({ tool }),
+
+  deleteLayers: (ids) => {
+    const { doc, spec, selection, fileName, draw } = get();
+    const targets = ids ?? selection;
+    if (!doc || targets.length === 0) return null;
+    const result = deleteLayersFromSvg(doc, spec, targets);
+    if (result.removed === 0) return null;
+    const snapshot: DrawSnapshot = { doc, fileName, spec, selection };
+    // While drawing, deleting joins the drawing history (Ctrl+Z); elsewhere the caller offers undo.
+    const history = draw.active
+      ? { ...draw, past: [...draw.past, snapshot].slice(-DRAW_HISTORY_LIMIT), future: [] }
+      : draw;
+    if (result.markup === null) {
+      set({
+        doc: null,
+        fileName: null,
+        importWarnings: [],
+        spec: createEmptySpec(),
+        selection: [],
+        selectionAnchor: null,
+        hovered: null,
+        activeStepId: null,
+        tool: "select",
+        draw: history,
+      });
+      return snapshot;
+    }
+    const { document, warnings } = importSvg(result.markup, { parser: new DOMParser() });
+    set((state) => ({
+      doc: document,
+      importWarnings: warnings,
+      spec: result.spec,
+      selection: [],
+      selectionAnchor: null,
+      hovered: null,
+      activeStepId: null,
+      tool: "select",
+      draw: history,
+      playback: { ...state.playback, restartToken: state.playback.restartToken + 1 },
+    }));
+    return snapshot;
+  },
+
+  restoreSnapshot: (snapshot) =>
+    set((state) => ({
+      ...snapshot,
+      hovered: null,
+      activeStepId: null,
+      playback: { ...state.playback, restartToken: state.playback.restartToken + 1 },
+    })),
 
   enterDraw: () =>
     set((state) => ({

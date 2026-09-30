@@ -10,7 +10,7 @@ import {
   strokeScales,
   toVisualWidth,
 } from "@strokit/core";
-import { CrosshairIcon, RotateCcwIcon } from "lucide-react";
+import { CrosshairIcon, RotateCcwIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,7 @@ import { useEditorStore } from "@/store/editor-store";
 import { CollapsibleSection } from "./collapsible-section";
 import { NumberField } from "./number-field";
 import { SelectField } from "./select-field";
+import { useDeleteLayers } from "./use-delete-layers";
 
 const INHERIT = "inherit";
 
@@ -178,6 +179,7 @@ export function LayerSection() {
   const setTool = useEditorStore((state) => state.setTool);
   const updateLayers = useEditorStore((state) => state.updateLayers);
   const resetLayers = useEditorStore((state) => state.resetLayers);
+  const deleteSelected = useDeleteLayers();
   const { t } = useI18n();
   const copy = t.params.layer;
 
@@ -329,16 +331,17 @@ export function LayerSection() {
         />
       </div>
 
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={!edited}
-        onClick={() => resetLayers()}
-        className="self-start"
-      >
-        <RotateCcwIcon data-icon="inline-start" />
-        {copy.reset}
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" size="sm" disabled={!edited} onClick={() => resetLayers()}>
+          <RotateCcwIcon data-icon="inline-start" />
+          {copy.reset}
+        </Button>
+        <Button variant="destructive" size="sm" onClick={deleteSelected}>
+          <Trash2Icon data-icon="inline-start" />
+          {copy.delete(elements.length)}
+        </Button>
+      </div>
+      <p className="-mt-1 text-muted-foreground text-xs">{copy.deleteHint}</p>
     </CollapsibleSection>
   );
 }

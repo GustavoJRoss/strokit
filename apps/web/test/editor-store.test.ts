@@ -314,3 +314,66 @@ describe("draw mode", () => {
     expect(store().doc).toBeNull();
   });
 });
+
+describe("deleting layers", () => {
+  beforeEach(() => useEditorStore.setState(getInitialState()));
+
+  it("does nothing without a document or a selection", () => {
+    expect(store().deleteLayers()).toBeNull();
+    store().loadSvg(example("orbita.svg"), "Órbita");
+    expect(store().deleteLayers()).toBeNull();
+    expect(store().doc?.elements).toHaveLength(4);
+  });
+
+  it("deletes the selection and keeps the rest animated, renumbered", () => {
+    store().loadSvg(example("orbita.svg"), "Órbita");
+    store().select("sk-1");
+    const snapshot = store().deleteLayers();
+    expect(snapshot).not.toBeNull();
+    const { doc, spec, selection } = store();
+    expect(doc?.elements.map((element) => element.id)).toEqual(["sk-0", "sk-1", "sk-2"]);
+    expect(spec.tracks.flatMap((track) => track.targets).sort()).toEqual(["sk-0", "sk-1", "sk-2"]);
+    expect(selection).toEqual([]);
+  });
+
+  it("carries layer edits to the new ids", () => {
+    store().loadSvg(example("orbita.svg"), "Órbita");
+    store().updateLayers({ strokeWidth: 7 }, ["sk-3"]);
+    store().select("sk-0");
+    store().deleteLayers();
+    expect(store().spec.layers).toEqual({ "sk-2": { strokeWidth: 7 } });
+  });
+
+  it("brings everything back with restoreSnapshot", () => {
+    store().loadSvg(example("orbita.svg"), "Órbita");
+    const before = store().spec;
+    store().selectAll();
+    const snapshot = store().deleteLayers();
+    expect(store().doc).toBeNull();
+    if (snapshot) store().restoreSnapshot(snapshot);
+    expect(store().doc?.elements).toHaveLength(4);
+    expect(store().spec).toBe(before);
+    expect(store().fileName).toBe("Órbita");
+  });
+
+  it("joins the drawing history while drawing, so undo works", () => {
+    store().enterDraw();
+    store().addDrawnShapes(["M0 0H10V10H0Z"], "Desenho");
+    store().addDrawnShapes(["M20 20L30 30"], "Desenho");
+    store().select("sk-0");
+    store().deleteLayers();
+    expect(store().doc?.elements).toHaveLength(1);
+    store().undoDraw();
+    expect(store().doc?.elements).toHaveLength(2);
+  });
+
+  it("deletes the whole drawing down to a blank canvas when drawing", () => {
+    store().enterDraw();
+    store().addDrawnShapes(["M0 0H10V10H0Z"], "Desenho");
+    store().deleteLayers();
+    expect(store().doc).toBeNull();
+    expect(store().draw.active).toBe(true);
+    store().addDrawnShapes(["M0 0L5 5"], "Desenho");
+    expect(store().doc?.elements).toHaveLength(1);
+  });
+});

@@ -129,8 +129,12 @@ export function DrawLayer() {
       } else if (event.key === "Enter" && placing) {
         event.preventDefault();
         finishPenRef.current(false);
-      } else if ((event.key === "Backspace" || event.key === "Delete") && placing) {
-        undoAnchor();
+      } else if (event.key === "Backspace" || event.key === "Delete") {
+        if (placing) undoAnchor();
+        else if (state.selection.length > 0) {
+          event.preventDefault();
+          state.deleteLayers();
+        }
       } else if (mod && key === "z") {
         if (placing && !event.shiftKey) undoAnchor();
         else {

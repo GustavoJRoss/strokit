@@ -10,6 +10,7 @@ import { EditorLayout } from "./editor-layout";
 import { EmptyState } from "./empty-state";
 import { PreviewCanvas } from "./preview-canvas";
 import { Toolbar } from "./toolbar";
+import { useDeleteLayers } from "./use-delete-layers";
 import { useDraft } from "./use-draft";
 import { useImporter } from "./use-importer";
 
@@ -20,6 +21,28 @@ export function Editor() {
   const [dragging, setDragging] = useState(false);
   const { t } = useI18n();
   useDraft();
+  const deleteSelected = useDeleteLayers();
+
+  // Delete/Backspace remove the selected layers. Draw mode has its own keys (see DrawLayer).
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Delete" && event.key !== "Backspace") return;
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (isEditableTarget(event.target)) return;
+      // Menus and dialogs own their keys.
+      if (
+        event.target instanceof Element &&
+        event.target.closest("[role=dialog],[role=menu],[role=listbox]")
+      )
+        return;
+      const { selection, draw } = useEditorStore.getState();
+      if (draw.active || selection.length === 0) return;
+      event.preventDefault();
+      deleteSelected();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [deleteSelected]);
 
   useEffect(() => {
     const onPaste = (event: ClipboardEvent) => {
