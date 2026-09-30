@@ -104,12 +104,10 @@ describe("editor store", () => {
     store().togglePlaying();
     store().setRate(0.5);
     store().setBackground("dark");
-    store().setReducedMotion(true);
     store().restart();
     expect(store().playback).toEqual({
       playing: true,
       rate: 0.5,
-      reducedMotion: true,
       background: "dark",
       restartToken: 2,
     });

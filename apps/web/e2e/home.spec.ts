@@ -37,6 +37,7 @@ test.describe("theme", () => {
   test("the toggle overrides the system and is remembered", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light" });
     await page.goto("/");
+    await page.getByRole("button", { name: "Preferências" }).click();
     await page.getByRole("radio", { name: "Tema escuro" }).click();
     await expect.poll(() => background(page)).toBe("rgb(0, 0, 0)");
     await page.reload();

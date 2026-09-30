@@ -22,6 +22,7 @@ export const pt = {
     home: "strokit, início",
   },
   language: { label: "Idioma" },
+  preferences: { label: "Preferências" },
   theme: { label: "Tema", system: "Tema do sistema", light: "Tema claro", dark: "Tema escuro" },
 
   toolbar: {
@@ -34,7 +35,6 @@ export const pt = {
     speed: "Velocidade do preview",
     background: "Fundo do preview",
     backgrounds: { light: "Claro", dark: "Escuro", checker: "Xadrez" },
-    reducedMotion: "Simular reduced motion",
   },
   paste: {
     title: "Colar SVG",
@@ -44,7 +44,7 @@ export const pt = {
     submit: "Importar",
   },
   draw: {
-    start: "Desenhar",
+    select: "Selecionar",
     createFromScratch: "Criar do zero",
     toolbar: "Ferramentas de desenho",
     canvas: "Área de desenho",
@@ -53,7 +53,6 @@ export const pt = {
     width: "Espessura do traço",
     undo: "Desfazer",
     redo: "Refazer",
-    done: "Concluir",
     hint: "Arraste no canvas. Shift mantém a proporção; Alt desenha a partir do centro.",
     penHint:
       "Clique para pôr pontos e arraste para curvar. Enter ou duplo clique termina; clique no primeiro ponto fecha; Backspace remove o último.",
@@ -564,6 +563,10 @@ export const pt = {
     fullHistory: "Ver o histórico completo de commits no GitHub",
   },
   changelog: {
+    "leaner-editor": {
+      title: "Editor mais enxuto",
+      body: "A barra superior ficou mais limpa: o nome do SVG foi para o topo do painel de camadas, idioma e tema agora ficam num único botão de preferências (em todas as páginas) e o compartilhar virou um ícone. As ferramentas de desenho flutuam no rodapé da área de edição, sempre à mão, como nos editores de design, e cada camada ganhou uma lixeira na lista. O interruptor de simular reduced motion foi removido.",
+    },
     "delete-layers": {
       title: "Excluir camadas",
       body: 'Agora dá para excluir as camadas selecionadas com o botão de lixeira no painel "Camada" ou com Delete/Backspace. As outras camadas mantêm suas animações e ajustes, e um aviso com "Desfazer" traz tudo de volta. No modo Desenhar, Ctrl/Cmd+Z também desfaz.',

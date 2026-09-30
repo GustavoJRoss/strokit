@@ -90,7 +90,7 @@ export function Editor() {
             <main className="relative size-full" aria-label="Preview">
               <PreviewCanvas />
               {!hasDoc && !drawing && (
-                <div className="absolute inset-0 overflow-auto">
+                <div className="pointer-events-none absolute inset-0 overflow-auto">
                   <EmptyState />
                 </div>
               )}

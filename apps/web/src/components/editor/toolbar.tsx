@@ -3,10 +3,8 @@
 import { PauseIcon, PlayIcon, RotateCcwIcon } from "lucide-react";
 import Link from "next/link";
 import { Wordmark } from "@/components/home/brand";
-import { LanguageSwitcher } from "@/components/language-switcher";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { PreferencesMenu } from "@/components/preferences-menu";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -15,12 +13,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useI18n } from "@/lib/i18n/provider";
 import { type Background, useEditorStore } from "@/store/editor-store";
-import { DrawButton } from "./draw-toolbar";
 import { ExamplesMenu, FilePickerButton, PasteDialogButton } from "./import-controls";
 import { LayoutMenu } from "./layout-menu";
 import { ShareMenu } from "./share-menu";
@@ -32,13 +28,11 @@ const BACKGROUNDS: Background[] = ["light", "dark", "checker"];
 
 export function Toolbar() {
   const hasDoc = useEditorStore((state) => state.doc !== null);
-  const fileName = useEditorStore((state) => state.fileName);
   const playback = useEditorStore((state) => state.playback);
   const togglePlaying = useEditorStore((state) => state.togglePlaying);
   const restart = useEditorStore((state) => state.restart);
   const setRate = useEditorStore((state) => state.setRate);
   const setBackground = useEditorStore((state) => state.setBackground);
-  const setReducedMotion = useEditorStore((state) => state.setReducedMotion);
   const { t } = useI18n();
   const playLabel = playback.playing ? t.toolbar.pause : t.toolbar.play;
 
@@ -50,14 +44,8 @@ export function Toolbar() {
       <FilePickerButton />
       <PasteDialogButton />
       <ExamplesMenu />
-      <DrawButton />
       <SvgEditorButton />
       <ShareMenu />
-      {fileName && (
-        <span className="ml-1 truncate text-muted-foreground text-sm" title={fileName}>
-          {fileName}
-        </span>
-      )}
 
       <div className="ml-auto flex flex-wrap items-center gap-2">
         <Tooltip>
@@ -123,23 +111,8 @@ export function Toolbar() {
         </ToggleGroup>
 
         <Separator orientation="vertical" className="h-6" />
-
-        <div className="flex items-center gap-2">
-          <Switch
-            id="reduced-motion"
-            checked={playback.reducedMotion}
-            onCheckedChange={setReducedMotion}
-            disabled={!hasDoc}
-          />
-          <Label htmlFor="reduced-motion" className="text-sm">
-            {t.toolbar.reducedMotion}
-          </Label>
-        </div>
-
-        <Separator orientation="vertical" className="h-6" />
         <LayoutMenu />
-        <LanguageSwitcher />
-        <ThemeToggle />
+        <PreferencesMenu />
       </div>
     </header>
   );

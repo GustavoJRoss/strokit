@@ -336,7 +336,7 @@ export function LayerSection() {
           <RotateCcwIcon data-icon="inline-start" />
           {copy.reset}
         </Button>
-        <Button variant="destructive" size="sm" onClick={deleteSelected}>
+        <Button variant="destructive" size="sm" onClick={() => deleteSelected()}>
           <Trash2Icon data-icon="inline-start" />
           {copy.delete(elements.length)}
         </Button>

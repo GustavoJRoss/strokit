@@ -145,6 +145,8 @@ export function DrawLayer() {
       } else if (mod && key === "y") {
         event.preventDefault();
         state.redoDraw();
+      } else if (!mod && !event.altKey && key === "v") {
+        state.exitDraw();
       } else if (!mod && !event.altKey && SHORTCUT_TOOLS[key]) {
         state.setDrawTool(SHORTCUT_TOOLS[key]);
       }

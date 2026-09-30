@@ -61,7 +61,6 @@ export type DrawState = {
 export type Playback = {
   playing: boolean;
   rate: number;
-  reducedMotion: boolean;
   background: Background;
   /** Bumped to restart the preview from t=0. */
   restartToken: number;
@@ -132,7 +131,6 @@ export type EditorActions = {
   redoDraw: () => void;
   togglePlaying: () => void;
   setRate: (rate: number) => void;
-  setReducedMotion: (reducedMotion: boolean) => void;
   setBackground: (background: Background) => void;
   restart: () => void;
   setExportTab: (tab: ExportTab) => void;
@@ -151,7 +149,6 @@ export function getInitialState(): EditorState {
     playback: {
       playing: true,
       rate: 1,
-      reducedMotion: false,
       background: "checker",
       restartToken: 0,
     },
@@ -491,9 +488,6 @@ export const useEditorStore = create<EditorState & EditorActions>()((set, get) =
     set((state) => ({ playback: { ...state.playback, playing: !state.playback.playing } })),
 
   setRate: (rate) => set((state) => ({ playback: { ...state.playback, rate } })),
-
-  setReducedMotion: (reducedMotion) =>
-    set((state) => ({ playback: { ...state.playback, reducedMotion } })),
 
   setBackground: (background) => set((state) => ({ playback: { ...state.playback, background } })),
 

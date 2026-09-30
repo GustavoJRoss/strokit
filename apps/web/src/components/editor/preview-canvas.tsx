@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editor-store";
 import { selectPreviewMarkup } from "@/store/selectors";
 import { DrawLayer } from "./draw-layer";
-import { DrawToolbar } from "./draw-toolbar";
+import { ToolDock } from "./tool-dock";
 
 type Box = {
   id: string;
@@ -80,7 +80,7 @@ export function PreviewCanvas() {
   useLayoutEffect(() => {
     if (!root) return;
     // While drawing the SVG shows its final state: outline animations start from nothing.
-    applyReducedMotion(root, playback.reducedMotion || drawing);
+    applyReducedMotion(root, drawing);
     applyPlayback(root, playback);
   }, [root, playback, renderCount, drawing]);
 
@@ -194,7 +194,7 @@ export function PreviewCanvas() {
         playback.background === "checker" && "sk-checker",
       )}
     >
-      {drawing && <DrawToolbar />}
+      <ToolDock />
       {tool === "start" && (
         <p className="pointer-events-none absolute inset-x-0 top-2 z-10 mx-auto w-fit rounded-md bg-foreground px-2 py-1 text-background text-xs">
           {t.params.layer.picking}

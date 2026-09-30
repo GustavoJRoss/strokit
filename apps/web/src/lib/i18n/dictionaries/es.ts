@@ -19,6 +19,7 @@ export const es: Dictionary = {
     home: "strokit, inicio",
   },
   language: { label: "Idioma" },
+  preferences: { label: "Preferencias" },
   theme: { label: "Tema", system: "Tema del sistema", light: "Tema claro", dark: "Tema oscuro" },
 
   toolbar: {
@@ -31,7 +32,6 @@ export const es: Dictionary = {
     speed: "Velocidad del preview",
     background: "Fondo del preview",
     backgrounds: { light: "Claro", dark: "Oscuro", checker: "Cuadros" },
-    reducedMotion: "Simular reduced motion",
   },
   paste: {
     title: "Pegar SVG",
@@ -41,7 +41,7 @@ export const es: Dictionary = {
     submit: "Importar",
   },
   draw: {
-    start: "Dibujar",
+    select: "Seleccionar",
     createFromScratch: "Crear desde cero",
     toolbar: "Herramientas de dibujo",
     canvas: "Área de dibujo",
@@ -50,7 +50,6 @@ export const es: Dictionary = {
     width: "Grosor del trazo",
     undo: "Deshacer",
     redo: "Rehacer",
-    done: "Listo",
     hint: "Arrastra en el lienzo. Shift mantiene la proporción; Alt dibuja desde el centro.",
     penHint:
       "Haz clic para poner puntos y arrastra para curvar. Enter o doble clic termina; clic en el primer punto cierra; Backspace quita el último.",
@@ -567,6 +566,10 @@ export const es: Dictionary = {
     fullHistory: "Ver el historial completo de commits en GitHub",
   },
   changelog: {
+    "leaner-editor": {
+      title: "Un editor más liviano",
+      body: "La barra superior quedó más limpia: el nombre del SVG pasó a la parte superior del panel de capas, idioma y tema ahora comparten un único botón de preferencias (en todas las páginas) y compartir se volvió un ícono. Las herramientas de dibujo flotan al pie del lienzo, siempre a mano como en los editores de diseño, y cada capa tiene una papelera en la lista. Se eliminó el interruptor de simular reduced motion.",
+    },
     "delete-layers": {
       title: "Eliminar capas",
       body: 'Ahora puedes eliminar las capas seleccionadas con el botón de papelera en el panel "Capa" o con Delete/Backspace. Las demás capas conservan sus animaciones y ajustes, y un aviso con "Deshacer" lo devuelve todo. En el modo Dibujar, Ctrl/Cmd+Z también lo deshace.',

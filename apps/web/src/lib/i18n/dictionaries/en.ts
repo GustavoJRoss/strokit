@@ -19,6 +19,7 @@ export const en: Dictionary = {
     home: "strokit, home",
   },
   language: { label: "Language" },
+  preferences: { label: "Preferences" },
   theme: { label: "Theme", system: "System theme", light: "Light theme", dark: "Dark theme" },
 
   toolbar: {
@@ -31,7 +32,6 @@ export const en: Dictionary = {
     speed: "Preview speed",
     background: "Preview background",
     backgrounds: { light: "Light", dark: "Dark", checker: "Checker" },
-    reducedMotion: "Simulate reduced motion",
   },
   paste: {
     title: "Paste SVG",
@@ -41,7 +41,7 @@ export const en: Dictionary = {
     submit: "Import",
   },
   draw: {
-    start: "Draw",
+    select: "Select",
     createFromScratch: "Start from scratch",
     toolbar: "Drawing tools",
     canvas: "Drawing area",
@@ -50,7 +50,6 @@ export const en: Dictionary = {
     width: "Stroke width",
     undo: "Undo",
     redo: "Redo",
-    done: "Done",
     hint: "Drag on the canvas. Shift keeps the proportion; Alt draws from the center.",
     penHint:
       "Click to place points and drag to curve. Enter or double-click finishes; click the first point to close; Backspace removes the last.",
@@ -552,6 +551,10 @@ export const en: Dictionary = {
     fullHistory: "See the full commit history on GitHub",
   },
   changelog: {
+    "leaner-editor": {
+      title: "A leaner editor",
+      body: "The top bar is cleaner: the SVG name moved to the top of the layers panel, language and theme now share a single preferences button (on every page) and share became an icon. The drawing tools float at the bottom of the canvas, always within reach like in design editors, and every layer got a trash button in the list. The simulate reduced motion switch was removed.",
+    },
     "delete-layers": {
       title: "Delete layers",
       body: 'You can now delete the selected layers with the trash button in the "Layer" panel or with Delete/Backspace. The other layers keep their animations and settings, and a notice with "Undo" brings everything back. In Draw mode, Ctrl/Cmd+Z undoes it too.',

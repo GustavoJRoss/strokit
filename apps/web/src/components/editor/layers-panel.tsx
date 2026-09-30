@@ -7,6 +7,7 @@ import {
   EyeOffIcon,
   PanelLeftCloseIcon,
   PencilIcon,
+  Trash2Icon,
   TriangleAlertIcon,
 } from "lucide-react";
 import { type MouseEvent, useState } from "react";
@@ -17,6 +18,7 @@ import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils";
 import { type SelectMode, useEditorStore } from "@/store/editor-store";
 import { selectCompiled, selectLayerTree } from "@/store/selectors";
+import { useDeleteLayers } from "./use-delete-layers";
 
 function Swatch({ element, override }: { element: DrawableElement; override: LayerOverride }) {
   const stroke = override.stroke ?? (element.hasStroke ? element.stroke : undefined);
@@ -67,6 +69,28 @@ function VisibilityButton({ ids, hidden }: { ids: string[]; hidden: boolean }) {
   );
 }
 
+/** Trash icon of a row: shown on hover, focus or when the row is selected (and on touch, selected). */
+function DeleteButton({ ids, visible }: { ids: string[]; visible: boolean }) {
+  const deleteLayers = useDeleteLayers();
+  const { t } = useI18n();
+  const label = t.params.layer.delete(ids.length);
+  return (
+    <Button
+      variant="ghost"
+      size="icon-xs"
+      aria-label={label}
+      title={label}
+      onClick={() => deleteLayers(ids)}
+      className={cn(
+        "shrink-0 text-muted-foreground opacity-0 hover:text-destructive focus-visible:opacity-100 group-focus-within/row:opacity-100 group-hover/row:opacity-100",
+        visible && "opacity-100",
+      )}
+    >
+      <Trash2Icon />
+    </Button>
+  );
+}
+
 function LayerRow({ element, depth }: { element: DrawableElement; depth: number }) {
   const spec = useEditorStore((state) => state.spec);
   const selected = useEditorStore((state) => state.selection.includes(element.id));
@@ -86,7 +110,7 @@ function LayerRow({ element, depth }: { element: DrawableElement; depth: number 
   const name = override.name ?? t.layers.tags[element.tag];
 
   return (
-    <li className="flex items-center gap-0.5" style={{ paddingLeft: depth * 12 }}>
+    <li className="group/row flex items-center gap-0.5" style={{ paddingLeft: depth * 12 }}>
       <button
         type="button"
         aria-pressed={selected}
@@ -129,6 +153,7 @@ function LayerRow({ element, depth }: { element: DrawableElement; depth: number 
         )}
       </button>
       <VisibilityButton ids={[element.id]} hidden={hidden} />
+      <DeleteButton ids={[element.id]} visible={selected} />
     </li>
   );
 }
@@ -154,7 +179,7 @@ function GroupRow({
 
   return (
     <li>
-      <div className="flex items-center gap-0.5" style={{ paddingLeft: depth * 12 }}>
+      <div className="group/row flex items-center gap-0.5" style={{ paddingLeft: depth * 12 }}>
         <Button
           variant="ghost"
           size="icon-xs"
@@ -188,6 +213,7 @@ function GroupRow({
           </span>
         </button>
         <VisibilityButton ids={node.ids} hidden={hidden} />
+        <DeleteButton ids={node.ids} visible={selected} />
       </div>
       {open && <LayerList nodes={node.children} depth={depth + 1} elements={elements} />}
     </li>
@@ -218,6 +244,7 @@ function LayerList({
 
 export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
   const doc = useEditorStore((state) => state.doc);
+  const fileName = useEditorStore((state) => state.fileName);
   const selection = useEditorStore((state) => state.selection);
   const selectAll = useEditorStore((state) => state.selectAll);
   const clearSelection = useEditorStore((state) => state.clearSelection);
@@ -227,6 +254,15 @@ export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
 
   return (
     <aside aria-label={t.layers.title} className="flex h-full min-h-0 flex-col">
+      {fileName && (
+        <p
+          className="truncate border-b px-3 py-2 font-medium text-sm"
+          title={fileName}
+          data-testid="file-name"
+        >
+          {fileName}
+        </p>
+      )}
       <div className="flex items-center justify-between gap-2 border-b px-3 py-2">
         <h2 className="font-medium text-sm">
           {t.layers.title}

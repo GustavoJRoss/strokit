@@ -51,8 +51,8 @@ test.describe("browser language", () => {
 test("the switcher changes the language instantly and remembers it", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-  await page.getByRole("button", { name: "Idioma" }).click();
-  await page.getByRole("menuitemradio", { name: "Español" }).click();
+  await page.getByRole("button", { name: "Preferências" }).click();
+  await page.getByRole("radio", { name: "Español" }).click();
   await expect(
     page.getByRole("heading", { level: 1, name: "Tu logo en movimiento. En código." }),
   ).toBeVisible();
@@ -68,8 +68,8 @@ test("the switcher changes the language instantly and remembers it", async ({ pa
   await page.getByRole("button", { name: "Ejemplos" }).first().click();
   await page.getByRole("menuitem", { name: /Onda/ }).click();
   await expect(page.getByRole("button", { name: /sk-0, Dibujar/ })).toBeVisible();
-  await page.getByRole("button", { name: "Idioma" }).click();
-  await page.getByRole("menuitemradio", { name: "English" }).click();
+  await page.getByRole("button", { name: "Preferencias" }).click();
+  await page.getByRole("radio", { name: "English" }).click();
   await expect(page.getByRole("button", { name: /^Back and forth/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /sk-0, Draw/ })).toBeVisible();
   await expect(page.getByRole("tab", { name: "CSS" })).toBeVisible();
