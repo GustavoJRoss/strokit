@@ -161,6 +161,13 @@ Plano completo em fases A–D. Um modo "Desenhar" no próprio preview, sem paine
 - [x] Testes: `penPath` (retas, curvas, fechamento, duplicata de duplo clique, pontos inválidos); i18n e changelog
 - [ ] Editor de nós (ajustar o traço depois de criado): não entra nesta fase; fica como próximo passo se fizer falta
 
+**E. Excluir camadas**
+
+- [x] `core/src/svg/delete.ts` (`deleteLayers`): remove os elementos (e grupos que ficam vazios), renumera os ids que sobram e leva tracks e edições junto; `removeElements` passou para `svg/tree.ts`
+- [x] Store: `deleteLayers` (seleção por padrão) e `restoreSnapshot`; no modo desenhar entra no histórico do Ctrl/Cmd+Z, fora dele há aviso com "Desfazer"
+- [x] Editor: botão de lixeira na seção "Camada" e atalhos Delete/Backspace (ignorados em campos de texto, menus e diálogos)
+- [x] Testes: `delete.test.ts` (core) e exclusão em `editor-store.test.ts`; i18n e changelog
+
 **Aceite (A):** o mesmo valor de largura tem aparência equivalente num ícone 24×24 e num logo 2000×2000, e um projeto antigo abre igual.
 
 **Aceite (B):** criar do zero, arrastar um retângulo e uma linha, desfazer, concluir e ver a animação tocar e o CSS exportado com as duas formas.
@@ -168,6 +175,8 @@ Plano completo em fases A–D. Um modo "Desenhar" no próprio preview, sem paine
 **Aceite (C):** arrastar à mão livre, soltar e ver um traço suave e leve (poucos pontos) que anima com o preset padrão.
 
 **Aceite (D):** com a caneta, clicar três pontos, arrastar um deles para curvar, fechar no primeiro ponto e ver a forma animar; Enter termina um caminho aberto.
+
+**Aceite (E):** selecionar camadas, apertar Delete/Backspace ou clicar na lixeira, ver as outras continuarem animando com seus ajustes e desfazer pelo aviso.
 
 ---
 
