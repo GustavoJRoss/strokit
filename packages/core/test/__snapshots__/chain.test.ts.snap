@@ -78,7 +78,7 @@ const css = \`
   stroke: var(--sk-stroke, #E30613);
   stroke-width: 2;
   stroke-dasharray: 1 1;
-  animation: sk-a34o74-t0-draw-fill calc(2000ms / var(--sk-speed, 1)) ease-in-out 0ms var(--sk-iterations, 1) normal both, sk-a34o74-t1-pulse calc(1400ms / var(--sk-speed, 1)) ease-in-out calc(2000ms / var(--sk-speed, 1)) var(--sk-iterations, infinite) normal forwards;
+  animation: sk-a34o74-t0-draw-fill calc(2000ms / var(--sk-speed, 1)) ease-in-out 0ms 1 normal both, sk-a34o74-t1-pulse calc(1400ms / var(--sk-speed, 1)) ease-in-out calc(2000ms / var(--sk-speed, 1)) var(--sk-iterations, infinite) normal forwards;
   animation-play-state: var(--sk-play-state, running);
 }
 .sk-a34o74-1 {
@@ -87,7 +87,7 @@ const css = \`
   stroke: var(--sk-stroke, #2563eb);
   stroke-width: 2;
   stroke-dasharray: 1 1;
-  animation: sk-a34o74-t0-draw-fill calc(2000ms / var(--sk-speed, 1)) ease-in-out 0ms var(--sk-iterations, 1) normal both, sk-a34o74-t1-pulse calc(1400ms / var(--sk-speed, 1)) ease-in-out calc(2000ms / var(--sk-speed, 1)) var(--sk-iterations, infinite) normal forwards;
+  animation: sk-a34o74-t0-draw-fill calc(2000ms / var(--sk-speed, 1)) ease-in-out 0ms 1 normal both, sk-a34o74-t1-pulse calc(1400ms / var(--sk-speed, 1)) ease-in-out calc(2000ms / var(--sk-speed, 1)) var(--sk-iterations, infinite) normal forwards;
   animation-play-state: var(--sk-play-state, running);
 }
 @keyframes sk-a34o74-t0-draw-fill {
@@ -242,7 +242,7 @@ const css = \`
 }
 \`;
 
-type Track = { selector: string; keyframes: DOMKeyframesDefinition; options: AnimationOptions };
+type Track = { selector: string; keyframes: DOMKeyframesDefinition; options: AnimationOptions; step?: true };
 
 const tracks: Track[] = [
   {
@@ -259,6 +259,7 @@ const tracks: Track[] = [
       repeat: 0,
       repeatType: "loop",
     },
+    step: true,
   },
   {
     selector: ".sk-a34o74-0",
@@ -289,6 +290,7 @@ const tracks: Track[] = [
       repeat: 0,
       repeatType: "loop",
     },
+    step: true,
   },
   {
     selector: ".sk-a34o74-1",
@@ -337,7 +339,7 @@ export function TestLogo({
     controls.current = tracks.map((track) =>
       animate(track.selector, track.keyframes, {
         ...track.options,
-        ...(loop === undefined ? {} : { repeat: loop ? Number.POSITIVE_INFINITY : 0 }),
+        ...(loop === undefined || track.step ? {} : { repeat: loop ? Number.POSITIVE_INFINITY : 0 }),
       }),
     );
     return () => {

@@ -227,8 +227,13 @@ describe("chained exports", () => {
     const react = exportReact(compiled(), { componentName: "TestLogo" });
     expect(react).toMatchSnapshot();
     expect(react).toContain("calc(2000ms / var(--sk-speed, 1))");
+    // `loop` only reaches the last step: the outline must finish for the pulse to start.
+    expect(react).toContain("ease-in-out 0ms 1 normal both");
+    expect(react.match(/var\(--sk-iterations/g)).toHaveLength(2);
     const motion = exportMotion(compiled(), { componentName: "TestLogo" });
     expect(motion).toMatchSnapshot();
+    expect(motion).toContain("step?: true");
+    expect(motion).toContain("|| track.step");
   });
 
   it("outline then shine exports the overlay too", () => {

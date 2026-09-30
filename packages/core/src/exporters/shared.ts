@@ -29,7 +29,16 @@ function formatIterations(animation: AnimationDef): string {
   return animation.iterations === "infinite" ? "infinite" : formatNumber(animation.iterations);
 }
 
-function formatAnimation(prefix: string, animation: AnimationDef, mode: AnimationMode): string {
+/**
+ * `loop` (`--sk-iterations`) only reaches the last animation of an element: an earlier step that
+ * looped would never hand over to the next one.
+ */
+function formatAnimation(
+  prefix: string,
+  animation: AnimationDef,
+  mode: AnimationMode,
+  last: boolean,
+): string {
   const scaled = (ms: number) =>
     mode === "variables" && ms !== 0 ? `calc(${ms}ms / var(--sk-speed, 1))` : `${ms}ms`;
   return [
@@ -37,7 +46,7 @@ function formatAnimation(prefix: string, animation: AnimationDef, mode: Animatio
     scaled(animation.duration),
     formatEasing(animation.easing),
     scaled(animation.delay),
-    mode === "variables"
+    mode === "variables" && last
       ? `var(--sk-iterations, ${formatIterations(animation)})`
       : formatIterations(animation),
     animation.direction,
@@ -71,13 +80,13 @@ export function uniqueGroups(groups: Map<string, RuleGroup>): RuleGroup[] {
   return [...new Set(groups.values())];
 }
 
-/** First keyframe of every animation of a rule, merged: the state before JS takes over. */
+/** First keyframe of every animation of a rule, merged (earlier steps win): the state before JS takes over. */
 export function initialProps(compiled: CompiledAnimation, rule: ElementRule): CssProps {
   const props: CssProps = {};
   for (const animation of rule.animations) {
     const definition = compiled.keyframes.find((item) => item.name === animation.keyframes);
     const first = definition?.stops.find((stop) => stop.offset === 0);
-    if (first) Object.assign(props, first.props);
+    if (first) Object.assign(props, { ...first.props, ...props });
   }
   return props;
 }
@@ -95,7 +104,9 @@ export function buildCss(
       sections.push(block(`.${className}`, { ...rule.props, ...initialProps(compiled, rule) }));
       continue;
     }
-    const animation = rule.animations.map((item) => formatAnimation(prefix, item, mode)).join(", ");
+    const animation = rule.animations
+      .map((item, index, all) => formatAnimation(prefix, item, mode, index === all.length - 1))
+      .join(", ");
     const props: CssProps = animation ? { ...rule.props, animation } : { ...rule.props };
     if (animation && mode === "variables")
       props["animation-play-state"] = "var(--sk-play-state, running)";
