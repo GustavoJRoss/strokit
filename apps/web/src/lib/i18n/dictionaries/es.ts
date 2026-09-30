@@ -208,6 +208,7 @@ export const es: Dictionary = {
       strokeWidth: "Grosor del trazo",
       autoStrokeHint:
         "Las capas solo con relleno reciben un trazo del color del relleno para que los presets de trazo funcionen.",
+      strokeWidthHint: "En % del tamaño del SVG: el mismo grosor se ve igual en cualquier logo.",
       missing: (n) => `${n} ${plural(n, "capa sin trazo", "capas sin trazo")}`,
       missingBody: "El preset anima el trazo, pero estas capas solo tienen relleno.",
       enableAutoStroke: "Activar trazo automático",
@@ -546,6 +547,10 @@ export const es: Dictionary = {
     fullHistory: "Ver el historial completo de commits en GitHub",
   },
   changelog: {
+    "consistent-stroke-width": {
+      title: "Grosor del trazo consistente",
+      body: "El grosor del trazo ahora se mide en % del tamaño del SVG, así que el mismo valor se ve igual en un ícono pequeño y en un logo grande (incluso cuando el SVG aplica escala en grupos). El límite subió a 100 y el grosor que ya trae el archivo se muestra correctamente, incluso en unidades como mm. Los proyectos y enlaces antiguos se abren exactamente como antes.",
+    },
     seo: {
       title: "Mejor búsqueda y para compartir",
       body: "El sitio ahora muestra una vista previa correcta al compartir (LinkedIn, WhatsApp) y está listo para la indexación de Google: sitemap, robots.txt y datos estructurados.",

@@ -207,6 +207,7 @@ export const en: Dictionary = {
       strokeWidth: "Stroke width",
       autoStrokeHint:
         "Fill-only layers get a stroke in their fill color so stroke presets can animate them.",
+      strokeWidthHint: "In % of the SVG's size: the same width looks the same in any logo.",
       missing: (n) => `${n} ${plural(n, "layer without stroke", "layers without stroke")}`,
       missingBody: "The preset animates the stroke, but these layers only have a fill.",
       enableAutoStroke: "Turn on auto stroke",
@@ -531,6 +532,10 @@ export const en: Dictionary = {
     fullHistory: "See the full commit history on GitHub",
   },
   changelog: {
+    "consistent-stroke-width": {
+      title: "Consistent stroke width",
+      body: "Stroke width is now measured in % of the SVG's size, so the same value looks the same in a small icon and a large logo (even when the SVG applies scale in groups). The limit went up to 100 and the width that comes in the file is shown correctly, even in units like mm. Old projects and links open exactly as before.",
+    },
     seo: {
       title: "Better sharing and search",
       body: "The site now shows a proper preview when shared (LinkedIn, WhatsApp) and is ready for Google indexing: sitemap, robots.txt and structured data.",

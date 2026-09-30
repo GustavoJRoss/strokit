@@ -6,6 +6,9 @@ import {
   getLayer,
   type LayerOverride,
   type LayerPatch,
+  type SvgDocument,
+  strokeScales,
+  toVisualWidth,
 } from "@strokit/core";
 import { CrosshairIcon, RotateCcwIcon } from "lucide-react";
 import { useEffect, useId, useState } from "react";
@@ -155,6 +158,18 @@ function strokeOf(element: DrawableElement, override: LayerOverride, auto: boole
   return auto ? (override.fill ?? element.fill) : undefined;
 }
 
+/** The SVG's own stroke width of an element, in the unit the sliders use. */
+function nativeWidth(
+  element: DrawableElement,
+  doc: SvgDocument | null,
+  visual: boolean,
+): number | undefined {
+  if (element.strokeWidth === undefined || !doc) return element.strokeWidth;
+  if (!visual) return element.strokeWidth;
+  const { unit, scales } = strokeScales(doc);
+  return toVisualWidth(element.strokeWidth, unit, scales.get(element.id) ?? 1);
+}
+
 export function LayerSection() {
   const doc = useEditorStore((state) => state.doc);
   const spec = useEditorStore((state) => state.spec);
@@ -187,7 +202,9 @@ export function LayerSection() {
   const stroke = strokeOf(first, override, auto);
   const fill = override.fill ?? first.fill;
   const hasStroke = stroke !== undefined && stroke !== "none";
-  const width = override.strokeWidth ?? first.strokeWidth ?? spec.global.autoStroke.width;
+  const visual = spec.global.strokeUnit === "visual";
+  const width =
+    override.strokeWidth ?? nativeWidth(first, doc, visual) ?? spec.global.autoStroke.width;
   const start = override.start ?? 0;
   const summary = many
     ? copy.selected(elements.length)
@@ -229,9 +246,10 @@ export function LayerSection() {
 
       <NumberField
         label={copy.strokeWidth}
+        unit={visual ? "%" : undefined}
         value={width}
         min={0}
-        max={40}
+        max={100}
         step={0.5}
         onChange={(strokeWidth) => set({ strokeWidth })}
       />

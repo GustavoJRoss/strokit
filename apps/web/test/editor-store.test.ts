@@ -94,7 +94,8 @@ describe("editor store", () => {
     expect(css).toContain("2400ms");
     expect(css).toContain("infinite");
     expect(css).toContain('aria-label="Carregando"');
-    expect(css).toContain("stroke-width: 4;");
+    // Visual units: 4% of pico's 200-wide viewBox.
+    expect(css).toContain("stroke-width: 8;");
   });
 
   it("controls preview playback without touching the spec", () => {

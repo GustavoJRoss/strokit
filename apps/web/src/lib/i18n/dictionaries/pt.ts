@@ -212,6 +212,8 @@ export const pt = {
       strokeWidth: "Largura do traço",
       autoStrokeHint:
         "Camadas só com preenchimento ganham um traço na cor do preenchimento para os presets de traço funcionarem.",
+      strokeWidthHint:
+        "Em % do tamanho do SVG: a mesma largura tem a mesma aparência em qualquer logo.",
       missing: (n: number) => `${n} ${plural(n, "camada sem traço", "camadas sem traço")}`,
       missingBody: "O preset anima o traço, mas essas camadas só têm preenchimento.",
       enableAutoStroke: "Ativar traço automático",
@@ -542,6 +544,10 @@ export const pt = {
     fullHistory: "Ver o histórico completo de commits no GitHub",
   },
   changelog: {
+    "consistent-stroke-width": {
+      title: "Largura do traço consistente",
+      body: "A largura do traço agora é medida em % do tamanho do SVG, então o mesmo valor tem a mesma aparência num ícone pequeno e num logo grande (inclusive quando o SVG tem escala aplicada em grupos). O limite subiu para 100 e a largura que já vem no arquivo é mostrada corretamente, mesmo em unidades como mm. Projetos e links antigos abrem exatamente como antes.",
+    },
     seo: {
       title: "Compartilhamento e busca melhorados",
       body: "O site agora aparece com preview correto ao compartilhar (LinkedIn, WhatsApp) e está pronto para indexação no Google: sitemap, robots.txt e dados estruturados.",
