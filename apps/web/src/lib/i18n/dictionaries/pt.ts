@@ -48,7 +48,7 @@ export const pt = {
     createFromScratch: "Criar do zero",
     toolbar: "Ferramentas de desenho",
     canvas: "Área de desenho",
-    tools: { line: "Linha", rect: "Retângulo", ellipse: "Elipse" },
+    tools: { pencil: "Lápis", line: "Linha", rect: "Retângulo", ellipse: "Elipse" },
     color: "Cor do traço",
     width: "Espessura do traço",
     undo: "Desfazer",
@@ -558,6 +558,10 @@ export const pt = {
     fullHistory: "Ver o histórico completo de commits no GitHub",
   },
   changelog: {
+    "freehand-pencil": {
+      title: "Lápis livre",
+      body: 'Agora dá para desenhar à mão livre no botão "Desenhar": é só arrastar no canvas. O traço é simplificado e suavizado em curvas, então sai limpo e leve no código exportado, e cada risco vira uma camada própria que você anima na ordem em que desenhou. Atalho: P.',
+    },
     "draw-shapes": {
       title: "Desenhe formas no editor",
       body: 'Novo botão "Desenhar": crie linhas, retângulos e elipses arrastando no canvas, direto sobre a sua logo ou numa tela em branco ("Criar do zero"). Shift mantém a proporção e Alt desenha a partir do centro. Escolha a cor e a espessura, desfaça e refaça (Ctrl/Cmd+Z), e cada forma já entra com a animação padrão e pode ser ajustada como qualquer camada.',

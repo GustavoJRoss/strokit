@@ -45,7 +45,7 @@ export const es: Dictionary = {
     createFromScratch: "Crear desde cero",
     toolbar: "Herramientas de dibujo",
     canvas: "Área de dibujo",
-    tools: { line: "Línea", rect: "Rectángulo", ellipse: "Elipse" },
+    tools: { pencil: "Lápiz", line: "Línea", rect: "Rectángulo", ellipse: "Elipse" },
     color: "Color del trazo",
     width: "Grosor del trazo",
     undo: "Deshacer",
@@ -561,6 +561,10 @@ export const es: Dictionary = {
     fullHistory: "Ver el historial completo de commits en GitHub",
   },
   changelog: {
+    "freehand-pencil": {
+      title: "Lápiz libre",
+      body: 'Ahora puedes dibujar a mano alzada con el botón "Dibujar": solo arrastra en el lienzo. El trazo se simplifica y suaviza en curvas, así que queda limpio y liviano en el código exportado, y cada trazo se vuelve una capa propia que animas en el orden en que dibujaste. Atajo: P.',
+    },
     "draw-shapes": {
       title: "Dibuja formas en el editor",
       body: 'Nuevo botón "Dibujar": crea líneas, rectángulos y elipses arrastrando en el lienzo, sobre tu logo o en un lienzo en blanco ("Crear desde cero"). Shift mantiene la proporción y Alt dibuja desde el centro. Elige el color y el grosor, deshaz y rehaz (Ctrl/Cmd+Z), y cada forma entra con la animación por defecto y se ajusta como cualquier capa.',

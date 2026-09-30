@@ -45,7 +45,7 @@ export const en: Dictionary = {
     createFromScratch: "Start from scratch",
     toolbar: "Drawing tools",
     canvas: "Drawing area",
-    tools: { line: "Line", rect: "Rectangle", ellipse: "Ellipse" },
+    tools: { pencil: "Pencil", line: "Line", rect: "Rectangle", ellipse: "Ellipse" },
     color: "Stroke color",
     width: "Stroke width",
     undo: "Undo",
@@ -546,6 +546,10 @@ export const en: Dictionary = {
     fullHistory: "See the full commit history on GitHub",
   },
   changelog: {
+    "freehand-pencil": {
+      title: "Freehand pencil",
+      body: 'You can now draw freehand with the "Draw" button: just drag on the canvas. The stroke is simplified and smoothed into curves, so it comes out clean and light in the exported code, and each stroke becomes its own layer that you animate in the order you drew it. Shortcut: P.',
+    },
     "draw-shapes": {
       title: "Draw shapes in the editor",
       body: 'New "Draw" button: create lines, rectangles and ellipses by dragging on the canvas, right over your logo or on a blank canvas ("Start from scratch"). Shift keeps the proportion and Alt draws from the center. Pick the color and width, undo and redo (Ctrl/Cmd+Z), and every shape comes with the default animation and can be tweaked like any layer.',
