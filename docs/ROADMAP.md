@@ -128,6 +128,35 @@ Regra: uma fase por vez. Ao terminar, rode `npm run lint && npm run typecheck &&
 
 ---
 
+## Fase 7 — Criar o SVG no editor (incluída a pedido do autor)
+
+Plano completo em fases A–D. Um modo "Desenhar" no próprio preview, sem painel novo.
+
+**A. Largura de traço consistente**
+
+- [x] `svg/stroke-scale.ts`: unidade visual (1 = 1% do maior lado do viewBox) compensada pela escala acumulada dos `transform` dos ancestrais
+- [x] `compile()` converte a largura do editor (auto-stroke e camadas) para as unidades do elemento; o código exportado continua com número absoluto
+- [x] `AnimationSpec` v2 (`global.strokeUnit`); `migrate()` converte v1 mantendo `"user"`, então projetos e links antigos abrem idênticos
+- [x] `parseLength` aceita `pt`, `pc`, `mm`, `cm`, `in` (a largura já presente no arquivo aparece certa no slider)
+- [x] Sliders de largura até 100 (%), com dica; textos nos 3 dicionários; entrada no changelog
+- [x] Testes: `stroke-scale.test.ts` (viewBox 24 × 2000, `scale(0.1,-0.1)`, migração v1→v2), snapshots revisados
+
+**B. Infraestrutura do modo desenhar**
+
+- [ ] Slice `draw` no store, documento em branco, `addDrawnPaths` via `replaceSvg`, conversão tela → viewBox, undo mínimo do modo
+
+**C. Lápis livre**
+
+- [ ] `core/src/draw/freehand.ts` (Ramer-Douglas-Peucker + Catmull-Rom → Bézier), `DrawLayer` com pointer events
+
+**D. Barra de ferramentas e demais ferramentas**
+
+- [ ] Barra flutuante (lápis, caneta, linha, retângulo, elipse, cor, espessura, desfazer), atalhos, i18n, changelog
+
+**Aceite (A):** o mesmo valor de largura tem aparência equivalente num ícone 24×24 e num logo 2000×2000, e um projeto antigo abre igual.
+
+---
+
 ## Fase 6 — Polimento (opcional antes do lançamento)
 
 - [ ] Undo/redo (`zundo`) com atalhos
