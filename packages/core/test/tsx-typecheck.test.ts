@@ -7,7 +7,7 @@ import { compile } from "../src/compile/compile";
 import { exportMotion } from "../src/exporters/motion";
 import { exportReact } from "../src/exporters/react";
 import { presetIds } from "../src/presets";
-import { applyPreset, createEmptySpec } from "../src/spec/defaults";
+import { appendStep, applyPreset, createEmptySpec } from "../src/spec/defaults";
 import { updateLayers } from "../src/spec/layers";
 import { importSvg } from "../src/svg/import";
 import { fixture, parser } from "./helpers";
@@ -55,6 +55,24 @@ describe("exported TSX compiles", () => {
           files.push(`${base}-react.tsx`, `${base}-motion.tsx`);
         }
       }
+    }
+    // A sequence (outline, pulse, shine) and a shine overlay.
+    {
+      const { document } = importSvg(fixture("illustrator-classes.svg"), { parser });
+      const ids = document.elements.map((element) => element.id);
+      let spec = applyPreset(createEmptySpec(), ids, "draw-fill");
+      spec = appendStep(appendStep(spec, ids, "pulse"), ids, "shine");
+      spec.global.autoStroke.enabled = true;
+      const compiled = compile(document, spec);
+      writeFileSync(
+        join(outDir, "chain-react.tsx"),
+        exportReact(compiled, { componentName: "TestLogo" }),
+      );
+      writeFileSync(
+        join(outDir, "chain-motion.tsx"),
+        exportMotion(compiled, { componentName: "TestLogo" }),
+      );
+      files.push("chain-react.tsx", "chain-motion.tsx");
     }
     writeFileSync(
       join(outDir, "tsconfig.json"),

@@ -1,6 +1,7 @@
 import { presets, type TrackOf } from "../presets";
 import type { PathMotion } from "../presets/path-motion";
 import type { PresetOutput } from "../presets/types";
+import { orderedTracks, trackTimes } from "../spec/chain";
 import { type LayerOverride, layerTokens } from "../spec/layers";
 import type { AnimationSpec, PresetId } from "../spec/schema";
 import {
@@ -242,15 +243,46 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
   const matrices = accumulatedMatrices(document.root);
   const overlays: { defs: SvgElementNode[]; nodes: SvgElementNode[] } = { defs: [], nodes: [] };
 
-  spec.tracks.forEach((track, trackIndex) => {
+  const times = trackTimes(spec.tracks);
+  const ruleByElement = new Map<string, ElementRule>();
+  /** Adds a rule, or appends a later step of a chain to the element's existing rule. */
+  const addRule = (rule: ElementRule, later: boolean): void => {
+    const existing = ruleByElement.get(rule.elementId);
+    if (!existing) {
+      rules.push(rule);
+      ruleByElement.set(rule.elementId, rule);
+      return;
+    }
+    // First step keeps the static props (the outline cannot be redefined halfway) and the last
+    // step decides the reduced-motion end state. Later steps must not paint before they start.
+    existing.props = { ...rule.props, ...existing.props };
+    existing.reducedMotion = { ...existing.reducedMotion, ...rule.reducedMotion };
+    existing.animations.push(
+      ...rule.animations.map((animation) => ({
+        ...animation,
+        fillMode: later ? ("forwards" as const) : animation.fillMode,
+      })),
+    );
+  };
+
+  orderedTracks(spec.tracks).forEach((track) => {
+    const trackIndex = spec.tracks.indexOf(track);
     const preset = presets[track.preset];
+    const shift = (times.get(track.id)?.start ?? track.timing.delay) - track.timing.delay;
+    const later = track.after !== undefined;
+    const namespace = (name: string) => `t${trackIndex}-${name}`;
+    const scheduled = (animations: PresetOutput["rule"]["animations"]) =>
+      animations.map((animation) => ({
+        ...animation,
+        delay: animation.delay + shift,
+        keyframes: namespace(animation.keyframes),
+      }));
     const targets = track.targets.filter((target) => {
       if (hidden.has(target)) return false;
       if (elementsById.has(target)) return true;
       warnings.push({ code: "unknown-target", trackId: track.id, elementId: target });
       return false;
     });
-    const namespace = (name: string) => `t${trackIndex}-${name}`;
 
     if (preset.compileOverlay) {
       const nodes = new Map<string, SvgElementNode>();
@@ -276,16 +308,16 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
         keyframes.set(name, { ...definition, name });
       }
       for (const rule of overlay.rules) {
-        rules.push({
-          elementId: rule.elementId,
-          trackId: track.id,
-          props: rule.props,
-          animations: rule.animations.map((animation) => ({
-            ...animation,
-            keyframes: namespace(animation.keyframes),
-          })),
-          reducedMotion: rule.reducedMotion,
-        });
+        addRule(
+          {
+            elementId: rule.elementId,
+            trackId: track.id,
+            props: rule.props,
+            animations: scheduled(rule.animations),
+            reducedMotion: rule.reducedMotion,
+          },
+          false,
+        );
       }
       for (const elementId of overlay.skipped) {
         warnings.push({ code: "overlay-skipped", trackId: track.id, elementId });
@@ -328,20 +360,25 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
       if (stroke.missing) {
         warnings.push({ code: "missing-stroke", trackId: track.id, elementId: target });
       }
-      rules.push({
-        elementId: target,
-        trackId: track.id,
-        props: { ...stroke.props, ...fillProps(layer), ...output.rule.props },
-        animations: output.rule.animations.map((animation) => ({
-          ...animation,
-          keyframes: namespace(animation.keyframes),
-        })),
-        reducedMotion: { ...output.rule.reducedMotion, ...stroke.reducedMotion },
+      addRule(
+        {
+          elementId: target,
+          trackId: track.id,
+          props: { ...stroke.props, ...fillProps(layer), ...output.rule.props },
+          animations: scheduled(output.rule.animations),
+          reducedMotion: { ...output.rule.reducedMotion, ...stroke.reducedMotion },
+        },
+        later,
+      );
+      attrsById.set(target, {
+        ...attrsById.get(target),
+        ...output.rule.attrs,
+        ...layerAttrs(layer.override),
       });
-      attrsById.set(target, { ...output.rule.attrs, ...layerAttrs(layer.override) });
       const props = animatedProps(output);
       const names = ["transform", "opacity"].filter((name) => props.has(name));
-      if (names.length > 0) moved.set(target, names);
+      if (names.length > 0)
+        moved.set(target, [...new Set([...(moved.get(target) ?? []), ...names])]);
       animated.add(target);
     });
   });

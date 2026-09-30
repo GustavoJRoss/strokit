@@ -1,5 +1,5 @@
 import type { SvgDocument } from "../svg/types";
-import { applyPreset, DEFAULT_PRESET } from "./defaults";
+import { applyPreset, DEFAULT_PRESET, pruneTracks } from "./defaults";
 import { pickLayers } from "./layers";
 import type { AnimationSpec } from "./schema";
 
@@ -25,9 +25,12 @@ export function reconcileSpec(spec: AnimationSpec, document: SvgDocument): Recon
     ...Object.keys(spec.layers ?? {}),
   ]);
 
-  const tracks = spec.tracks
-    .map((track) => ({ ...track, targets: track.targets.filter((id) => exists.has(id)) }))
-    .filter((track) => track.targets.length > 0);
+  const tracks = pruneTracks(
+    spec.tracks.map((track) => ({
+      ...track,
+      targets: track.targets.filter((id) => exists.has(id)),
+    })),
+  );
   const animated = new Set(tracks.flatMap((track) => track.targets));
   const added = ids.filter((id) => !animated.has(id));
 

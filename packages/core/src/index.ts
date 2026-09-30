@@ -49,12 +49,19 @@ export {
   type ShareErrorCode,
   serializeProject,
 } from "./share";
+export { orderedTracks, type TrackTime, trackTimes } from "./spec/chain";
 export {
+  appendStep,
   applyPreset,
+  chainOf,
   createEmptySpec,
   createTrack,
   DEFAULT_PRESET,
   findTrackForElement,
+  moveStep,
+  pruneTracks,
+  removeStep,
+  stepIndex,
   updateTrackParams,
   updateTrackTiming,
 } from "./spec/defaults";

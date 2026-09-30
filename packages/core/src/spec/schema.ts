@@ -7,6 +7,7 @@ import { pulseParamsSchema } from "../presets/pulse";
 import { shineParamsSchema } from "../presets/shine";
 import { spinParamsSchema } from "../presets/spin";
 import { yoyoParamsSchema } from "../presets/yoyo";
+import { chainIssues } from "./chain";
 import { layerOverrideSchema } from "./layers";
 import { timingSchema } from "./timing";
 
@@ -14,6 +15,8 @@ const trackBase = z.object({
   id: z.string().min(1),
   /** DrawableElement ids. */
   targets: z.array(z.string().min(1)),
+  /** Id of the track this one plays after (a sequence of animations). Absent: starts at 0. */
+  after: z.string().min(1).optional(),
   timing: timingSchema,
 });
 
@@ -43,7 +46,6 @@ export const animationSpecSchema = z
   })
   .superRefine((spec, ctx) => {
     const trackIds = new Set<string>();
-    const owners = new Map<string, string>();
     spec.tracks.forEach((track, trackIndex) => {
       if (trackIds.has(track.id)) {
         ctx.addIssue({
@@ -53,18 +55,10 @@ export const animationSpecSchema = z
         });
       }
       trackIds.add(track.id);
-      track.targets.forEach((target, targetIndex) => {
-        const owner = owners.get(target);
-        if (owner !== undefined) {
-          ctx.addIssue({
-            code: "custom",
-            message: `Element "${target}" is already animated by track "${owner}"`,
-            path: ["tracks", trackIndex, "targets", targetIndex],
-          });
-        }
-        owners.set(target, track.id);
-      });
     });
+    for (const issue of chainIssues(spec.tracks)) {
+      ctx.addIssue({ code: "custom", message: issue.message, path: issue.path });
+    }
   });
 
 export type Track = z.infer<typeof trackSchema>;

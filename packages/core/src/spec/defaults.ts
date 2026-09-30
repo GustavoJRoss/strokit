@@ -1,4 +1,5 @@
 import { getPreset } from "../presets";
+import { ancestorIds, chainIssues, orderedTracks } from "./chain";
 import type { AnimationSpec, PresetId, Track } from "./schema";
 import type { Timing } from "./timing";
 
@@ -43,8 +44,29 @@ function structuredCloneParams<P>(params: P): P {
 }
 
 /**
- * Applies a preset to the given elements. An element belongs to at most one track, so the
- * targets leave their current tracks first and tracks left empty are removed.
+ * Drops tracks left without targets. Tracks that followed a dropped one now follow whatever it
+ * followed, so a chain never points at a track that is gone.
+ */
+export function pruneTracks(tracks: Track[]): Track[] {
+  const kept = tracks.filter((track) => track.targets.length > 0);
+  const keptIds = new Set(kept.map((track) => track.id));
+  const byId = new Map(tracks.map((track) => [track.id, track]));
+  return kept.map((track) => {
+    let after = track.after;
+    const seen = new Set<string>();
+    while (after !== undefined && !keptIds.has(after) && !seen.has(after)) {
+      seen.add(after);
+      after = byId.get(after)?.after;
+    }
+    if (after === track.after) return track;
+    const { after: _dropped, ...rest } = track;
+    return (after === undefined ? rest : { ...rest, after }) as Track;
+  });
+}
+
+/**
+ * Applies a preset to the given elements, replacing whatever animated them (the whole chain).
+ * The targets leave their current tracks first and tracks left empty are removed.
  */
 export function applyPreset(
   spec: AnimationSpec,
@@ -53,11 +75,91 @@ export function applyPreset(
 ): AnimationSpec {
   const unique = [...new Set(targets)];
   if (unique.length === 0) return spec;
-  const remaining = spec.tracks
-    .map((track) => ({ ...track, targets: track.targets.filter((id) => !unique.includes(id)) }))
-    .filter((track) => track.targets.length > 0);
+  const remaining = pruneTracks(
+    spec.tracks.map((track) => ({
+      ...track,
+      targets: track.targets.filter((id) => !unique.includes(id)),
+    })),
+  );
   const track = createTrack(nextTrackId(spec), preset, unique);
   return { ...spec, tracks: [...remaining, track] };
+}
+
+/** Steps that animate the element, in playing order (a chain; a single track when not chained). */
+export function chainOf(spec: AnimationSpec, elementId: string): Track[] {
+  return orderedTracks(spec.tracks.filter((track) => track.targets.includes(elementId)));
+}
+
+/**
+ * Adds an animation that plays after the ones the elements already have. Elements whose chains
+ * end in different tracks get one new step per end, so every step keeps a single chain. The step
+ * it follows can no longer loop forever and becomes a single iteration. Outline presets only
+ * start a chain: for elements that already have steps the spec is returned unchanged.
+ */
+export function appendStep(
+  spec: AnimationSpec,
+  targets: string[],
+  preset: PresetId,
+): AnimationSpec {
+  const unique = [...new Set(targets)];
+  if (unique.length === 0) return spec;
+  const tails = new Map<string | undefined, string[]>();
+  for (const id of unique) {
+    const tail = chainOf(spec, id).at(-1)?.id;
+    tails.set(tail, [...(tails.get(tail) ?? []), id]);
+  }
+  if (getPreset(preset).kind === "stroke" && [...tails.keys()].some((tail) => tail !== undefined)) {
+    return spec;
+  }
+  let next = spec;
+  for (const [tail, ids] of tails) {
+    const step = createTrack(nextTrackId(next), preset, ids);
+    const tracks = next.tracks.map((track) =>
+      track.id === tail && track.timing.iterations === "infinite"
+        ? { ...track, timing: { ...track.timing, iterations: 1 } }
+        : track,
+    );
+    next = { ...next, tracks: [...tracks, tail === undefined ? step : { ...step, after: tail }] };
+  }
+  return next;
+}
+
+/** Removes one step; the steps that followed it now follow what it followed. */
+export function removeStep(spec: AnimationSpec, trackId: string): AnimationSpec {
+  return {
+    ...spec,
+    tracks: pruneTracks(
+      spec.tracks.map((track) => (track.id === trackId ? { ...track, targets: [] } : track)),
+    ),
+  };
+}
+
+/**
+ * Swaps a step with the previous (`-1`) or next (`1`) one of its chain: their animations trade
+ * places while the timeline slots stay. Unchanged when there is no such step or the result
+ * would be invalid (an outline preset that is no longer first, a looping step in the middle).
+ */
+export function moveStep(spec: AnimationSpec, trackId: string, direction: -1 | 1): AnimationSpec {
+  const track = spec.tracks.find((item) => item.id === trackId);
+  if (!track) return spec;
+  const neighbor =
+    direction === -1
+      ? spec.tracks.find((item) => item.id === track.after)
+      : spec.tracks.find((item) => item.after === trackId);
+  if (!neighbor) return spec;
+  const swap = (from: Track, to: Track): Track =>
+    ({ ...from, preset: to.preset, params: to.params, timing: to.timing }) as Track;
+  const tracks = spec.tracks.map((item) => {
+    if (item.id === track.id) return swap(item, neighbor);
+    if (item.id === neighbor.id) return swap(item, track);
+    return item;
+  });
+  return chainIssues(tracks).length > 0 ? spec : { ...spec, tracks };
+}
+
+/** Steps a track's chain has before it (used by the editor to number steps). */
+export function stepIndex(spec: AnimationSpec, track: Track): number {
+  return ancestorIds(spec.tracks, track).length;
 }
 
 export function findTrackForElement(spec: AnimationSpec, elementId: string): Track | undefined {
