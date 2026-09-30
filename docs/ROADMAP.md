@@ -149,9 +149,22 @@ Plano completo em fases A–D. Um modo "Desenhar" no próprio preview, sem paine
 - [x] Em modo desenhar o preview mostra o estado final da animação (contornos não somem); a forma nova entra com o preset padrão e fica selecionada
 - [x] Testes: `draw.test.ts` (core), modo desenhar em `editor-store.test.ts`; i18n nos 3 idiomas; entrada no changelog
 
+**C. Lápis livre**
+
+- [x] `core/src/draw/freehand.ts`: `simplify` (Ramer-Douglas-Peucker iterativo), `smoothPath` (Catmull-Rom → Bézier cúbico) e `freehandPath`; clique sem arrastar não desenha (em vez de um ponto, que a animação de contorno não mostraria)
+- [x] Ferramenta lápis (padrão do modo desenhar, atalho `P`): amostras com `getCoalescedEvents()`, tolerância fixa em pixels de tela (1,5 px), pré-visualização já suavizada
+- [x] Testes: reta vira 2 pontos, canto preservado, desvio dentro da tolerância, 50 mil pontos sem estourar a pilha, `d` aceito pela importação; i18n e changelog
+
+**D. Caneta e ajuste dos traços**
+
+- [ ] Ferramenta caneta (Bézier) em `core/src/draw/pen.ts` e atalho `B`
+- [ ] Editor de nós (ajustar o traço depois de criado), fora do escopo até aqui
+
 **Aceite (A):** o mesmo valor de largura tem aparência equivalente num ícone 24×24 e num logo 2000×2000, e um projeto antigo abre igual.
 
 **Aceite (B):** criar do zero, arrastar um retângulo e uma linha, desfazer, concluir e ver a animação tocar e o CSS exportado com as duas formas.
+
+**Aceite (C):** arrastar à mão livre, soltar e ver um traço suave e leve (poucos pontos) que anima com o preset padrão.
 
 ---
 
