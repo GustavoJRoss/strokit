@@ -92,5 +92,12 @@ export { type LayerNode, layerTree } from "./svg/layers";
 export { normalizeSvg } from "./svg/normalize";
 export { type DomParserLike, MAX_SVG_BYTES, parseSvg } from "./svg/parse";
 export { serializeSvg } from "./svg/serialize";
+export {
+  type StrokeScales,
+  strokeScales,
+  toUserWidth,
+  toVisualWidth,
+  visualUnit,
+} from "./svg/stroke-scale";
 export type { SvgElementNode, SvgNode } from "./svg/tree";
 export type { DrawableElement, DrawableTag, SvgDocument } from "./svg/types";

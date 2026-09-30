@@ -82,7 +82,8 @@ describe("compile × layer overrides", () => {
     expect(ring?.props.stroke).toBe("var(--sk-stroke, #1d4ed8)");
     expect(arrow?.props).toMatchObject({
       stroke: "var(--sk-layer-1-stroke, var(--sk-stroke, #e11d48))",
-      "stroke-width": "9",
+      // Visual units: 9 × (120 / 100) user units in the 120-wide viewBox.
+      "stroke-width": "10.8",
     });
   });
 

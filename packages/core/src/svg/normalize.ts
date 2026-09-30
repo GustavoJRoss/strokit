@@ -23,10 +23,22 @@ function isDrawableTag(name: string): name is DrawableTag {
   return (DRAWABLE_TAGS as readonly string[]).includes(name);
 }
 
+/** CSS absolute units in user units (px). `em`, `%` and the like depend on context: unknown. */
+const LENGTH_UNITS: Record<string, number> = {
+  "": 1,
+  px: 1,
+  pt: 4 / 3,
+  pc: 16,
+  mm: 96 / 25.4,
+  cm: 96 / 2.54,
+  in: 96,
+};
+
 export function parseLength(value: string | undefined): number | undefined {
   if (value === undefined) return undefined;
-  const match = /^\s*(-?\d*\.?\d+(?:e[-+]?\d+)?)\s*(px)?\s*$/i.exec(value);
-  return match ? Number(match[1]) : undefined;
+  const match = /^\s*(-?\d*\.?\d+(?:e[-+]?\d+)?)\s*([a-z]*)\s*$/i.exec(value);
+  const factor = match ? LENGTH_UNITS[(match[2] ?? "").toLowerCase()] : undefined;
+  return match && factor !== undefined ? Number(match[1]) * factor : undefined;
 }
 
 export function parseViewBox(value: string | undefined): [number, number, number, number] | null {

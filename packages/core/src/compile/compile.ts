@@ -4,6 +4,7 @@ import type { PresetOutput } from "../presets/types";
 import { orderedTracks, trackTimes } from "../spec/chain";
 import { type LayerOverride, layerTokens } from "../spec/layers";
 import type { AnimationSpec, PresetId } from "../spec/schema";
+import { accumulatedMatrices, toUserWidth, transformScale, visualUnit } from "../svg/stroke-scale";
 import {
   apply,
   determinant,
@@ -80,23 +81,6 @@ function coordinateSpaces(
   return spaces;
 }
 
-/** Accumulated `transform` (ancestors, then the element itself) of every drawable; null if not affine. */
-function accumulatedMatrices(root: SvgElementNode): Map<string, Matrix | null> {
-  const matrices = new Map<string, Matrix | null>();
-  const inherited = new Map<SvgElementNode, Matrix | null>();
-  walkElements(root, (element, ancestors) => {
-    const parent = ancestors[ancestors.length - 1];
-    const before = parent ? inherited.get(parent) : IDENTITY;
-    const own = parseTransform(element.attrs.transform);
-    const matrix = before && own ? multiply(before, own) : null;
-    inherited.set(element, matrix);
-    const id = element.attrs["data-sk-id"];
-    if (id !== undefined) matrices.set(id, matrix);
-    return undefined;
-  });
-  return matrices;
-}
-
 /** Properties the element's animations set, from its rule or its keyframes. */
 function animatedProps(output: PresetOutput): Set<string> {
   const names = new Set(Object.keys(output.rule.props));
@@ -160,6 +144,7 @@ function strokeColor(color: string, layer: Layer): string {
 /**
  * Stroke of an element: its own (possibly recolored), one chosen in the layer editor, or,
  * when `auto` is set (stroke presets), the RF4 auto-stroke in the color of the fill.
+ * Widths set in the editor are in visual units; `toUser` turns them into the element's units.
  */
 function strokeProps(
   element: DrawableElement,
@@ -167,6 +152,7 @@ function strokeProps(
   spec: AnimationSpec,
   fill: "keep" | "ghost",
   auto: boolean,
+  toUser: (width: number) => number,
 ): StrokeProps {
   const { stroke, strokeWidth } = layer.override;
   const none: StrokeProps = { props: {}, reducedMotion: {}, missing: auto };
@@ -177,10 +163,10 @@ function strokeProps(
       auto || stroke !== undefined
         ? { stroke: strokeColor(stroke ?? element.stroke ?? "currentColor", layer) }
         : {};
-    if (strokeWidth !== undefined) props["stroke-width"] = String(strokeWidth);
+    if (strokeWidth !== undefined) props["stroke-width"] = String(toUser(strokeWidth));
     return { props, reducedMotion: {}, missing: false };
   }
-  const width = String(strokeWidth ?? spec.global.autoStroke.width);
+  const width = String(toUser(strokeWidth ?? spec.global.autoStroke.width));
   if (stroke !== undefined) {
     return {
       props: { stroke: strokeColor(stroke, layer), "stroke-width": width },
@@ -241,6 +227,12 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
   const warnings: CompileWarning[] = [];
   const spaces = coordinateSpaces(document.root, document.viewBox);
   const matrices = accumulatedMatrices(document.root);
+  const unit = visualUnit(document.viewBox);
+  /** Editor widths are visual units (legacy specs: the element's own units, left untouched). */
+  const widthFor = (id: string) => (width: number) =>
+    spec.global.strokeUnit === "user"
+      ? width
+      : toUserWidth(width, unit, transformScale(matrices.get(id) ?? null));
   const overlays: { defs: SvgElementNode[]; nodes: SvgElementNode[] } = { defs: [], nodes: [] };
 
   const times = trackTimes(spec.tracks);
@@ -356,6 +348,7 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
         spec,
         preset.autoStrokeFill ?? "keep",
         preset.requiresStroke,
+        widthFor(target),
       );
       if (stroke.missing) {
         warnings.push({ code: "missing-stroke", trackId: track.id, elementId: target });
@@ -393,7 +386,7 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
     if (animated.has(id) || hidden.has(id)) continue;
     const layer = layerOf(id);
     const props = {
-      ...strokeProps(element, layer, spec, "keep", false).props,
+      ...strokeProps(element, layer, spec, "keep", false, widthFor(id)).props,
       ...fillProps(layer),
     };
     if (Object.keys(props).length > 0) {

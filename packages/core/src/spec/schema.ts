@@ -33,12 +33,18 @@ export const trackSchema = z.discriminatedUnion("preset", [
 
 export const animationSpecSchema = z
   .object({
-    version: z.literal(1),
+    version: z.literal(2),
     name: z.string().max(120),
     global: z.object({
       /** SPEC RF4 */
       autoStroke: z.object({ enabled: z.boolean(), width: z.number().positive().max(100) }),
       a11y: z.object({ label: z.string().max(200), mode: z.enum(["img", "status"]) }),
+      /**
+       * What stroke widths set in the editor (auto-stroke and layers) are measured in: `visual`,
+       * relative to the SVG's size and ancestor transforms, or `user`, the element's own units
+       * (specs from before v2, kept so their look does not change).
+       */
+      strokeUnit: z.enum(["visual", "user"]).default("visual"),
     }),
     tracks: z.array(trackSchema),
     /** Per-layer edits by element id. Absent when there are none (keeps old specs identical). */
