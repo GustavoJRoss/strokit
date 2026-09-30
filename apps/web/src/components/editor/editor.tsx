@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { isEditableTarget } from "@/lib/dom";
 import { DocumentTitle, useI18n } from "@/lib/i18n/provider";
 import { useEditorStore } from "@/store/editor-store";
 import { EditorLayout } from "./editor-layout";
@@ -12,15 +13,9 @@ import { Toolbar } from "./toolbar";
 import { useDraft } from "./use-draft";
 import { useImporter } from "./use-importer";
 
-function isEditable(target: EventTarget | null): boolean {
-  return (
-    target instanceof HTMLElement &&
-    (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
-  );
-}
-
 export function Editor() {
   const hasDoc = useEditorStore((state) => state.doc !== null);
+  const drawing = useEditorStore((state) => state.draw.active);
   const { importFile, importMarkup } = useImporter();
   const [dragging, setDragging] = useState(false);
   const { t } = useI18n();
@@ -28,7 +23,7 @@ export function Editor() {
 
   useEffect(() => {
     const onPaste = (event: ClipboardEvent) => {
-      if (isEditable(event.target)) return;
+      if (isEditableTarget(event.target)) return;
       const file = event.clipboardData?.files[0];
       if (file) {
         event.preventDefault();
@@ -71,7 +66,7 @@ export function Editor() {
           preview={
             <main className="relative size-full" aria-label="Preview">
               <PreviewCanvas />
-              {!hasDoc && (
+              {!hasDoc && !drawing && (
                 <div className="absolute inset-0 overflow-auto">
                   <EmptyState />
                 </div>

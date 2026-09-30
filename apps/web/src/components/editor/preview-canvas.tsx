@@ -7,6 +7,8 @@ import { applyPlayback, applyReducedMotion, injectMarkup } from "@/lib/preview";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editor-store";
 import { selectPreviewMarkup } from "@/store/selectors";
+import { DrawLayer } from "./draw-layer";
+import { DrawToolbar } from "./draw-toolbar";
 
 type Box = {
   id: string;
@@ -48,6 +50,7 @@ export function PreviewCanvas() {
   const clearSelection = useEditorStore((state) => state.clearSelection);
   const setHovered = useEditorStore((state) => state.setHovered);
   const tool = useEditorStore((state) => state.tool);
+  const drawing = useEditorStore((state) => state.draw.active);
   const setTool = useEditorStore((state) => state.setTool);
   const setLayerStart = useEditorStore((state) => state.setLayerStart);
   const layers = useEditorStore((state) => state.spec.layers);
@@ -76,9 +79,10 @@ export function PreviewCanvas() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: re-apply after every injection
   useLayoutEffect(() => {
     if (!root) return;
-    applyReducedMotion(root, playback.reducedMotion);
+    // While drawing the SVG shows its final state: outline animations start from nothing.
+    applyReducedMotion(root, playback.reducedMotion || drawing);
     applyPlayback(root, playback);
-  }, [root, playback, renderCount]);
+  }, [root, playback, renderCount, drawing]);
 
   const measure = useCallback(() => {
     const wrapper = wrapperRef.current;
@@ -190,6 +194,7 @@ export function PreviewCanvas() {
         playback.background === "checker" && "sk-checker",
       )}
     >
+      {drawing && <DrawToolbar />}
       {tool === "start" && (
         <p className="pointer-events-none absolute inset-x-0 top-2 z-10 mx-auto w-fit rounded-md bg-foreground px-2 py-1 text-background text-xs">
           {t.params.layer.picking}
@@ -209,6 +214,7 @@ export function PreviewCanvas() {
           role="presentation"
           aria-hidden={markup ? undefined : true}
         />
+        {drawing && <DrawLayer />}
         {boxes.map((box) => (
           <div
             key={`${box.kind}-${box.id}`}

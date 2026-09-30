@@ -40,6 +40,20 @@ export const en: Dictionary = {
     label: "SVG markup",
     submit: "Import",
   },
+  draw: {
+    start: "Draw",
+    createFromScratch: "Start from scratch",
+    toolbar: "Drawing tools",
+    canvas: "Drawing area",
+    tools: { line: "Line", rect: "Rectangle", ellipse: "Ellipse" },
+    color: "Stroke color",
+    width: "Stroke width",
+    undo: "Undo",
+    redo: "Redo",
+    done: "Done",
+    hint: "Drag on the canvas. Shift keeps the proportion; Alt draws from the center.",
+    untitled: "Drawing",
+  },
   svgEditor: {
     button: "Edit SVG",
     title: "Edit the SVG",
@@ -532,6 +546,10 @@ export const en: Dictionary = {
     fullHistory: "See the full commit history on GitHub",
   },
   changelog: {
+    "draw-shapes": {
+      title: "Draw shapes in the editor",
+      body: 'New "Draw" button: create lines, rectangles and ellipses by dragging on the canvas, right over your logo or on a blank canvas ("Start from scratch"). Shift keeps the proportion and Alt draws from the center. Pick the color and width, undo and redo (Ctrl/Cmd+Z), and every shape comes with the default animation and can be tweaked like any layer.',
+    },
     "consistent-stroke-width": {
       title: "Consistent stroke width",
       body: "Stroke width is now measured in % of the SVG's size, so the same value looks the same in a small icon and a large logo (even when the SVG applies scale in groups). The limit went up to 100 and the width that comes in the file is shown correctly, even in units like mm. Old projects and links open exactly as before.",

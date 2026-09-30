@@ -20,6 +20,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useI18n } from "@/lib/i18n/provider";
 import { type Background, useEditorStore } from "@/store/editor-store";
+import { DrawButton } from "./draw-toolbar";
 import { ExamplesMenu, FilePickerButton, PasteDialogButton } from "./import-controls";
 import { LayoutMenu } from "./layout-menu";
 import { ShareMenu } from "./share-menu";
@@ -49,6 +50,7 @@ export function Toolbar() {
       <FilePickerButton />
       <PasteDialogButton />
       <ExamplesMenu />
+      <DrawButton />
       <SvgEditorButton />
       <ShareMenu />
       {fileName && (

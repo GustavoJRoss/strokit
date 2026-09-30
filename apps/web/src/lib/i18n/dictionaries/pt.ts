@@ -43,6 +43,20 @@ export const pt = {
     label: "Markup do SVG",
     submit: "Importar",
   },
+  draw: {
+    start: "Desenhar",
+    createFromScratch: "Criar do zero",
+    toolbar: "Ferramentas de desenho",
+    canvas: "Área de desenho",
+    tools: { line: "Linha", rect: "Retângulo", ellipse: "Elipse" },
+    color: "Cor do traço",
+    width: "Espessura do traço",
+    undo: "Desfazer",
+    redo: "Refazer",
+    done: "Concluir",
+    hint: "Arraste no canvas. Shift mantém a proporção; Alt desenha a partir do centro.",
+    untitled: "Desenho",
+  },
   svgEditor: {
     button: "Editar SVG",
     title: "Editar o SVG",
@@ -544,6 +558,10 @@ export const pt = {
     fullHistory: "Ver o histórico completo de commits no GitHub",
   },
   changelog: {
+    "draw-shapes": {
+      title: "Desenhe formas no editor",
+      body: 'Novo botão "Desenhar": crie linhas, retângulos e elipses arrastando no canvas, direto sobre a sua logo ou numa tela em branco ("Criar do zero"). Shift mantém a proporção e Alt desenha a partir do centro. Escolha a cor e a espessura, desfaça e refaça (Ctrl/Cmd+Z), e cada forma já entra com a animação padrão e pode ser ajustada como qualquer camada.',
+    },
     "consistent-stroke-width": {
       title: "Largura do traço consistente",
       body: "A largura do traço agora é medida em % do tamanho do SVG, então o mesmo valor tem a mesma aparência num ícone pequeno e num logo grande (inclusive quando o SVG tem escala aplicada em grupos). O limite subiu para 100 e a largura que já vem no arquivo é mostrada corretamente, mesmo em unidades como mm. Projetos e links antigos abrem exatamente como antes.",

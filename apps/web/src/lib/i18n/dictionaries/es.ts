@@ -40,6 +40,20 @@ export const es: Dictionary = {
     label: "Markup del SVG",
     submit: "Importar",
   },
+  draw: {
+    start: "Dibujar",
+    createFromScratch: "Crear desde cero",
+    toolbar: "Herramientas de dibujo",
+    canvas: "Área de dibujo",
+    tools: { line: "Línea", rect: "Rectángulo", ellipse: "Elipse" },
+    color: "Color del trazo",
+    width: "Grosor del trazo",
+    undo: "Deshacer",
+    redo: "Rehacer",
+    done: "Listo",
+    hint: "Arrastra en el lienzo. Shift mantiene la proporción; Alt dibuja desde el centro.",
+    untitled: "Dibujo",
+  },
   svgEditor: {
     button: "Editar SVG",
     title: "Editar el SVG",
@@ -547,6 +561,10 @@ export const es: Dictionary = {
     fullHistory: "Ver el historial completo de commits en GitHub",
   },
   changelog: {
+    "draw-shapes": {
+      title: "Dibuja formas en el editor",
+      body: 'Nuevo botón "Dibujar": crea líneas, rectángulos y elipses arrastrando en el lienzo, sobre tu logo o en un lienzo en blanco ("Crear desde cero"). Shift mantiene la proporción y Alt dibuja desde el centro. Elige el color y el grosor, deshaz y rehaz (Ctrl/Cmd+Z), y cada forma entra con la animación por defecto y se ajusta como cualquier capa.',
+    },
     "consistent-stroke-width": {
       title: "Grosor del trazo consistente",
       body: "El grosor del trazo ahora se mide en % del tamaño del SVG, así que el mismo valor se ve igual en un ícono pequeño y en un logo grande (incluso cuando el SVG aplica escala en grupos). El límite subió a 100 y el grosor que ya trae el archivo se muestra correctamente, incluso en unidades como mm. Los proyectos y enlaces antiguos se abren exactamente como antes.",
