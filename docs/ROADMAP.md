@@ -157,14 +157,17 @@ Plano completo em fases A–D. Um modo "Desenhar" no próprio preview, sem paine
 
 **D. Caneta e ajuste dos traços**
 
-- [ ] Ferramenta caneta (Bézier) em `core/src/draw/pen.ts` e atalho `B`
-- [ ] Editor de nós (ajustar o traço depois de criado), fora do escopo até aqui
+- [x] Ferramenta caneta (Bézier): `core/src/draw/pen.ts` (`penPath`: âncoras com alça que sai e espelho na chegada, `L` entre pontos sem alça, fechamento com `Z`); clique põe ponto, arrastar puxa a alça, clique no primeiro ponto fecha, Enter/duplo clique termina, Backspace/Ctrl+Z remove o último ponto, Esc descarta; trocar de ferramenta ou concluir mantém o caminho; atalho `B`
+- [x] Testes: `penPath` (retas, curvas, fechamento, duplicata de duplo clique, pontos inválidos); i18n e changelog
+- [ ] Editor de nós (ajustar o traço depois de criado): não entra nesta fase; fica como próximo passo se fizer falta
 
 **Aceite (A):** o mesmo valor de largura tem aparência equivalente num ícone 24×24 e num logo 2000×2000, e um projeto antigo abre igual.
 
 **Aceite (B):** criar do zero, arrastar um retângulo e uma linha, desfazer, concluir e ver a animação tocar e o CSS exportado com as duas formas.
 
 **Aceite (C):** arrastar à mão livre, soltar e ver um traço suave e leve (poucos pontos) que anima com o preset padrão.
+
+**Aceite (D):** com a caneta, clicar três pontos, arrastar um deles para curvar, fechar no primeiro ponto e ver a forma animar; Enter termina um caminho aberto.
 
 ---
 
