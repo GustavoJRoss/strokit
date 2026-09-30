@@ -34,10 +34,11 @@ Devs front-end React/Next que precisam de um loader ou reveal de marca e não qu
 | `fade` | A peça inteira aparece com fade e desliza na direção escolhida (cima, baixo, esquerda, direita ou nenhuma) | `opacity` e `transform: translate` (distância em % do viewBox) |
 | `spin` | A logo gira em torno do centro (ou cada peça no seu centro), horário ou anti-horário | `transform: rotate` com `transform-origin` no centro do viewBox em coordenadas locais |
 | `pulse` | Estado de espera: opacidade/escala suave | `opacity` e `transform: scale` com `transform-box: fill-box` |
+| `shine` | Reflexo de luz que atravessa a peça (efeito de moeda), na direção escolhida (direita, esquerda, cima, baixo) | faixa `<rect>` com gradiente estático, recortada por `<clipPath>` com a silhueta dos elementos com preenchimento; `transform: translate` em unidades do viewBox |
 | `march` | "Formigas marchando" contínuo | `dasharray` curto repetido + `dashoffset` linear infinito |
 
 Parâmetros comuns: `duration` (ms), `delay` (ms), `easing` (presets + cubic-bezier customizado), `iterations` (número ou infinito), `direction`, `strokeWidth`, `color` (token ou valor).
-Parâmetros específicos: `comet.length` (0–1), `draw-fill.fillAt` (0–1 do tempo total), `march.dash` e `march.gap`.
+Parâmetros específicos: `comet.length` (0–1), `draw-fill.fillAt` (0–1 do tempo total), `march.dash` e `march.gap`, `shine.direction`, `shine.angle` (inclinação), `shine.width` (% do viewBox), `shine.intensity` e `shine.rest` (pausa entre brilhos, % do ciclo).
 
 ## 5. Requisitos funcionais
 
@@ -56,6 +57,8 @@ Parâmetros específicos: `comet.length` (0–1), `draw-fill.fillAt` (0–1 do t
 - **RF14 Rascunho local:** a URL fica limpa durante a edição; o trabalho é salvo no navegador e restaurado na próxima visita. Links `#s=` continuam funcionando ao serem abertos. *(2026-09-26.)*
 - **RF15 Edição por camada:** selecionando uma ou mais camadas, o editor permite mudar nome, visibilidade, cor do traço e do preenchimento, espessura do traço, opacidade, pontas e cantos do traço, **ponto de partida** da animação (slider ou clique no contorno, no preview) e sentido do traço. As edições ficam na `AnimationSpec` (o SVG importado não muda), valem para o preview, os três exportadores, o vídeo e o link. Uma cor escolhida sai como token próprio da camada encadeado no global: `var(--sk-<camada>-stroke, var(--sk-stroke, <cor>))`. O painel de camadas mostra os grupos (`<g>`) do SVG; clicar num grupo seleciona todas as camadas dele. *(Incluído em 2026-09-26 a pedido do autor.)*
 - **RF16 Editar SVG:** um diálogo mostra o markup normalizado do SVG para edição direta. Ao aplicar, ele passa de novo por todo o pipeline de import (sanitização inclusa) e as animações e edições continuam nas camadas que mantiverem a posição no documento. *(2026-09-26.)*
+- **RF17 Sequência de animações:** uma camada pode ter várias animações que tocam uma depois da outra (ex.: desenhar e preencher, depois brilho em loop). O editor tem a seção "Sequência" (adicionar, reordenar, remover, editar cada etapa). Só a última etapa pode repetir para sempre; presets de contorno (`draw-fill`, `comet`, `yoyo`, `march`) só podem ser a primeira etapa. O atraso de cada etapa conta a partir do fim da anterior. Vale para CSS, React, Motion, vídeo e link. *(Incluído em 2026-09-30 a pedido do autor.)*
+- **RF18 Preset Brilho:** ver `shine` na tabela de presets. Só brilha sobre elementos com preenchimento; a cor vem de `--sk-shine` (padrão branco). *(2026-09-30.)*
 - **RF12 Vídeo transparente:** exportar a animação como `.webm` (VP9 com canal alfa), gerado quadro a quadro no navegador, com largura, duração, FPS (30/60) e cor do traço configuráveis. Onde o navegador não conseguir gravar VP9 com transparência, mostrar um aviso (sem formato alternativo). *(Incluído em 2026-09-25 a pedido do autor.)*
 
 ## 6. Requisitos não funcionais

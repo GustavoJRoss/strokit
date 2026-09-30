@@ -114,6 +114,20 @@ Regra: uma fase por vez. Ao terminar, rode `npm run lint && npm run typecheck &&
 
 ---
 
+## Fase 5d — Sequência de animações e preset Brilho (incluída a pedido do autor)
+
+- [x] `shine`: faixa de luz recortada pela silhueta, direção/inclinação/largura/intensidade/pausa; hook `Preset.compileOverlay` (chamado uma vez por track) e `PresetKind`
+- [x] `Track.after` opcional (sem subir a versão da spec): mesma camada em vários tracks só se formarem uma cadeia; validação de ciclos, `infinite` no meio e preset de contorno fora do início
+- [x] `compile()` funde as etapas de um elemento em uma regra, com atrasos acumulados, `fill-mode: forwards` nas etapas seguintes e estado final do reduced motion da última etapa
+- [x] Exportadores: `loop` (React) e `repeat` (Motion) só atingem a última etapa
+- [x] Core: `appendStep`, `removeStep`, `moveStep`, `setStepPreset`, `chainOf`, `pruneTracks`, `trackTimes`
+- [x] Editor: seção "Sequência" (adicionar, reordenar, remover, escolher a etapa editada); presets e "Repetir para sempre" respeitam a cadeia
+- [x] Testes: chain.test.ts, shine em presets.test.ts, snapshots CSS/React/Motion, TSX compila, e2e nos 3 motores (inclui paridade vídeo × CSS numa sequência com brilho)
+
+**Aceite:** importar uma logo, deixar "Desenhar e preencher", adicionar "Brilho" (loop) e ver o preview, o código exportado e o vídeo tocarem na mesma ordem.
+
+---
+
 ## Fase 6 — Polimento (opcional antes do lançamento)
 
 - [ ] Undo/redo (`zundo`) com atalhos

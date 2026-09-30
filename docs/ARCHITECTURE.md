@@ -107,6 +107,7 @@ type LayerOverride = {       // tudo opcional; o SVG importado nunca muda
 type Track = {
   id: string;
   targets: string[];         // ids de DrawableElement
+  after?: string;            // id do track que toca antes deste (sequência); ausente = começa em 0
   preset: PresetId;
   params: PresetParams;      // união discriminada por preset, validada por Zod
   timing: {
@@ -169,6 +170,12 @@ interface Preset<P> {
 ```
 
 Os presets de traço usam `presets/path-motion.ts`: com o `path` padrão a saída é idêntica à técnica do §6; com outro ponto de partida, os presets de desenho animam um tracejado periódico (`stroke-dasharray: 0 1 → 1 0` com `stroke-dashoffset: -start`) e os de risco que anda (`comet`, `yoyo`, `march`) deslocam/invertem o `dashoffset`.
+
+Presets de tela inteira (`shine`) definem também `compileOverlay(ctx)`, chamado **uma vez por track** com os alvos visíveis (nó do SVG + matriz acumulada). Ele devolve `defs`/`nodes` injetados no fim da raiz (`<clipPath>` com a silhueta e a faixa animada) e regras normais com `data-sk-id` próprio, então exportadores, amostragem e vídeo os tratam como qualquer elemento. `kind: "stroke" | "layer"` diz se o preset usa as propriedades de tracejado (só pode ser o primeiro de uma sequência).
+
+### Sequência (RF17)
+
+`Track.after` liga tracks em cadeia. `spec/chain.ts` calcula `trackTimes()` (início = fim do anterior + `timing.delay`), `orderedTracks()` e valida (`chainIssues`). O `compile()` percorre os tracks na ordem da cadeia e, para um elemento que já tem regra, concatena as `animations` (atraso absoluto), mantém as `props` estáticas da primeira etapa e o `reducedMotion` da última.
 
 ### Edição por camada (RF15/RF16)
 
@@ -362,6 +369,10 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-28 | Presets `draw` e `stagger-draw` removidos (resultado visual fraco); `draw-fill` passa a ser o preset padrão (`DEFAULT_PRESET`) de import e de camadas novas; `util/random.ts` e os params `step`/`order`/`seed` saem junto | `draw-fill` cobre o desenho do contorno e também logos só com preenchimento. Links e projetos `.strokit` antigos que usam `draw`/`stagger-draw` deixam de validar (`invalid-spec`); as snapshots de exportadores foram regeneradas conscientemente |
 | 2026-09-29 | Preset `fade` (aparece com fade e desliza em cima/baixo/esquerda/direita); `PresetContext` ganha `viewBox` opcional e a distância é % do viewBox | Em `fill-box` o `translate(%)` é relativo à caixa de cada path e peças de tamanhos diferentes andariam distâncias diferentes; em unidades do viewBox a peça inteira anda igual e o CSS continua independente de escala |
 | 2026-09-29 | Preset `spin`: pivô "logo inteira" usa `transform-origin` em px nas coordenadas locais do elemento, calculado por `compile()` como a inversa do `transform` acumulado (ancestrais + próprio) aplicada ao centro do viewBox (`svg/transform.ts`); espelhamento inverte o sentido; skew/escala não uniforme cai no pivô por peça com aviso `spin-skewed-transform` | O origin do CSS vive no espaço local, então qualquer `transform` no path ou num `<g>` pai (logos do Illustrator/Figma, a própria logo do strokit) deslocaria o centro e a logo "orbitaria" |
+
+| 2026-09-30 | Sequência por `Track.after` (opcional, sem subir `version`), em vez de uma lista de etapas dentro do track | O schema de track (união por preset) e todos os consumidores continuam iguais; links e snapshots antigos idênticos. O mesmo elemento pode estar em vários tracks só se formarem uma cadeia (substitui a regra "um elemento, um track" de 2026-09-25) |
+| 2026-09-30 | Etapas depois da primeira usam `fill-mode: forwards` e só a última pode repetir para sempre; presets de contorno só abrem a sequência; `loop` (React) e `repeat` (Motion) só valem para a última | Com `both`, o keyframe 0 de uma etapa tardia pintaria durante as anteriores; um contorno em loop nunca passaria a vez para a próxima etapa; o CSS puro não reinicia a sequência inteira. Motion emite `step: true` nas etapas anteriores só quando há sequência (exports sem sequência ficam idênticos) |
+| 2026-09-30 | `shine` como overlay: `<clipPath>` com cópias das formas (matriz acumulada aplicada) + `<rect>` de gradiente estático animado por `transform` em unidades do viewBox, cor por `--sk-shine` | `stop-color` não aceita `var()` como atributo, então vai por classe; o gradiente não anima (CSS não anima `<stop>`), o `rect` anda. Só elementos com preenchimento entram no recorte (aviso `overlay-skipped` para os demais). O teste de cores hex aceita `var(--sk-shine, #fff)` como fallback válido |
 
 ### Pendências abertas (decidir até a fase indicada)
 
