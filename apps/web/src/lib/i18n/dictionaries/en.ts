@@ -45,13 +45,15 @@ export const en: Dictionary = {
     createFromScratch: "Start from scratch",
     toolbar: "Drawing tools",
     canvas: "Drawing area",
-    tools: { pencil: "Pencil", line: "Line", rect: "Rectangle", ellipse: "Ellipse" },
+    tools: { pen: "Pen", pencil: "Pencil", line: "Line", rect: "Rectangle", ellipse: "Ellipse" },
     color: "Stroke color",
     width: "Stroke width",
     undo: "Undo",
     redo: "Redo",
     done: "Done",
     hint: "Drag on the canvas. Shift keeps the proportion; Alt draws from the center.",
+    penHint:
+      "Click to place points and drag to curve. Enter or double-click finishes; click the first point to close; Backspace removes the last.",
     untitled: "Drawing",
   },
   svgEditor: {
@@ -546,6 +548,10 @@ export const en: Dictionary = {
     fullHistory: "See the full commit history on GitHub",
   },
   changelog: {
+    "pen-tool": {
+      title: "Pen for precise curves",
+      body: "Draw mode now has the pen: click to place points, drag to pull out handles and curve, and click the first point to close the shape. Enter or double-click finishes, Backspace removes the last point and Esc discards. Shortcut: B.",
+    },
     "freehand-pencil": {
       title: "Freehand pencil",
       body: 'You can now draw freehand with the "Draw" button: just drag on the canvas. The stroke is simplified and smoothed into curves, so it comes out clean and light in the exported code, and each stroke becomes its own layer that you animate in the order you drew it. Shortcut: P.',

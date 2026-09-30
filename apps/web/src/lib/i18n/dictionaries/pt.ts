@@ -48,13 +48,15 @@ export const pt = {
     createFromScratch: "Criar do zero",
     toolbar: "Ferramentas de desenho",
     canvas: "Área de desenho",
-    tools: { pencil: "Lápis", line: "Linha", rect: "Retângulo", ellipse: "Elipse" },
+    tools: { pen: "Caneta", pencil: "Lápis", line: "Linha", rect: "Retângulo", ellipse: "Elipse" },
     color: "Cor do traço",
     width: "Espessura do traço",
     undo: "Desfazer",
     redo: "Refazer",
     done: "Concluir",
     hint: "Arraste no canvas. Shift mantém a proporção; Alt desenha a partir do centro.",
+    penHint:
+      "Clique para pôr pontos e arraste para curvar. Enter ou duplo clique termina; clique no primeiro ponto fecha; Backspace remove o último.",
     untitled: "Desenho",
   },
   svgEditor: {
@@ -558,6 +560,10 @@ export const pt = {
     fullHistory: "Ver o histórico completo de commits no GitHub",
   },
   changelog: {
+    "pen-tool": {
+      title: "Caneta para curvas precisas",
+      body: 'No modo "Desenhar" agora há a caneta: clique para pôr pontos, arraste para puxar as alças e curvar, e clique no primeiro ponto para fechar a forma. Enter ou duplo clique termina, Backspace remove o último ponto e Esc descarta. Atalho: B.',
+    },
     "freehand-pencil": {
       title: "Lápis livre",
       body: 'Agora dá para desenhar à mão livre no botão "Desenhar": é só arrastar no canvas. O traço é simplificado e suavizado em curvas, então sai limpo e leve no código exportado, e cada risco vira uma camada própria que você anima na ordem em que desenhou. Atalho: P.',

@@ -45,13 +45,15 @@ export const es: Dictionary = {
     createFromScratch: "Crear desde cero",
     toolbar: "Herramientas de dibujo",
     canvas: "Área de dibujo",
-    tools: { pencil: "Lápiz", line: "Línea", rect: "Rectángulo", ellipse: "Elipse" },
+    tools: { pen: "Pluma", pencil: "Lápiz", line: "Línea", rect: "Rectángulo", ellipse: "Elipse" },
     color: "Color del trazo",
     width: "Grosor del trazo",
     undo: "Deshacer",
     redo: "Rehacer",
     done: "Listo",
     hint: "Arrastra en el lienzo. Shift mantiene la proporción; Alt dibuja desde el centro.",
+    penHint:
+      "Haz clic para poner puntos y arrastra para curvar. Enter o doble clic termina; clic en el primer punto cierra; Backspace quita el último.",
     untitled: "Dibujo",
   },
   svgEditor: {
@@ -561,6 +563,10 @@ export const es: Dictionary = {
     fullHistory: "Ver el historial completo de commits en GitHub",
   },
   changelog: {
+    "pen-tool": {
+      title: "Pluma para curvas precisas",
+      body: 'El modo "Dibujar" ahora tiene la pluma: haz clic para poner puntos, arrastra para sacar los tiradores y curvar, y haz clic en el primer punto para cerrar la forma. Enter o doble clic termina, Backspace quita el último punto y Esc descarta. Atajo: B.',
+    },
     "freehand-pencil": {
       title: "Lápiz libre",
       body: 'Ahora puedes dibujar a mano alzada con el botón "Dibujar": solo arrastra en el lienzo. El trazo se simplifica y suaviza en curvas, así que queda limpio y liviano en el código exportado, y cada trazo se vuelve una capa propia que animas en el orden en que dibujaste. Atajo: P.',
