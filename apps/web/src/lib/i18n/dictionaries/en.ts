@@ -220,6 +220,11 @@ export const en: Dictionary = {
       label: "Spin",
       description: "The logo rotates around its center. Great for loading screens.",
     },
+    shine: {
+      label: "Shine",
+      description:
+        "A glint of light sweeps across the piece in the chosen direction, like on a coin.",
+    },
   },
   presetParams: {
     angle: "Angle",
@@ -232,6 +237,9 @@ export const en: Dictionary = {
     minOpacity: "Minimum opacity",
     dash: "Dash",
     gap: "Gap",
+    width: "Glint width",
+    intensity: "Intensity",
+    rest: "Pause between glints",
   },
   presetOptions: {
     direction: {
@@ -511,6 +519,10 @@ export const en: Dictionary = {
     seo: {
       title: "Better sharing and search",
       body: "The site now shows a proper preview when shared (LinkedIn, WhatsApp) and is ready for Google indexing: sitemap, robots.txt and structured data.",
+    },
+    "shine-preset": {
+      title: "New preset: Shine",
+      body: "A glint of light sweeps across the logo like the shine on a coin. Pick the direction (right, left, up or down), the tilt, the width, the intensity and the pause between glints. The glint only shows over filled parts and respects the reduced-motion preference.",
     },
     "fade-preset": {
       title: "New presets: Fade in and Spin",

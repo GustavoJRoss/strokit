@@ -39,7 +39,7 @@ describe("exporters.css × draw-fill", () => {
       expect(css).toContain("@media (prefers-reduced-motion: reduce)");
       // Every hex color in the CSS is a var() fallback, never a fixed value.
       const hexes = css.match(/#[0-9a-f]{3,8}\b/gi) ?? [];
-      const fallbacks = css.match(/var\(--sk-stroke, #[0-9a-f]{3,8}\)/gi) ?? [];
+      const fallbacks = css.match(/var\(--sk-(?:stroke|shine), #[0-9a-f]{3,8}\)/gi) ?? [];
       expect(hexes.length).toBe(fallbacks.length);
     },
   );
@@ -106,7 +106,7 @@ describe("exporters.css × every preset", () => {
     const css = styleOf(output);
     expect(css).toContain("@media (prefers-reduced-motion: reduce)");
     const hexes = css.match(/#[0-9a-f]{3,8}\b/gi) ?? [];
-    const fallbacks = css.match(/var\(--sk-stroke, #[0-9a-f]{3,8}\)/gi) ?? [];
+    const fallbacks = css.match(/var\(--sk-(?:stroke|shine), #[0-9a-f]{3,8}\)/gi) ?? [];
     expect(hexes.length).toBe(fallbacks.length);
   });
 });

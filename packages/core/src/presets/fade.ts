@@ -45,6 +45,7 @@ export const fadePreset: Preset<"fade", FadeParams> = {
     params: { direction: "up", distance: 8 },
     timing: { duration: 900, delay: 0, easing: "ease-out", iterations: 1, direction: "normal" },
   },
+  kind: "layer",
   requiresStroke: false,
   compile: ({ params, timing, viewBox }) => {
     const [, , width, height] = viewBox ?? [0, 0, 100, 100];

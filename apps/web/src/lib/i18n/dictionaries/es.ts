@@ -222,6 +222,11 @@ export const es: Dictionary = {
       label: "Girar",
       description: "El logo gira alrededor del centro. Ideal para pantallas de carga.",
     },
+    shine: {
+      label: "Brillo",
+      description:
+        "Un reflejo de luz atraviesa la pieza en la dirección elegida, como en una moneda.",
+    },
   },
   presetParams: {
     angle: "Ángulo",
@@ -234,6 +239,9 @@ export const es: Dictionary = {
     minOpacity: "Opacidad mínima",
     dash: "Trazo",
     gap: "Espacio",
+    width: "Ancho del brillo",
+    intensity: "Intensidad",
+    rest: "Pausa entre brillos",
   },
   presetOptions: {
     direction: {
@@ -526,6 +534,10 @@ export const es: Dictionary = {
     seo: {
       title: "Mejor búsqueda y para compartir",
       body: "El sitio ahora muestra una vista previa correcta al compartir (LinkedIn, WhatsApp) y está listo para la indexación de Google: sitemap, robots.txt y datos estructurados.",
+    },
+    "shine-preset": {
+      title: "Nuevo preset: Brillo",
+      body: "Un reflejo de luz atraviesa el logo como el brillo de una moneda. Eliges la dirección (derecha, izquierda, arriba o abajo), la inclinación, el ancho, la intensidad y la pausa entre un brillo y otro. El reflejo solo aparece sobre las partes rellenas y respeta la preferencia de movimiento reducido.",
     },
     "fade-preset": {
       title: "Nuevos presets: Aparecer y Girar",

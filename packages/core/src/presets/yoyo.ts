@@ -30,6 +30,7 @@ export const yoyoPreset: Preset<"yoyo", YoyoParams> = {
       direction: "alternate",
     },
   },
+  kind: "stroke",
   requiresStroke: true,
   autoStrokeFill: "ghost",
   compile: ({ params, timing, path }) => {

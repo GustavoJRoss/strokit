@@ -41,6 +41,7 @@ export const spinPreset: Preset<"spin", SpinParams> = {
       direction: "normal",
     },
   },
+  kind: "layer",
   requiresStroke: false,
   compile: ({ params, timing, origin, mirrored }) => {
     // A mirrored local space (negative determinant) turns the rotation the other way on screen.

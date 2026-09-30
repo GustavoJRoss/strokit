@@ -22,7 +22,14 @@ export { toComponentName } from "./exporters/jsx";
 export { getPreset, presetIds, presets } from "./presets";
 export { describeParams, type ParamField, type ParamMeta } from "./presets/fields";
 export { DEFAULT_PATH, type PathMotion } from "./presets/path-motion";
-export type { Preset, PresetContext, PresetOutput } from "./presets/types";
+export type {
+  OverlayContext,
+  OverlayOutput,
+  Preset,
+  PresetContext,
+  PresetKind,
+  PresetOutput,
+} from "./presets/types";
 export {
   animationLength,
   type FrameOptions,

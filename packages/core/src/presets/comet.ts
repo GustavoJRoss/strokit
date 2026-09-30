@@ -27,6 +27,7 @@ export const cometPreset: Preset<"comet", CometParams> = {
       direction: "normal",
     },
   },
+  kind: "stroke",
   requiresStroke: true,
   autoStrokeFill: "ghost",
   compile: ({ params, timing, path }) => {

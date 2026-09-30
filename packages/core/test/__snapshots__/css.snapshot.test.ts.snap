@@ -463,6 +463,46 @@ exports[`exporters.css × every preset > pulse × simple-stroke.svg 1`] = `
 "
 `;
 
+exports[`exporters.css × every preset > shine × illustrator-classes.svg 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-i8favz" role="img" aria-label="Logo"><style>
+.sk-i8favz-0 {
+  transform: translate(-61.397px, 50px) skewX(20deg);
+  animation: sk-i8favz-t0-shine 1600ms ease-in-out 0ms infinite normal both;
+}
+.sk-i8favz-1 {
+  stop-color: var(--sk-shine, #fff);
+}
+@keyframes sk-i8favz-t0-shine {
+  0% {
+    transform: translate(-61.397px, 50px) skewX(20deg);
+  }
+  60% {
+    transform: translate(261.397px, 50px) skewX(20deg);
+  }
+  100% {
+    transform: translate(261.397px, 50px) skewX(20deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-i8favz * {
+    animation: none;
+  }
+}
+</style><path d="M10 90 L40 10 L70 90 Z" fill="#E30613"/><polyline points="80,90 110,10 140,90" fill="none" stroke="#1D1D1B" stroke-width="4" stroke-miterlimit="10"/><path d="M150 90 L190 10" fill="none" stroke="#1D1D1B" stroke-width="5" stroke-miterlimit="10"/><ellipse id="accent" cx="170" cy="70" rx="12" ry="8" fill="#2563eb"/><line x1="10" y1="95" x2="190" y2="95" fill="none" stroke="#10b981" stroke-width="4" stroke-miterlimit="10"/><defs><clipPath id="sk-i8favz-t0-clip"><path d="M10 90 L40 10 L70 90 Z" transform="matrix(1 0 0 1 0 0)"/><ellipse cx="170" cy="70" rx="12" ry="8" transform="matrix(1 0 0 1 0 0)"/></clipPath><linearGradient id="sk-i8favz-t0-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-opacity="0" class="sk-i8favz-1"/><stop offset="0.5" stop-opacity="0.6" class="sk-i8favz-1"/><stop offset="1" stop-opacity="0" class="sk-i8favz-1"/></linearGradient></defs><g clip-path="url(#sk-i8favz-t0-clip)" pointer-events="none" aria-hidden="true"><rect x="-25" y="-100" width="50" height="200" fill="url(#sk-i8favz-t0-grad)" class="sk-i8favz-0"/></g></svg>
+"
+`;
+
+exports[`exporters.css × every preset > shine × simple-stroke.svg 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" class="sk-llztk4" role="img" aria-label="Logo"><style>
+@media (prefers-reduced-motion: reduce) {
+  .sk-llztk4 * {
+    animation: none;
+  }
+}
+</style><title>Anel e seta</title><g fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"><circle cx="60" cy="60" r="44"/><path d="M36 64 L56 84 L88 40"/></g></svg>
+"
+`;
+
 exports[`exporters.css × every preset > spin × illustrator-classes.svg 1`] = `
 "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" id="Layer_1" class="sk-pqdy25" role="img" aria-label="Logo"><style>
 .sk-pqdy25-0 {

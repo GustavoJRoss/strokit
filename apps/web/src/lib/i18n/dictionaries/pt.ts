@@ -226,6 +226,10 @@ export const pt = {
       label: "Girar",
       description: "A logo gira em torno do centro. Ótimo para telas de carregamento.",
     },
+    shine: {
+      label: "Brilho",
+      description: "Um reflexo de luz atravessa a peça na direção escolhida, como numa moeda.",
+    },
   },
   presetParams: {
     angle: "Ângulo",
@@ -238,6 +242,9 @@ export const pt = {
     minOpacity: "Opacidade mínima",
     dash: "Traço",
     gap: "Espaço",
+    width: "Largura do brilho",
+    intensity: "Intensidade",
+    rest: "Pausa entre brilhos",
   },
   presetOptions: {
     direction: {
@@ -523,6 +530,10 @@ export const pt = {
     seo: {
       title: "Compartilhamento e busca melhorados",
       body: "O site agora aparece com preview correto ao compartilhar (LinkedIn, WhatsApp) e está pronto para indexação no Google: sitemap, robots.txt e dados estruturados.",
+    },
+    "shine-preset": {
+      title: "Novo preset: Brilho",
+      body: "Um reflexo de luz atravessa a logo como o brilho de uma moeda. Você escolhe a direção (direita, esquerda, cima ou baixo), a inclinação, a largura, a intensidade e a pausa entre um brilho e outro. O reflexo só aparece sobre as partes preenchidas e respeita a preferência de movimento reduzido.",
     },
     "fade-preset": {
       title: "Novos presets: Aparecer e Girar",

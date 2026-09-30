@@ -20,6 +20,7 @@ export const drawFillPreset: Preset<"draw-fill", DrawFillParams> = {
     params: { fillAt: 0.6 },
     timing: { duration: 2000, delay: 0, easing: "ease-in-out", iterations: 1, direction: "normal" },
   },
+  kind: "stroke",
   requiresStroke: true,
   compile: ({ params, timing, path }) => {
     const stroke = reveal(path);

@@ -79,6 +79,23 @@ function coordinateSpaces(
   return spaces;
 }
 
+/** Accumulated `transform` (ancestors, then the element itself) of every drawable; null if not affine. */
+function accumulatedMatrices(root: SvgElementNode): Map<string, Matrix | null> {
+  const matrices = new Map<string, Matrix | null>();
+  const inherited = new Map<SvgElementNode, Matrix | null>();
+  walkElements(root, (element, ancestors) => {
+    const parent = ancestors[ancestors.length - 1];
+    const before = parent ? inherited.get(parent) : IDENTITY;
+    const own = parseTransform(element.attrs.transform);
+    const matrix = before && own ? multiply(before, own) : null;
+    inherited.set(element, matrix);
+    const id = element.attrs["data-sk-id"];
+    if (id !== undefined) matrices.set(id, matrix);
+    return undefined;
+  });
+  return matrices;
+}
+
 /** Properties the element's animations set, from its rule or its keyframes. */
 function animatedProps(output: PresetOutput): Set<string> {
   const names = new Set(Object.keys(output.rule.props));
@@ -222,6 +239,8 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
   const animated = new Set<string>();
   const warnings: CompileWarning[] = [];
   const spaces = coordinateSpaces(document.root, document.viewBox);
+  const matrices = accumulatedMatrices(document.root);
+  const overlays: { defs: SvgElementNode[]; nodes: SvgElementNode[] } = { defs: [], nodes: [] };
 
   spec.tracks.forEach((track, trackIndex) => {
     const preset = presets[track.preset];
@@ -232,6 +251,49 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
       return false;
     });
     const namespace = (name: string) => `t${trackIndex}-${name}`;
+
+    if (preset.compileOverlay) {
+      const nodes = new Map<string, SvgElementNode>();
+      walkElements(document.root, (element) => {
+        const elementId = element.attrs["data-sk-id"];
+        if (elementId !== undefined) nodes.set(elementId, element);
+        return undefined;
+      });
+      const overlay = preset.compileOverlay({
+        prefix: `${id}-t${trackIndex}`,
+        targets: targets.map((target) => ({
+          element: elementsById.get(target) as DrawableElement,
+          node: nodes.get(target) as SvgElementNode,
+          matrix: matrices.get(target) ?? null,
+        })),
+        // `track.params` widens to the union of all params; the discriminant guarantees the match.
+        params: track.params as never,
+        timing: track.timing,
+        viewBox: document.viewBox,
+      });
+      for (const definition of overlay.keyframes) {
+        const name = namespace(definition.name);
+        keyframes.set(name, { ...definition, name });
+      }
+      for (const rule of overlay.rules) {
+        rules.push({
+          elementId: rule.elementId,
+          trackId: track.id,
+          props: rule.props,
+          animations: rule.animations.map((animation) => ({
+            ...animation,
+            keyframes: namespace(animation.keyframes),
+          })),
+          reducedMotion: rule.reducedMotion,
+        });
+      }
+      for (const elementId of overlay.skipped) {
+        warnings.push({ code: "overlay-skipped", trackId: track.id, elementId });
+      }
+      overlays.defs.push(...overlay.defs);
+      overlays.nodes.push(...overlay.nodes);
+      return;
+    }
 
     targets.forEach((target, index) => {
       const element = elementsById.get(target) as DrawableElement;
@@ -311,6 +373,7 @@ export function compile(document: SvgDocument, spec: AnimationSpec): CompiledAni
     return undefined;
   });
   if (moved.size > 0) wrapAnimatedAttrs(root, moved);
+  root.children.push(...overlays.defs, ...overlays.nodes);
 
   return {
     id,

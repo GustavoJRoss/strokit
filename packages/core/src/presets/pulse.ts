@@ -30,6 +30,7 @@ export const pulsePreset: Preset<"pulse", PulseParams> = {
       direction: "normal",
     },
   },
+  kind: "layer",
   requiresStroke: false,
   compile: ({ params, timing }) => ({
     keyframes: [

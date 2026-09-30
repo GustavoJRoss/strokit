@@ -38,6 +38,7 @@ export const marchPreset: Preset<"march", MarchParams> = {
       direction: "normal",
     },
   },
+  kind: "stroke",
   requiresStroke: true,
   autoStrokeFill: "ghost",
   compile: ({ params, timing, path }) => {

@@ -32,7 +32,9 @@ export type CompileWarning =
   | { code: "missing-stroke"; trackId: string; elementId: string }
   | { code: "unknown-target"; trackId: string; elementId: string }
   | { code: "unknown-layer"; elementId: string }
-  | { code: "spin-skewed-transform"; trackId: string; elementId: string };
+  | { code: "spin-skewed-transform"; trackId: string; elementId: string }
+  /** An overlay preset (shine) left the element out: no fill, or a non-affine transform. */
+  | { code: "overlay-skipped"; trackId: string; elementId: string };
 
 /** Neutral IR read by every exporter. Exporters never know about presets. */
 export type CompiledAnimation = {

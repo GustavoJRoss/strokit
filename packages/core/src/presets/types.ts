@@ -1,6 +1,8 @@
 import type { z } from "zod";
 import type { AnimationDef, CssProps, KeyframesDef } from "../compile/types";
 import type { Timing } from "../spec/timing";
+import type { Matrix } from "../svg/transform";
+import type { SvgElementNode } from "../svg/tree";
 import type { DrawableElement } from "../svg/types";
 import type { PathMotion } from "./path-motion";
 
@@ -33,6 +35,34 @@ export type PresetOutput = {
   };
 };
 
+export type OverlayContext<P> = {
+  /** Unique, deterministic prefix for ids and element ids the overlay creates ("sk-<hash>-t<n>"). */
+  prefix: string;
+  /** The track's visible drawables, with their tree node and accumulated matrix (null: not affine). */
+  targets: Array<{ element: DrawableElement; node: SvgElementNode; matrix: Matrix | null }>;
+  params: P;
+  timing: Timing;
+  viewBox: [number, number, number, number];
+};
+
+export type OverlayOutput = {
+  /** Appended to the root's children, before `nodes`. */
+  defs: SvgElementNode[];
+  nodes: SvgElementNode[];
+  /** Names are local to the track; `compile()` namespaces them. */
+  keyframes: KeyframesDef[];
+  /** One per overlay node that carries a `data-sk-id`. */
+  rules: Array<{ elementId: string } & PresetOutput["rule"]>;
+  /** Targets the overlay could not cover (no fill, non-affine transform). */
+  skipped: string[];
+};
+
+/**
+ * "stroke" presets own the outline's dash properties, so at most one may run per element and it
+ * must come first in a chain. "layer" presets only touch transform/opacity or add an overlay.
+ */
+export type PresetKind = "stroke" | "layer";
+
 export interface Preset<Id extends string, P> {
   id: Id;
   /** UI label (pt-BR). */
@@ -41,6 +71,7 @@ export interface Preset<Id extends string, P> {
   paramsSchema: z.ZodType<P>;
   defaults: { params: P; timing: Timing };
   /** When true and the element has no stroke, compile uses autoStroke or warns. */
+  kind: PresetKind;
   requiresStroke: boolean;
   /**
    * What happens to the fill of an element that only gets a stroke from autoStroke.
@@ -49,4 +80,9 @@ export interface Preset<Id extends string, P> {
    */
   autoStrokeFill?: "keep" | "ghost";
   compile(context: PresetContext<P>): PresetOutput;
+  /**
+   * Whole-piece effects (shine): called once per track instead of `compile()` per element. When
+   * present, `compile()` is not used for the track and its output must be empty.
+   */
+  compileOverlay?(context: OverlayContext<P>): OverlayOutput;
 }

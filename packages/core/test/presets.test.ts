@@ -6,6 +6,7 @@ import { drawFillPreset } from "../src/presets/draw-fill";
 import { fadePreset } from "../src/presets/fade";
 import { fitPattern, marchPreset } from "../src/presets/march";
 import { pulsePreset } from "../src/presets/pulse";
+import { type ShineParams, shinePreset } from "../src/presets/shine";
 import { spinPreset } from "../src/presets/spin";
 import { yoyoPreset } from "../src/presets/yoyo";
 import { applyPreset, createEmptySpec } from "../src/spec/defaults";
@@ -14,7 +15,7 @@ import type { Timing } from "../src/spec/timing";
 import { importSvg } from "../src/svg/import";
 import { serializeSvg } from "../src/svg/serialize";
 import type { DrawableElement } from "../src/svg/types";
-import { parser } from "./helpers";
+import { fixture, parser } from "./helpers";
 
 const element: DrawableElement = {
   id: "sk-0",
@@ -30,7 +31,16 @@ function context<P>(params: P, timing: Timing, index = 0, total = 1) {
 
 describe("preset registry", () => {
   it("registers every MVP preset, in editor order", () => {
-    expect(presetIds).toEqual(["draw-fill", "comet", "yoyo", "march", "pulse", "fade", "spin"]);
+    expect(presetIds).toEqual([
+      "draw-fill",
+      "comet",
+      "yoyo",
+      "march",
+      "pulse",
+      "fade",
+      "spin",
+      "shine",
+    ]);
   });
 
   it.each(presetIds)("%s: defaults satisfy its schema and a spec with it validates", (id) => {
@@ -202,5 +212,82 @@ describe("march", () => {
       "-0.1",
     ]);
     expect(output.rule.reducedMotion).toEqual({});
+  });
+});
+
+describe("shine", () => {
+  const load = () => importSvg(fixture("illustrator-classes.svg"), { parser }).document;
+  const compileShine = (patch: Partial<ShineParams>) => {
+    const spec = applyPreset(createEmptySpec(), ["sk-0", "sk-3"], "shine");
+    const track = spec.tracks[0];
+    if (track?.preset !== "shine") throw new Error("expected a shine track");
+    track.params = { ...track.params, ...patch };
+    return compile(load(), spec);
+  };
+  const band = (compiled: ReturnType<typeof compile>) =>
+    compiled.rules.find((rule) => rule.elementId.endsWith("-band"));
+  const sweep = (compiled: ReturnType<typeof compile>) =>
+    compiled.keyframes[0]?.stops.map((stop) => stop.props.transform);
+
+  it("is a layer preset that draws no outline", () => {
+    expect(shinePreset.kind).toBe("layer");
+    expect(shinePreset.requiresStroke).toBe(false);
+    expect(shinePreset.defaults.timing.iterations).toBe("infinite");
+  });
+
+  it("clips a moving band to the filled shapes, with themable color", () => {
+    const compiled = compileShine({});
+    const markup = serializeSvg(compiled.root);
+    expect(markup).toContain("<clipPath");
+    expect(markup).toContain('clip-path="url(#');
+    expect(markup).toContain('pointer-events="none"');
+    // Only sk-0 (path) and sk-3 (ellipse) have a fill among the two targets.
+    expect(
+      markup.match(/<clipPath[^>]*>(.*?)<\/clipPath>/)?.[1]?.match(/<(path|ellipse)/g),
+    ).toHaveLength(2);
+    expect(compiled.rules.filter((rule) => rule.props["stop-color"])).toHaveLength(3);
+    expect(compiled.rules.find((rule) => rule.props["stop-color"])?.props["stop-color"]).toBe(
+      "var(--sk-shine, #fff)",
+    );
+    // The band is parked off-canvas at rest, which is also what reduced motion shows.
+    expect(band(compiled)?.props.transform).toBe(sweep(compiled)?.[0]);
+    expect(band(compiled)?.reducedMotion).toEqual({});
+    expect(compiled.warnings).toEqual([]);
+  });
+
+  it("sweeps opposite ways for right and left, and along Y for down and up", () => {
+    const x = (transform: string | undefined) =>
+      Number(/translate\((-?[\d.]+)px/.exec(transform ?? "")?.[1]);
+    const y = (transform: string | undefined) =>
+      Number(/translate\(-?[\d.]+px, (-?[\d.]+)px/.exec(transform ?? "")?.[1]);
+    const right = sweep(compileShine({ direction: "right" })) ?? [];
+    const left = sweep(compileShine({ direction: "left" })) ?? [];
+    expect(x(right[0])).toBeLessThan(0);
+    expect(x(right[1])).toBeGreaterThan(200);
+    expect(x(left[0])).toBeGreaterThan(200);
+    expect(x(left[1])).toBeLessThan(0);
+    const down = sweep(compileShine({ direction: "down" })) ?? [];
+    expect(y(down[0])).toBeLessThan(0);
+    expect(y(down[1])).toBeGreaterThan(100);
+    expect(down[0]).toContain("skewY(");
+  });
+
+  it("rest parks the band for the end of the cycle; rest 0 sweeps the whole time", () => {
+    expect(compileShine({ rest: 40 }).keyframes[0]?.stops.map((stop) => stop.offset)).toEqual([
+      0, 0.6, 1,
+    ]);
+    expect(compileShine({ rest: 0 }).keyframes[0]?.stops.map((stop) => stop.offset)).toEqual([
+      0, 1,
+    ]);
+  });
+
+  it("skips targets without a fill and warns; nothing is added when none is left", () => {
+    const spec = applyPreset(createEmptySpec(), ["sk-1"], "shine");
+    const compiled = compile(load(), spec);
+    expect(compiled.warnings).toEqual([
+      { code: "overlay-skipped", trackId: "track-0", elementId: "sk-1" },
+    ]);
+    expect(compiled.rules).toEqual([]);
+    expect(serializeSvg(compiled.root)).not.toContain("clipPath");
   });
 });
