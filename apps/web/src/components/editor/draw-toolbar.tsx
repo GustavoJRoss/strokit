@@ -3,6 +3,7 @@
 import {
   CheckIcon,
   CircleIcon,
+  PencilIcon,
   PencilLineIcon,
   Redo2Icon,
   SlashIcon,
@@ -20,15 +21,21 @@ import { useI18n } from "@/lib/i18n/provider";
 import { DEFAULT_DRAW_COLOR, type DrawTool, useEditorStore } from "@/store/editor-store";
 
 /** Single-key shortcuts of the tools (handled by the draw layer). */
-export const DRAW_SHORTCUTS: Record<DrawTool, string> = { line: "L", rect: "R", ellipse: "E" };
+export const DRAW_SHORTCUTS: Record<DrawTool, string> = {
+  pencil: "P",
+  line: "L",
+  rect: "R",
+  ellipse: "E",
+};
 
 const TOOL_ICONS: Record<DrawTool, ComponentType> = {
+  pencil: PencilIcon,
   line: SlashIcon,
   rect: SquareIcon,
   ellipse: CircleIcon,
 };
 
-const TOOLS: DrawTool[] = ["rect", "ellipse", "line"];
+const TOOLS: DrawTool[] = ["pencil", "line", "rect", "ellipse"];
 
 /** Toolbar button that turns draw mode on and off. */
 export function DrawButton() {

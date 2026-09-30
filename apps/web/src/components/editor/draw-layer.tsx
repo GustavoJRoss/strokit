@@ -1,6 +1,6 @@
 "use client";
 
-import { BLANK_VIEWBOX, type DrawPoint, shapePath, visualUnit } from "@strokit/core";
+import { BLANK_VIEWBOX, type DrawPoint, freehandPath, shapePath, visualUnit } from "@strokit/core";
 import { useEffect, useRef, useState } from "react";
 import { isEditableTarget } from "@/lib/dom";
 import { useI18n } from "@/lib/i18n/provider";
@@ -9,11 +9,21 @@ import { type DrawTool, useEditorStore } from "@/store/editor-store";
 /** A drag shorter than this (screen px) is a click and draws nothing. */
 const MIN_DRAG_PX = 4;
 
-const SHORTCUT_TOOLS: Record<string, DrawTool> = { l: "line", r: "rect", e: "ellipse" };
+/** How far (screen px) the simplified pencil stroke may stray from what was drawn. */
+const PENCIL_TOLERANCE_PX = 1.5;
+
+const SHORTCUT_TOOLS: Record<string, DrawTool> = {
+  p: "pencil",
+  l: "line",
+  r: "rect",
+  e: "ellipse",
+};
 
 type Drag = {
   from: DrawPoint;
   to: DrawPoint;
+  /** Every sample of a pencil stroke, in viewBox units. */
+  points: DrawPoint[];
   startClient: { x: number; y: number };
   constrain: boolean;
   fromCenter: boolean;
@@ -44,6 +54,12 @@ export function DrawLayer() {
     return { x: point.x, y: point.y };
   };
 
+  /** The pencil tolerance in viewBox units: a fixed size on screen at any zoom or viewBox. */
+  const pencilTolerance = (): number => {
+    const scale = svgRef.current?.getScreenCTM()?.a;
+    return scale ? PENCIL_TOLERANCE_PX / scale : visualUnit(viewBox) / 4;
+  };
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (isEditableTarget(event.target)) return;
@@ -69,8 +85,14 @@ export function DrawLayer() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const options = drag && { constrain: drag.constrain, fromCenter: drag.fromCenter };
-  const previewPath = drag && options ? shapePath(draw.tool, drag.from, drag.to, options) : null;
+  const previewPath = !drag
+    ? null
+    : draw.tool === "pencil"
+      ? freehandPath(drag.points, pencilTolerance())
+      : shapePath(draw.tool, drag.from, drag.to, {
+          constrain: drag.constrain,
+          fromCenter: drag.fromCenter,
+        });
 
   return (
     <svg
@@ -88,6 +110,7 @@ export function DrawLayer() {
         setDrag({
           from,
           to: from,
+          points: [from],
           startClient: { x: event.clientX, y: event.clientY },
           constrain: event.shiftKey,
           fromCenter: event.altKey,
@@ -95,11 +118,23 @@ export function DrawLayer() {
       }}
       onPointerMove={(event) => {
         if (!dragRef.current) return;
-        const to = toViewBox(event);
+        // Fast strokes arrive as several samples per event: keep them all for a smooth curve.
+        const pencil = draw.tool === "pencil";
+        const samples = pencil ? event.nativeEvent.getCoalescedEvents?.() : undefined;
+        const points = (samples?.length ? samples : [event.nativeEvent])
+          .map((sample) => toViewBox(sample))
+          .filter((point): point is DrawPoint => point !== null);
+        const to = points.at(-1);
         if (to) {
           setDrag(
             (current) =>
-              current && { ...current, to, constrain: event.shiftKey, fromCenter: event.altKey },
+              current && {
+                ...current,
+                to,
+                points: pencil ? [...current.points, ...points] : current.points,
+                constrain: event.shiftKey,
+                fromCenter: event.altKey,
+              },
           );
         }
       }}
@@ -113,10 +148,13 @@ export function DrawLayer() {
           event.clientY - current.startClient.y,
         );
         if (moved < MIN_DRAG_PX) return;
-        const d = shapePath(draw.tool, current.from, to, {
-          constrain: event.shiftKey,
-          fromCenter: event.altKey,
-        });
+        const d =
+          draw.tool === "pencil"
+            ? freehandPath([...current.points, to], pencilTolerance())
+            : shapePath(draw.tool, current.from, to, {
+                constrain: event.shiftKey,
+                fromCenter: event.altKey,
+              });
         if (d) addDrawnShapes([d], t.draw.untitled);
       }}
       onPointerCancel={() => setDrag(null)}

@@ -221,7 +221,19 @@ describe("selectors", () => {
 describe("draw mode", () => {
   beforeEach(() => useEditorStore.setState(getInitialState()));
 
-  it("starts inactive and leaves the document alone when entered and exited", () => {
+  it("starts inactive with the pencil as the tool", () => {
+    expect(store().draw.active).toBe(false);
+    expect(store().draw.tool).toBe("pencil");
+  });
+
+  it("adds a pencil stroke (curved path data) like any other shape", () => {
+    store().enterDraw();
+    store().addDrawnShapes(["M0 0C1 1 5 10 10 10C13 10 18 1 20 0"], "Desenho");
+    expect(store().doc?.elements).toHaveLength(1);
+    expect(store().doc?.elements[0]?.tag).toBe("path");
+  });
+
+  it("leaves the document alone when entered and exited", () => {
     expect(store().draw.active).toBe(false);
     store().enterDraw();
     expect(store().draw.active).toBe(true);

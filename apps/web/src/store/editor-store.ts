@@ -34,7 +34,7 @@ export type SelectMode = "replace" | "toggle" | "range";
 export type CanvasTool = "select" | "start";
 
 /** Shapes the draw mode can make. */
-export type DrawTool = "line" | "rect" | "ellipse";
+export type DrawTool = "pencil" | "line" | "rect" | "ellipse";
 
 /** What undo brings back: the document and everything derived from it by the drawing. */
 export type DrawSnapshot = {
@@ -158,7 +158,14 @@ export function getInitialState(): EditorState {
 export const DEFAULT_DRAW_COLOR = "#3b82f6";
 
 function initialDraw(): DrawState {
-  return { active: false, tool: "rect", width: 2, color: DEFAULT_DRAW_COLOR, past: [], future: [] };
+  return {
+    active: false,
+    tool: "pencil",
+    width: 2,
+    color: DEFAULT_DRAW_COLOR,
+    past: [],
+    future: [],
+  };
 }
 
 const DRAW_HISTORY_LIMIT = 100;
