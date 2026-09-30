@@ -34,7 +34,7 @@ export type SelectMode = "replace" | "toggle" | "range";
 export type CanvasTool = "select" | "start";
 
 /** Shapes the draw mode can make. */
-export type DrawTool = "pencil" | "line" | "rect" | "ellipse";
+export type DrawTool = "pencil" | "pen" | "line" | "rect" | "ellipse";
 
 /** What undo brings back: the document and everything derived from it by the drawing. */
 export type DrawSnapshot = {

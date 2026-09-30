@@ -5,6 +5,7 @@ import {
   CircleIcon,
   PencilIcon,
   PencilLineIcon,
+  PenToolIcon,
   Redo2Icon,
   SlashIcon,
   SquareIcon,
@@ -23,6 +24,7 @@ import { DEFAULT_DRAW_COLOR, type DrawTool, useEditorStore } from "@/store/edito
 /** Single-key shortcuts of the tools (handled by the draw layer). */
 export const DRAW_SHORTCUTS: Record<DrawTool, string> = {
   pencil: "P",
+  pen: "B",
   line: "L",
   rect: "R",
   ellipse: "E",
@@ -30,12 +32,13 @@ export const DRAW_SHORTCUTS: Record<DrawTool, string> = {
 
 const TOOL_ICONS: Record<DrawTool, ComponentType> = {
   pencil: PencilIcon,
+  pen: PenToolIcon,
   line: SlashIcon,
   rect: SquareIcon,
   ellipse: CircleIcon,
 };
 
-const TOOLS: DrawTool[] = ["pencil", "line", "rect", "ellipse"];
+const TOOLS: DrawTool[] = ["pencil", "pen", "line", "rect", "ellipse"];
 
 /** Toolbar button that turns draw mode on and off. */
 export function DrawButton() {
@@ -170,7 +173,7 @@ export function DrawToolbar() {
         </Button>
       </div>
       <p className="hidden rounded-md bg-foreground/85 px-2 py-1 text-background text-xs sm:block">
-        {copy.hint}
+        {draw.tool === "pen" ? copy.penHint : copy.hint}
       </p>
     </div>
   );
