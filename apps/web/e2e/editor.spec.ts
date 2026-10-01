@@ -83,22 +83,6 @@ test("pasted markup that is not SVG shows a friendly error", async ({ page }) =>
   await expect(page.getByText("SVGs com DOCTYPE ou entidades não são aceitos.")).toBeVisible();
 });
 
-test("simulated reduced motion shows the static final state", async ({ page }) => {
-  await page.goto("/editor");
-  await loadExample(page, "Onda");
-  await page.getByRole("switch", { name: "Simular reduced motion" }).click();
-  const state = await page.evaluate(() => {
-    const root = document.querySelector('[data-testid="preview"]')?.shadowRoot;
-    const element = root?.querySelector('[data-sk-id="sk-0"]');
-    return {
-      animations: root?.getAnimations().length,
-      dashoffset: element ? getComputedStyle(element).strokeDashoffset : null,
-    };
-  });
-  expect(state.animations).toBe(0);
-  expect(state.dashoffset).toMatch(/^0(px)?$/);
-});
-
 test("selecting a layer outlines it on the canvas", async ({ page }) => {
   await page.goto("/editor");
   await loadExample(page, "Pico");

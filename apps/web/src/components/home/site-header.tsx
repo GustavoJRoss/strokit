@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { GithubIcon } from "@/components/github-icon";
-import { LanguageSwitcher } from "@/components/language-switcher";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { PreferencesMenu } from "@/components/preferences-menu";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
 import { site } from "@/lib/site";
@@ -32,8 +31,7 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          <LanguageSwitcher />
-          <ThemeToggle />
+          <PreferencesMenu />
           <Button asChild size="icon-sm" variant="ghost">
             <a
               href={site.repo.url}

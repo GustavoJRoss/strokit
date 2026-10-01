@@ -389,14 +389,18 @@ function GlobalSection() {
       {global.autoStroke.enabled && (
         <NumberField
           label={copy.strokeWidth}
+          unit={global.strokeUnit === "visual" ? "%" : undefined}
           value={global.autoStroke.width}
           min={0.5}
-          max={20}
+          max={100}
           step={0.5}
           onChange={(width) => setAutoStroke({ width })}
         />
       )}
       <p className="text-muted-foreground text-xs">{copy.autoStrokeHint}</p>
+      {global.strokeUnit === "visual" && (
+        <p className="text-muted-foreground text-xs">{copy.strokeWidthHint}</p>
+      )}
       {missing > 0 && (
         <Alert>
           <TriangleAlertIcon />

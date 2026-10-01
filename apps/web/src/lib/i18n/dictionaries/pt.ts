@@ -22,6 +22,7 @@ export const pt = {
     home: "strokit, início",
   },
   language: { label: "Idioma" },
+  preferences: { label: "Preferências" },
   theme: { label: "Tema", system: "Tema do sistema", light: "Tema claro", dark: "Tema escuro" },
 
   toolbar: {
@@ -34,7 +35,6 @@ export const pt = {
     speed: "Velocidade do preview",
     background: "Fundo do preview",
     backgrounds: { light: "Claro", dark: "Escuro", checker: "Xadrez" },
-    reducedMotion: "Simular reduced motion",
   },
   paste: {
     title: "Colar SVG",
@@ -42,6 +42,28 @@ export const pt = {
       "Cole o código do SVG. Ele é sanitizado antes de qualquer renderização e não sai do seu navegador.",
     label: "Markup do SVG",
     submit: "Importar",
+  },
+  view: {
+    zoomIn: "Aumentar zoom",
+    zoomOut: "Diminuir zoom",
+    zoom: "Zoom",
+    center: "Centralizar",
+    hint: "Role para dar zoom, arraste o fundo (ou segure Espaço) para mover.",
+  },
+  draw: {
+    select: "Selecionar",
+    createFromScratch: "Criar do zero",
+    toolbar: "Ferramentas de desenho",
+    canvas: "Área de desenho",
+    tools: { pen: "Caneta", pencil: "Lápis", line: "Linha", rect: "Retângulo", ellipse: "Elipse" },
+    color: "Cor do traço",
+    width: "Espessura do traço",
+    undo: "Desfazer",
+    redo: "Refazer",
+    hint: "Arraste no canvas. Shift mantém a proporção; Alt desenha a partir do centro.",
+    penHint:
+      "Clique para pôr pontos e arraste para curvar. Enter ou duplo clique termina; clique no primeiro ponto fecha; Backspace remove o último.",
+    untitled: "Desenho",
   },
   svgEditor: {
     button: "Editar SVG",
@@ -131,6 +153,10 @@ export const pt = {
       auto: "Automático",
       noColor: "Nenhum",
       invalidColor: "Cor inválida. Use #hex, rgb(), hsl() ou um nome de cor.",
+      delete: (n: number) => (n > 1 ? `Excluir ${n} camadas` : "Excluir camada"),
+      deleted: (n: number) => (n > 1 ? `${n} camadas excluídas` : "Camada excluída"),
+      undoDelete: "Desfazer",
+      deleteHint: "Delete ou Backspace também excluem.",
       strokeWidth: "Espessura do traço",
       opacity: "Opacidade",
       linecap: "Pontas do traço",
@@ -212,6 +238,8 @@ export const pt = {
       strokeWidth: "Largura do traço",
       autoStrokeHint:
         "Camadas só com preenchimento ganham um traço na cor do preenchimento para os presets de traço funcionarem.",
+      strokeWidthHint:
+        "Em % do tamanho do SVG: a mesma largura tem a mesma aparência em qualquer logo.",
       missing: (n: number) => `${n} ${plural(n, "camada sem traço", "camadas sem traço")}`,
       missingBody: "O preset anima o traço, mas essas camadas só têm preenchimento.",
       enableAutoStroke: "Ativar traço automático",
@@ -542,6 +570,34 @@ export const pt = {
     fullHistory: "Ver o histórico completo de commits no GitHub",
   },
   changelog: {
+    "canvas-zoom-pan": {
+      title: "Zoom e movimento no canvas",
+      body: 'O canvas agora dá zoom e se move: role o mouse (ou faça o gesto de pinça) para aproximar e afastar, arraste o fundo — ou segure Espaço, ou use o botão do meio — para mover, e use os botões + e − ou as teclas + e −. O botão "Centralizar" (ou a tecla 0) volta tudo ao lugar. Funciona também enquanto você desenha, e o desenho cai exatamente onde você arrasta.',
+    },
+    "leaner-editor": {
+      title: "Editor mais enxuto",
+      body: "A barra superior ficou mais limpa: o nome do SVG foi para o topo do painel de camadas, idioma e tema agora ficam num único botão de preferências (em todas as páginas) e o compartilhar virou um ícone. As ferramentas de desenho flutuam no rodapé da área de edição, sempre à mão, como nos editores de design, e cada camada ganhou uma lixeira na lista. O interruptor de simular reduced motion foi removido.",
+    },
+    "delete-layers": {
+      title: "Excluir camadas",
+      body: 'Agora dá para excluir as camadas selecionadas com o botão de lixeira no painel "Camada" ou com Delete/Backspace. As outras camadas mantêm suas animações e ajustes, e um aviso com "Desfazer" traz tudo de volta. No modo Desenhar, Ctrl/Cmd+Z também desfaz.',
+    },
+    "pen-tool": {
+      title: "Caneta para curvas precisas",
+      body: 'No modo "Desenhar" agora há a caneta: clique para pôr pontos, arraste para puxar as alças e curvar, e clique no primeiro ponto para fechar a forma. Enter ou duplo clique termina, Backspace remove o último ponto e Esc descarta. Atalho: B.',
+    },
+    "freehand-pencil": {
+      title: "Lápis livre",
+      body: 'Agora dá para desenhar à mão livre no botão "Desenhar": é só arrastar no canvas. O traço é simplificado e suavizado em curvas, então sai limpo e leve no código exportado, e cada risco vira uma camada própria que você anima na ordem em que desenhou. Atalho: P.',
+    },
+    "draw-shapes": {
+      title: "Desenhe formas no editor",
+      body: 'Novo botão "Desenhar": crie linhas, retângulos e elipses arrastando no canvas, direto sobre a sua logo ou numa tela em branco ("Criar do zero"). Shift mantém a proporção e Alt desenha a partir do centro. Escolha a cor e a espessura, desfaça e refaça (Ctrl/Cmd+Z), e cada forma já entra com a animação padrão e pode ser ajustada como qualquer camada.',
+    },
+    "consistent-stroke-width": {
+      title: "Largura do traço consistente",
+      body: "A largura do traço agora é medida em % do tamanho do SVG, então o mesmo valor tem a mesma aparência num ícone pequeno e num logo grande (inclusive quando o SVG tem escala aplicada em grupos). O limite subiu para 100 e a largura que já vem no arquivo é mostrada corretamente, mesmo em unidades como mm. Projetos e links antigos abrem exatamente como antes.",
+    },
     seo: {
       title: "Compartilhamento e busca melhorados",
       body: "O site agora aparece com preview correto ao compartilhar (LinkedIn, WhatsApp) e está pronto para indexação no Google: sitemap, robots.txt e dados estruturados.",

@@ -84,10 +84,11 @@ type DrawableElement = {
 
 ```ts
 type AnimationSpec = {
-  version: 1;
+  version: 2;
   name: string;
   global: {
-    autoStroke: { enabled: boolean; width: number };   // RF4
+    autoStroke: { enabled: boolean; width: number };   // RF4; em `strokeUnit`
+    strokeUnit: "visual" | "user";   // "visual": % do tamanho do SVG; "user": unidades do elemento (v1)
     a11y: { label: string; mode: "img" | "status" };
   };
   tracks: Track[];
@@ -373,6 +374,9 @@ Build com `shadcn build`, saída em `apps/web/public/r/`. Instalação: `npx sha
 | 2026-09-30 | Sequência por `Track.after` (opcional, sem subir `version`), em vez de uma lista de etapas dentro do track | O schema de track (união por preset) e todos os consumidores continuam iguais; links e snapshots antigos idênticos. O mesmo elemento pode estar em vários tracks só se formarem uma cadeia (substitui a regra "um elemento, um track" de 2026-09-25) |
 | 2026-09-30 | Etapas depois da primeira usam `fill-mode: forwards` e só a última pode repetir para sempre; presets de contorno só abrem a sequência; `loop` (React) e `repeat` (Motion) só valem para a última | Com `both`, o keyframe 0 de uma etapa tardia pintaria durante as anteriores; um contorno em loop nunca passaria a vez para a próxima etapa; o CSS puro não reinicia a sequência inteira. Motion emite `step: true` nas etapas anteriores só quando há sequência (exports sem sequência ficam idênticos) |
 | 2026-09-30 | `shine` como overlay: `<clipPath>` com cópias das formas (matriz acumulada aplicada) + `<rect>` de gradiente estático animado por `transform` em unidades do viewBox, cor por `--sk-shine` | `stop-color` não aceita `var()` como atributo, então vai por classe; o gradiente não anima (CSS não anima `<stop>`), o `rect` anda. Só elementos com preenchimento entram no recorte (aviso `overlay-skipped` para os demais). O teste de cores hex aceita `var(--sk-shine, #fff)` como fallback válido |
+| 2026-09-30 | Largura do traço em unidades visuais (1 = 1% do maior lado do viewBox, dividida pela escala acumulada dos `transform`), com `AnimationSpec` v2 e `global.strokeUnit`; `migrate()` leva v1 a `"user"` | Em unidades do viewBox, "2" era grosso num ícone de 24 e invisível num logo de 2000 (e grupos com `scale()` distorciam de novo). A conversão acontece no `compile()`, então o CSS exportado segue com número absoluto (sem runtime). Migrar v1 para `"user"` em vez de converter evita precisar do documento dentro de `migrate()` e mantém links e projetos antigos idênticos. Descartado: `vector-effect: non-scaling-stroke`, que muda o comportamento em escala e não é estável entre exports |
+| 2026-09-30 | Ferramentas de desenho num dock flutuante no rodapé do canvas; idioma e tema num único `PreferencesMenu` (popover) em todos os cabeçalhos; removido o toggle de simular reduced motion (e `playback.reducedMotion`) | A barra superior tinha controles demais. O dock deixa as ferramentas sempre à mão (clicar numa ferramenta entra no modo desenhar). O toggle de reduced motion não funcionava de forma confiável no preview e o código exportado já trata `prefers-reduced-motion`; o preview só força o estado final (via `applyReducedMotion`) enquanto se desenha |
+| 2026-09-30 | Zoom e movimento do canvas como estado só de visão (`View` no `PreviewCanvas`, `lib/view.ts`), aplicado por `transform` no palco que contém o SVG e o modo desenhar; a caixa de seleção e os marcadores ficam fora do palco e são re-medidos | `AnimationSpec` e exportadores não sabem de zoom (WYSIWYG intacto). `getBoundingClientRect` e `getScreenCTM` já incluem transformações CSS, então seleção, pontos de partida e conversão de ponteiro → viewBox continuam corretos. A roda dá zoom (não move) porque é o gesto mais descobrível; mover é arrastar o fundo, Espaço ou botão do meio |
 
 ### Pendências abertas (decidir até a fase indicada)
 

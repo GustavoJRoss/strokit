@@ -41,7 +41,7 @@ Regra: uma fase por vez. Ao terminar, rode `npm run lint && npm run typecheck &&
 - [x] Canvas: preview isolado (Shadow DOM) renderizando a saída do `exporters.css()`
 - [x] Camadas: lista, hover destaca, seleção múltipla, "selecionar tudo"
 - [x] PresetPicker (por enquanto só `draw`) e ParamsPanel gerado a partir do `paramsSchema` + `timing`
-- [x] Controles: play/pause/restart, velocidade, fundo, simular reduced motion (Web Animations API)
+- [x] Controles: play/pause/restart, velocidade, fundo (Web Animations API; o toggle de simular reduced motion foi removido na Fase 7F)
 - [x] ExportPanel: aba CSS com highlight (Shiki), copiar, baixar `.svg`
 - [x] 3 logos de exemplo originais em `apps/web/public/examples/`
 
@@ -125,6 +125,73 @@ Regra: uma fase por vez. Ao terminar, rode `npm run lint && npm run typecheck &&
 - [x] Testes: chain.test.ts, shine em presets.test.ts, snapshots CSS/React/Motion, TSX compila, e2e nos 3 motores (inclui paridade vídeo × CSS numa sequência com brilho)
 
 **Aceite:** importar uma logo, deixar "Desenhar e preencher", adicionar "Brilho" (loop) e ver o preview, o código exportado e o vídeo tocarem na mesma ordem.
+
+---
+
+## Fase 7 — Criar o SVG no editor (incluída a pedido do autor)
+
+Plano completo em fases A–D. Um modo "Desenhar" no próprio preview, sem painel novo.
+
+**A. Largura de traço consistente**
+
+- [x] `svg/stroke-scale.ts`: unidade visual (1 = 1% do maior lado do viewBox) compensada pela escala acumulada dos `transform` dos ancestrais
+- [x] `compile()` converte a largura do editor (auto-stroke e camadas) para as unidades do elemento; o código exportado continua com número absoluto
+- [x] `AnimationSpec` v2 (`global.strokeUnit`); `migrate()` converte v1 mantendo `"user"`, então projetos e links antigos abrem idênticos
+- [x] `parseLength` aceita `pt`, `pc`, `mm`, `cm`, `in` (a largura já presente no arquivo aparece certa no slider)
+- [x] Sliders de largura até 100 (%), com dica; textos nos 3 dicionários; entrada no changelog
+- [x] Testes: `stroke-scale.test.ts` (viewBox 24 × 2000, `scale(0.1,-0.1)`, migração v1→v2), snapshots revisados
+
+**B. Modo desenhar e formas**
+
+- [x] Slice `draw` no store (`active`, `tool`, `width`, `color`, pilha de desfazer/refazer própria do modo); `enterDraw`/`exitDraw`, `addDrawnShapes`, `undoDraw`/`redoDraw`
+- [x] Core: `draw/shapes.ts` (`shapePath`: linha, retângulo e elipse como `<path>`, Shift = proporção/45°, Alt = a partir do centro) e `draw/append.ts` (`appendDrawnPaths`, SVG em branco 512×512); a entrada passa por `importSvg`/`replaceSvg` (sanitize + normalize + reconcile)
+- [x] Botão "Desenhar" na toolbar e "Criar do zero" no estado vazio; barra flutuante sobre o canvas (formas, cor, espessura em %, desfazer/refazer, concluir); atalhos L/R/E, Ctrl/Cmd+Z, Esc
+- [x] Em modo desenhar o preview mostra o estado final da animação (contornos não somem); a forma nova entra com o preset padrão e fica selecionada
+- [x] Testes: `draw.test.ts` (core), modo desenhar em `editor-store.test.ts`; i18n nos 3 idiomas; entrada no changelog
+
+**C. Lápis livre**
+
+- [x] `core/src/draw/freehand.ts`: `simplify` (Ramer-Douglas-Peucker iterativo), `smoothPath` (Catmull-Rom → Bézier cúbico) e `freehandPath`; clique sem arrastar não desenha (em vez de um ponto, que a animação de contorno não mostraria)
+- [x] Ferramenta lápis (padrão do modo desenhar, atalho `P`): amostras com `getCoalescedEvents()`, tolerância fixa em pixels de tela (1,5 px), pré-visualização já suavizada
+- [x] Testes: reta vira 2 pontos, canto preservado, desvio dentro da tolerância, 50 mil pontos sem estourar a pilha, `d` aceito pela importação; i18n e changelog
+
+**D. Caneta e ajuste dos traços**
+
+- [x] Ferramenta caneta (Bézier): `core/src/draw/pen.ts` (`penPath`: âncoras com alça que sai e espelho na chegada, `L` entre pontos sem alça, fechamento com `Z`); clique põe ponto, arrastar puxa a alça, clique no primeiro ponto fecha, Enter/duplo clique termina, Backspace/Ctrl+Z remove o último ponto, Esc descarta; trocar de ferramenta ou concluir mantém o caminho; atalho `B`
+- [x] Testes: `penPath` (retas, curvas, fechamento, duplicata de duplo clique, pontos inválidos); i18n e changelog
+- [ ] Editor de nós (ajustar o traço depois de criado): não entra nesta fase; fica como próximo passo se fizer falta
+
+**E. Excluir camadas**
+
+- [x] `core/src/svg/delete.ts` (`deleteLayers`): remove os elementos (e grupos que ficam vazios), renumera os ids que sobram e leva tracks e edições junto; `removeElements` passou para `svg/tree.ts`
+- [x] Store: `deleteLayers` (seleção por padrão) e `restoreSnapshot`; no modo desenhar entra no histórico do Ctrl/Cmd+Z, fora dele há aviso com "Desfazer"
+- [x] Editor: botão de lixeira na seção "Camada" e atalhos Delete/Backspace (ignorados em campos de texto, menus e diálogos)
+- [x] Testes: `delete.test.ts` (core) e exclusão em `editor-store.test.ts`; i18n e changelog
+
+**F. Layout do editor**
+
+- [x] Barra superior enxuta: nome do SVG no topo do painel de camadas, compartilhar só com ícone, sem o toggle de simular reduced motion (removido junto com `playback.reducedMotion`)
+- [x] `PreferencesMenu` (idioma + tema num botão com popover, `ui/popover.tsx`) em todos os cabeçalhos, no lugar de `LanguageSwitcher` e `ThemeToggle`
+- [x] Dock de ferramentas flutuante no rodapé do canvas (selecionar, lápis, caneta, linha, retângulo, elipse; cor, espessura e desfazer/refazer aparecem ao desenhar), no lugar do botão "Desenhar" e da barra do topo
+- [x] Lixeira em cada linha do painel de camadas (e nos grupos), visível ao passar o mouse, focar ou selecionar
+
+**G. Zoom e movimento do canvas**
+
+- [x] `lib/view.ts` (`zoomAt`, `panBy`, `wheelZoomFactor`, limites 10%–1000%): só visão do workspace, fora da `AnimationSpec` e de qualquer export
+- [x] Canvas: palco com `transform` (seleção, marcadores e o modo desenhar acompanham; `getScreenCTM` já considera o zoom); roda/pinça dá zoom no cursor, arrastar o fundo, Espaço+arrastar ou botão do meio movem; o xadrez anda junto
+- [x] Controles no rodapé (− / nível / + e "Centralizar", desabilitado quando já está centralizado) ao lado do dock; teclas `+`, `-` e `0`
+- [x] Importar ou abrir um link recentraliza (`loadToken`); a primeira forma desenhada não
+- [x] Testes: `view.test.ts`
+
+**Aceite (A):** o mesmo valor de largura tem aparência equivalente num ícone 24×24 e num logo 2000×2000, e um projeto antigo abre igual.
+
+**Aceite (B):** criar do zero, arrastar um retângulo e uma linha, desfazer, concluir e ver a animação tocar e o CSS exportado com as duas formas.
+
+**Aceite (C):** arrastar à mão livre, soltar e ver um traço suave e leve (poucos pontos) que anima com o preset padrão.
+
+**Aceite (D):** com a caneta, clicar três pontos, arrastar um deles para curvar, fechar no primeiro ponto e ver a forma animar; Enter termina um caminho aberto.
+
+**Aceite (E):** selecionar camadas, apertar Delete/Backspace ou clicar na lixeira, ver as outras continuarem animando com seus ajustes e desfazer pelo aviso.
 
 ---
 

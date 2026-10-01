@@ -19,6 +19,7 @@ export const en: Dictionary = {
     home: "strokit, home",
   },
   language: { label: "Language" },
+  preferences: { label: "Preferences" },
   theme: { label: "Theme", system: "System theme", light: "Light theme", dark: "Dark theme" },
 
   toolbar: {
@@ -31,7 +32,6 @@ export const en: Dictionary = {
     speed: "Preview speed",
     background: "Preview background",
     backgrounds: { light: "Light", dark: "Dark", checker: "Checker" },
-    reducedMotion: "Simulate reduced motion",
   },
   paste: {
     title: "Paste SVG",
@@ -39,6 +39,28 @@ export const en: Dictionary = {
       "Paste the SVG code. It is sanitized before anything is rendered and never leaves your browser.",
     label: "SVG markup",
     submit: "Import",
+  },
+  view: {
+    zoomIn: "Zoom in",
+    zoomOut: "Zoom out",
+    zoom: "Zoom",
+    center: "Center",
+    hint: "Scroll to zoom, drag the background (or hold Space) to move.",
+  },
+  draw: {
+    select: "Select",
+    createFromScratch: "Start from scratch",
+    toolbar: "Drawing tools",
+    canvas: "Drawing area",
+    tools: { pen: "Pen", pencil: "Pencil", line: "Line", rect: "Rectangle", ellipse: "Ellipse" },
+    color: "Stroke color",
+    width: "Stroke width",
+    undo: "Undo",
+    redo: "Redo",
+    hint: "Drag on the canvas. Shift keeps the proportion; Alt draws from the center.",
+    penHint:
+      "Click to place points and drag to curve. Enter or double-click finishes; click the first point to close; Backspace removes the last.",
+    untitled: "Drawing",
   },
   svgEditor: {
     button: "Edit SVG",
@@ -128,6 +150,10 @@ export const en: Dictionary = {
       auto: "Automatic",
       noColor: "None",
       invalidColor: "Invalid color. Use #hex, rgb(), hsl() or a color name.",
+      delete: (n: number) => (n > 1 ? `Delete ${n} layers` : "Delete layer"),
+      deleted: (n: number) => (n > 1 ? `${n} layers deleted` : "Layer deleted"),
+      undoDelete: "Undo",
+      deleteHint: "Delete or Backspace also work.",
       strokeWidth: "Stroke width",
       opacity: "Opacity",
       linecap: "Line caps",
@@ -207,6 +233,7 @@ export const en: Dictionary = {
       strokeWidth: "Stroke width",
       autoStrokeHint:
         "Fill-only layers get a stroke in their fill color so stroke presets can animate them.",
+      strokeWidthHint: "In % of the SVG's size: the same width looks the same in any logo.",
       missing: (n) => `${n} ${plural(n, "layer without stroke", "layers without stroke")}`,
       missingBody: "The preset animates the stroke, but these layers only have a fill.",
       enableAutoStroke: "Turn on auto stroke",
@@ -531,6 +558,34 @@ export const en: Dictionary = {
     fullHistory: "See the full commit history on GitHub",
   },
   changelog: {
+    "canvas-zoom-pan": {
+      title: "Zoom and pan the canvas",
+      body: 'The canvas now zooms and moves: scroll (or pinch) to zoom in and out, drag the background — or hold Space, or use the middle button — to move it, and use the + and − buttons or keys. The "Center" button (or the 0 key) puts everything back. It works while drawing too, and the drawing lands exactly where you drag.',
+    },
+    "leaner-editor": {
+      title: "A leaner editor",
+      body: "The top bar is cleaner: the SVG name moved to the top of the layers panel, language and theme now share a single preferences button (on every page) and share became an icon. The drawing tools float at the bottom of the canvas, always within reach like in design editors, and every layer got a trash button in the list. The simulate reduced motion switch was removed.",
+    },
+    "delete-layers": {
+      title: "Delete layers",
+      body: 'You can now delete the selected layers with the trash button in the "Layer" panel or with Delete/Backspace. The other layers keep their animations and settings, and a notice with "Undo" brings everything back. In Draw mode, Ctrl/Cmd+Z undoes it too.',
+    },
+    "pen-tool": {
+      title: "Pen for precise curves",
+      body: "Draw mode now has the pen: click to place points, drag to pull out handles and curve, and click the first point to close the shape. Enter or double-click finishes, Backspace removes the last point and Esc discards. Shortcut: B.",
+    },
+    "freehand-pencil": {
+      title: "Freehand pencil",
+      body: 'You can now draw freehand with the "Draw" button: just drag on the canvas. The stroke is simplified and smoothed into curves, so it comes out clean and light in the exported code, and each stroke becomes its own layer that you animate in the order you drew it. Shortcut: P.',
+    },
+    "draw-shapes": {
+      title: "Draw shapes in the editor",
+      body: 'New "Draw" button: create lines, rectangles and ellipses by dragging on the canvas, right over your logo or on a blank canvas ("Start from scratch"). Shift keeps the proportion and Alt draws from the center. Pick the color and width, undo and redo (Ctrl/Cmd+Z), and every shape comes with the default animation and can be tweaked like any layer.',
+    },
+    "consistent-stroke-width": {
+      title: "Consistent stroke width",
+      body: "Stroke width is now measured in % of the SVG's size, so the same value looks the same in a small icon and a large logo (even when the SVG applies scale in groups). The limit went up to 100 and the width that comes in the file is shown correctly, even in units like mm. Old projects and links open exactly as before.",
+    },
     seo: {
       title: "Better sharing and search",
       body: "The site now shows a proper preview when shared (LinkedIn, WhatsApp) and is ready for Google indexing: sitemap, robots.txt and structured data.",

@@ -17,6 +17,10 @@ export {
   pickPathFraction,
   pointAtFraction,
 } from "./dom/nearest-point";
+export { appendDrawnPaths, BLANK_VIEWBOX, type DrawnPath } from "./draw/append";
+export { freehandPath, simplify, smoothPath } from "./draw/freehand";
+export { type PenAnchor, penPath } from "./draw/pen";
+export { type DrawPoint, type ShapeKind, type ShapeOptions, shapePath } from "./draw/shapes";
 export * as exporters from "./exporters";
 export { toComponentName } from "./exporters/jsx";
 export { getPreset, presetIds, presets } from "./presets";
@@ -86,11 +90,19 @@ export {
   trackSchema,
 } from "./spec/schema";
 export { type Easing, type EasingPreset, easingPresetSchema, type Timing } from "./spec/timing";
+export { type DeleteLayersResult, deleteLayers } from "./svg/delete";
 export { type ImportWarning, SvgImportError, type SvgImportErrorCode } from "./svg/errors";
 export { type ImportOptions, type ImportResult, importSvg, sanitizeSvg } from "./svg/import";
 export { type LayerNode, layerTree } from "./svg/layers";
 export { normalizeSvg } from "./svg/normalize";
 export { type DomParserLike, MAX_SVG_BYTES, parseSvg } from "./svg/parse";
 export { serializeSvg } from "./svg/serialize";
+export {
+  type StrokeScales,
+  strokeScales,
+  toUserWidth,
+  toVisualWidth,
+  visualUnit,
+} from "./svg/stroke-scale";
 export type { SvgElementNode, SvgNode } from "./svg/tree";
 export type { DrawableElement, DrawableTag, SvgDocument } from "./svg/types";

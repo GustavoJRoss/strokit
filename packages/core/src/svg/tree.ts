@@ -40,3 +40,13 @@ export function walkElements(
   };
   recurse(root, []);
 }
+
+/** Removes the drawables with these `data-sk-id`s, at any depth. */
+export function removeElements(element: SvgElementNode, ids: ReadonlySet<string>): void {
+  element.children = element.children.filter(
+    (child) => child.type !== "element" || !ids.has(child.attrs["data-sk-id"] ?? ""),
+  );
+  for (const child of element.children) {
+    if (child.type === "element") removeElements(child, ids);
+  }
+}

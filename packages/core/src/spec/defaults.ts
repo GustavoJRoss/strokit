@@ -8,11 +8,12 @@ export const DEFAULT_PRESET: PresetId = "draw-fill";
 
 export function createEmptySpec(name = "Minha animação"): AnimationSpec {
   return {
-    version: 1,
+    version: 2,
     name,
     global: {
       autoStroke: { enabled: false, width: 2 },
       a11y: { label: "Logo", mode: "img" },
+      strokeUnit: "visual",
     },
     tracks: [],
   };

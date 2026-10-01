@@ -159,6 +159,8 @@ function build(source: Source) {
     source.preset,
   );
   spec.global.a11y.label = source.name;
+  // The showcase widths were tuned in each SVG's own units; keep them so the site looks the same.
+  spec.global.strokeUnit = "user";
   spec.global.autoStroke.enabled = document.elements.some((element) => !element.hasStroke);
   source.configure?.(spec);
   return { document, spec, compiled: compile(document, spec) };

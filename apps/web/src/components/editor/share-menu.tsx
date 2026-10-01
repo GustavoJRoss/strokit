@@ -1,7 +1,7 @@
 "use client";
 
 import { PROJECT_EXTENSION } from "@strokit/core";
-import { ChevronDownIcon, DownloadIcon, FolderOpenIcon, LinkIcon, Share2Icon } from "lucide-react";
+import { DownloadIcon, FolderOpenIcon, LinkIcon, Share2Icon } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -52,10 +52,8 @@ export function ShareMenu() {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm">
-            <Share2Icon data-icon="inline-start" />
-            {t.share.menu}
-            <ChevronDownIcon data-icon="inline-end" />
+          <Button variant="outline" size="icon-sm" aria-label={t.share.menu} title={t.share.menu}>
+            <Share2Icon />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

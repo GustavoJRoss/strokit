@@ -3,32 +3,50 @@
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { isEditableTarget } from "@/lib/dom";
 import { DocumentTitle, useI18n } from "@/lib/i18n/provider";
 import { useEditorStore } from "@/store/editor-store";
 import { EditorLayout } from "./editor-layout";
 import { EmptyState } from "./empty-state";
 import { PreviewCanvas } from "./preview-canvas";
 import { Toolbar } from "./toolbar";
+import { useDeleteLayers } from "./use-delete-layers";
 import { useDraft } from "./use-draft";
 import { useImporter } from "./use-importer";
 
-function isEditable(target: EventTarget | null): boolean {
-  return (
-    target instanceof HTMLElement &&
-    (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
-  );
-}
-
 export function Editor() {
   const hasDoc = useEditorStore((state) => state.doc !== null);
+  const drawing = useEditorStore((state) => state.draw.active);
   const { importFile, importMarkup } = useImporter();
   const [dragging, setDragging] = useState(false);
   const { t } = useI18n();
   useDraft();
+  const deleteSelected = useDeleteLayers();
+
+  // Delete/Backspace remove the selected layers. Draw mode has its own keys (see DrawLayer).
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Delete" && event.key !== "Backspace") return;
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (isEditableTarget(event.target)) return;
+      // Menus and dialogs own their keys.
+      if (
+        event.target instanceof Element &&
+        event.target.closest("[role=dialog],[role=menu],[role=listbox]")
+      )
+        return;
+      const { selection, draw } = useEditorStore.getState();
+      if (draw.active || selection.length === 0) return;
+      event.preventDefault();
+      deleteSelected();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [deleteSelected]);
 
   useEffect(() => {
     const onPaste = (event: ClipboardEvent) => {
-      if (isEditable(event.target)) return;
+      if (isEditableTarget(event.target)) return;
       const file = event.clipboardData?.files[0];
       if (file) {
         event.preventDefault();
@@ -71,8 +89,8 @@ export function Editor() {
           preview={
             <main className="relative size-full" aria-label="Preview">
               <PreviewCanvas />
-              {!hasDoc && (
-                <div className="absolute inset-0 overflow-auto">
+              {!hasDoc && !drawing && (
+                <div className="pointer-events-none absolute inset-0 overflow-auto">
                   <EmptyState />
                 </div>
               )}
