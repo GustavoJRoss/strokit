@@ -31,6 +31,19 @@ const previewMemo = memoizeLast((compiled: CompiledAnimation) =>
   exporters.css(compiled, { includeElementIds: true }),
 );
 
+const animationKeyMemo = memoizeLast((tracks: readonly Track[]) =>
+  // Which layers a track animates is left out: moving, grouping or deleting layers renumbers
+  // them, and none of that changes how the animation itself plays.
+  JSON.stringify(tracks.map(({ targets: _targets, ...settings }) => settings)),
+);
+
+/**
+ * Identifies the animation settings (steps, presets, timing, params). The preview keeps playing
+ * from where it is across edits that leave this unchanged, and restarts when it changes.
+ */
+export const selectAnimationKey = (state: EditorState): string =>
+  animationKeyMemo(state.spec.tracks);
+
 export const selectCompiled = (state: EditorState): CompiledAnimation | null =>
   state.doc ? compileMemo(state.doc, state.spec) : null;
 

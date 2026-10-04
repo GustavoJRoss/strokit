@@ -1,6 +1,6 @@
 "use client";
 
-import { PauseIcon, PlayIcon, RotateCcwIcon } from "lucide-react";
+import { PauseIcon, PlayIcon, Redo2Icon, RotateCcwIcon, Undo2Icon } from "lucide-react";
 import Link from "next/link";
 import { Wordmark } from "@/components/home/brand";
 import { PreferencesMenu } from "@/components/preferences-menu";
@@ -33,6 +33,10 @@ export function Toolbar() {
   const restart = useEditorStore((state) => state.restart);
   const setRate = useEditorStore((state) => state.setRate);
   const setBackground = useEditorStore((state) => state.setBackground);
+  const undo = useEditorStore((state) => state.undo);
+  const redo = useEditorStore((state) => state.redo);
+  const canUndo = useEditorStore((state) => state.history.past.length > 0);
+  const canRedo = useEditorStore((state) => state.history.future.length > 0);
   const { t } = useI18n();
   const playLabel = playback.playing ? t.toolbar.pause : t.toolbar.play;
 
@@ -48,6 +52,35 @@ export function Toolbar() {
       <ShareMenu />
 
       <div className="ml-auto flex flex-wrap items-center gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              disabled={!canUndo}
+              onClick={undo}
+              aria-label={t.toolbar.undo}
+            >
+              <Undo2Icon />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>{t.toolbar.undo} (Ctrl/⌘+Z)</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              disabled={!canRedo}
+              onClick={redo}
+              aria-label={t.toolbar.redo}
+            >
+              <Redo2Icon />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>{t.toolbar.redo} (Ctrl/⌘+Shift+Z)</TooltipContent>
+        </Tooltip>
+        <Separator orientation="vertical" className="h-6" />
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

@@ -1,14 +1,22 @@
 "use client";
 
-import { type DrawableElement, getLayer, type LayerNode, type LayerOverride } from "@strokit/core";
+import {
+  type DrawableElement,
+  findGroupWithIds,
+  getLayer,
+  type LayerNode,
+  type LayerOverride,
+} from "@strokit/core";
 import {
   ChevronRightIcon,
   EyeIcon,
   EyeOffIcon,
+  GroupIcon,
   PanelLeftCloseIcon,
   PencilIcon,
   Trash2Icon,
   TriangleAlertIcon,
+  UngroupIcon,
 } from "lucide-react";
 import { type MouseEvent, useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +27,7 @@ import { cn } from "@/lib/utils";
 import { type SelectMode, useEditorStore } from "@/store/editor-store";
 import { selectCompiled, selectLayerTree } from "@/store/selectors";
 import { useDeleteLayers } from "./use-delete-layers";
+import { useGroupLayers } from "./use-group-layers";
 
 function Swatch({ element, override }: { element: DrawableElement; override: LayerOverride }) {
   const stroke = override.stroke ?? (element.hasStroke ? element.stroke : undefined);
@@ -249,8 +258,11 @@ export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
   const selectAll = useEditorStore((state) => state.selectAll);
   const clearSelection = useEditorStore((state) => state.clearSelection);
   const tree = useEditorStore(selectLayerTree);
+  const { group, ungroup } = useGroupLayers();
   const { t } = useI18n();
   const elements = new Map(doc?.elements.map((element) => [element.id, element]));
+  const canGroup = selection.length >= 2;
+  const canUngroup = selection.length >= 2 && findGroupWithIds(tree, selection) !== null;
 
   return (
     <aside aria-label={t.layers.title} className="flex h-full min-h-0 flex-col">
@@ -269,6 +281,26 @@ export function LayersPanel({ onCollapse }: { onCollapse?: () => void }) {
           {doc ? <span className="text-muted-foreground"> ({doc.elements.length})</span> : null}
         </h2>
         <div className="flex gap-1">
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            disabled={!canGroup}
+            onClick={group}
+            aria-label={t.layers.groupAction}
+            title={`${t.layers.groupAction} (Ctrl/⌘+G)`}
+          >
+            <GroupIcon />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            disabled={!canUngroup}
+            onClick={ungroup}
+            aria-label={t.layers.ungroupAction}
+            title={`${t.layers.ungroupAction} (Ctrl/⌘+Shift+G)`}
+          >
+            <UngroupIcon />
+          </Button>
           <Button variant="ghost" size="xs" disabled={!doc} onClick={selectAll}>
             {t.layers.all}
           </Button>

@@ -29,6 +29,8 @@ export const es: Dictionary = {
     play: "Reproducir",
     pause: "Pausar",
     restart: "Reiniciar",
+    undo: "Deshacer",
+    redo: "Rehacer",
     speed: "Velocidad del preview",
     background: "Fondo del preview",
     backgrounds: { light: "Claro", dark: "Oscuro", checker: "Cuadros" },
@@ -57,7 +59,8 @@ export const es: Dictionary = {
     width: "Grosor del trazo",
     undo: "Deshacer",
     redo: "Rehacer",
-    hint: "Arrastra en el lienzo. Shift mantiene la proporción; Alt dibuja desde el centro.",
+    hint: "Arrastra en el lienzo. Shift mantiene la proporción; Alt dibuja desde el centro. Haz clic en una forma para seleccionarla y moverla.",
+    overHint: "Dibujando encima: arrastra para crear una forma incluso sobre otra.",
     penHint:
       "Haz clic para poner puntos y arrastra para curvar. Enter o doble clic termina; clic en el primer punto cierra; Backspace quita el último.",
     untitled: "Dibujo",
@@ -119,6 +122,16 @@ export const es: Dictionary = {
     showLayer: "Mostrar capa",
     hideLayer: "Ocultar capa",
     edited: "Capa editada",
+    groupAction: "Agrupar",
+    ungroupAction: "Desagrupar",
+    groupErrors: {
+      "too-few": "Selecciona al menos dos capas, o grupos, del mismo nivel para agrupar.",
+      "partial-group":
+        "La selección corta un grupo por la mitad. Selecciona el grupo entero, o solo capas de su interior.",
+      "no-group": "Selecciona un grupo entero para desagrupar.",
+      "group-has-style":
+        "Este grupo tiene opacidad, color o máscara propios; desagrupar cambiaría su aspecto.",
+    },
     tags: {
       path: "Trazado",
       line: "Línea",
@@ -573,6 +586,26 @@ export const es: Dictionary = {
     fullHistory: "Ver el historial completo de commits en GitHub",
   },
   changelog: {
+    "steady-preview": {
+      title: "El preview ya no se reinicia en cada edición",
+      body: "La animación ya no vuelve al inicio cada vez que cambias el dibujo. Mover, agrupar, eliminar o deshacer una capa mantiene la animación donde estaba. Solo empieza de nuevo cuando haces clic en reiniciar, cargas otro SVG o cambias la propia animación (preset, paso, duración, retraso o parámetros).",
+    },
+    "select-while-drawing": {
+      title: "Seleccionar y mover formas mientras dibujas",
+      body: "En el modo Dibujar, hacer clic en una forma existente ahora la selecciona (y arrastrar la mueve) en vez de empezar otra encima. Una forma nueva solo nace donde no hay ninguna. Para dibujar encima de una forma, haz clic de nuevo en la herramienta activa.",
+    },
+    "group-layers": {
+      title: "Agrupar capas",
+      body: "Selecciona dos o más capas y usa el botón Agrupar del panel (o Ctrl/Cmd+G) para juntarlas en un grupo, como en Figma. Ctrl/Cmd+Shift+G deshace el grupo. El grupo aparece en el panel de capas, mueve todo junto al arrastrar y pasa al SVG y al código exportado, con las animaciones intactas.",
+    },
+    "move-layers": {
+      title: "Arrastra capas en el canvas",
+      body: "Ahora puedes mover las capas del SVG: haz clic en una capa y arrástrala en el canvas (con varias seleccionadas, todas se mueven juntas), o usa las flechas del teclado (Shift mueve más rápido). Esc cancela el arrastre y Ctrl/Cmd+Z deshace el movimiento. La posición pasa al SVG y al código exportado, y las animaciones siguen funcionando.",
+    },
+    "undo-redo": {
+      title: "Deshacer y rehacer en todo",
+      body: "Ctrl/Cmd+Z ahora deshace cualquier cambio, no solo el dibujo: sliders, presets, pasos de la secuencia, colores y capas eliminadas. Ctrl/Cmd+Shift+Z (o Ctrl+Y) rehace, y los botones de la barra superior hacen lo mismo. Arrastrar un slider cuenta como un solo paso, y el historial guarda los últimos 100.",
+    },
     "canvas-zoom-pan": {
       title: "Zoom y movimiento del lienzo",
       body: 'El lienzo ahora hace zoom y se mueve: desplaza (o haz el gesto de pinza) para acercar y alejar, arrastra el fondo —o mantén Espacio, o usa el botón central— para moverlo, y usa los botones + y − o las teclas + y −. El botón "Centrar" (o la tecla 0) lo devuelve todo a su sitio. También funciona mientras dibujas, y el dibujo cae exactamente donde arrastras.',

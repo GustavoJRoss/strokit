@@ -32,6 +32,8 @@ export const pt = {
     play: "Reproduzir",
     pause: "Pausar",
     restart: "Reiniciar",
+    undo: "Desfazer",
+    redo: "Refazer",
     speed: "Velocidade do preview",
     background: "Fundo do preview",
     backgrounds: { light: "Claro", dark: "Escuro", checker: "Xadrez" },
@@ -60,7 +62,8 @@ export const pt = {
     width: "Espessura do traço",
     undo: "Desfazer",
     redo: "Refazer",
-    hint: "Arraste no canvas. Shift mantém a proporção; Alt desenha a partir do centro.",
+    hint: "Arraste no canvas. Shift mantém a proporção; Alt desenha a partir do centro. Clique numa forma para selecionar e mover.",
+    overHint: "Desenhando por cima: arraste para criar uma forma mesmo sobre outra.",
     penHint:
       "Clique para pôr pontos e arraste para curvar. Enter ou duplo clique termina; clique no primeiro ponto fecha; Backspace remove o último.",
     untitled: "Desenho",
@@ -122,6 +125,16 @@ export const pt = {
     showLayer: "Mostrar camada",
     hideLayer: "Ocultar camada",
     edited: "Camada editada",
+    groupAction: "Agrupar",
+    ungroupAction: "Desagrupar",
+    groupErrors: {
+      "too-few": "Selecione pelo menos duas camadas, ou grupos, do mesmo nível para agrupar.",
+      "partial-group":
+        "A seleção corta um grupo ao meio. Selecione o grupo inteiro, ou só camadas de dentro dele.",
+      "no-group": "Selecione um grupo inteiro para desagrupar.",
+      "group-has-style":
+        "Esse grupo tem opacidade, cor ou máscara próprias; desagrupar mudaria a aparência.",
+    },
     tags: {
       path: "Caminho",
       line: "Linha",
@@ -570,6 +583,26 @@ export const pt = {
     fullHistory: "Ver o histórico completo de commits no GitHub",
   },
   changelog: {
+    "steady-preview": {
+      title: "Preview sem reinício a cada edição",
+      body: "A animação não volta mais ao início toda vez que você mexe no desenho. Mover, agrupar, excluir ou desfazer uma camada mantém a animação de onde ela estava. Ela só recomeça quando você clica em reiniciar, carrega outro SVG ou muda a própria animação (preset, etapa, duração, atraso ou parâmetros).",
+    },
+    "select-while-drawing": {
+      title: "Selecionar e mover formas enquanto desenha",
+      body: "No modo Desenhar, clicar numa forma que já existe agora a seleciona (e arrastar a move), em vez de começar outra forma por cima. Uma forma nova só nasce onde não há nenhuma. Para desenhar por cima de uma forma, clique de novo na ferramenta que já está ativa.",
+    },
+    "group-layers": {
+      title: "Agrupar camadas",
+      body: "Selecione duas ou mais camadas e use o botão Agrupar do painel (ou Ctrl/Cmd+G) para juntá-las num grupo, como no Figma. Ctrl/Cmd+Shift+G desfaz o grupo. O grupo aparece no painel de camadas, move tudo junto ao arrastar e vai para o SVG e para o código exportado, com as animações intactas.",
+    },
+    "move-layers": {
+      title: "Arraste camadas no canvas",
+      body: "Agora dá para mover as camadas do SVG de lugar: clique numa camada e arraste no canvas (com várias selecionadas, todas vão juntas), ou use as setas do teclado (Shift move mais rápido). Esc cancela o arrasto e Ctrl/Cmd+Z desfaz o movimento. A posição vai para o SVG e para o código exportado, e as animações continuam funcionando.",
+    },
+    "undo-redo": {
+      title: "Desfazer e refazer em tudo",
+      body: "Ctrl/Cmd+Z agora desfaz qualquer ajuste, não só o desenho: sliders, presets, etapas da sequência, cores e camadas excluídas. Ctrl/Cmd+Shift+Z (ou Ctrl+Y) refaz, e os botões na barra superior fazem o mesmo. Arrastar um slider conta como um único passo, e o histórico guarda os últimos 100.",
+    },
     "canvas-zoom-pan": {
       title: "Zoom e movimento no canvas",
       body: 'O canvas agora dá zoom e se move: role o mouse (ou faça o gesto de pinça) para aproximar e afastar, arraste o fundo — ou segure Espaço, ou use o botão do meio — para mover, e use os botões + e − ou as teclas + e −. O botão "Centralizar" (ou a tecla 0) volta tudo ao lugar. Funciona também enquanto você desenha, e o desenho cai exatamente onde você arrasta.',

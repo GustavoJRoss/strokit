@@ -1,9 +1,10 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getInitialState, useEditorStore } from "@/store/editor-store";
 import {
   selectActiveTrack,
+  selectAnimationKey,
   selectCompiled,
   selectCssExport,
   selectLayerTree,
@@ -284,31 +285,31 @@ describe("draw mode", () => {
     store().addDrawnShapes(["M20 20L30 30"], "Desenho");
     expect(store().doc?.elements).toHaveLength(2);
 
-    store().undoDraw();
+    store().undo();
     expect(store().doc?.elements).toHaveLength(1);
-    store().undoDraw();
+    store().undo();
     expect(store().doc).toBeNull();
-    expect(store().draw.past).toHaveLength(0);
+    expect(store().history.past).toHaveLength(0);
 
-    store().redoDraw();
-    store().redoDraw();
+    store().redo();
+    store().redo();
     expect(store().doc?.elements).toHaveLength(2);
-    expect(store().draw.future).toHaveLength(0);
+    expect(store().history.future).toHaveLength(0);
   });
 
   it("drops the redo stack when something new is drawn", () => {
     store().enterDraw();
     store().addDrawnShapes(["M0 0H10V10H0Z"], "Desenho");
-    store().undoDraw();
-    expect(store().draw.future).toHaveLength(1);
+    store().undo();
+    expect(store().history.future).toHaveLength(1);
     store().addDrawnShapes(["M0 0L5 5"], "Desenho");
-    expect(store().draw.future).toHaveLength(0);
+    expect(store().history.future).toHaveLength(0);
   });
 
   it("ignores undo and redo when there is nothing to do", () => {
     store().enterDraw();
-    store().undoDraw();
-    store().redoDraw();
+    store().undo();
+    store().redo();
     expect(store().doc).toBeNull();
   });
 });
@@ -317,17 +318,16 @@ describe("deleting layers", () => {
   beforeEach(() => useEditorStore.setState(getInitialState()));
 
   it("does nothing without a document or a selection", () => {
-    expect(store().deleteLayers()).toBeNull();
+    expect(store().deleteLayers()).toBe(false);
     store().loadSvg(example("orbita.svg"), "Órbita");
-    expect(store().deleteLayers()).toBeNull();
+    expect(store().deleteLayers()).toBe(false);
     expect(store().doc?.elements).toHaveLength(4);
   });
 
   it("deletes the selection and keeps the rest animated, renumbered", () => {
     store().loadSvg(example("orbita.svg"), "Órbita");
     store().select("sk-1");
-    const snapshot = store().deleteLayers();
-    expect(snapshot).not.toBeNull();
+    expect(store().deleteLayers()).toBe(true);
     const { doc, spec, selection } = store();
     expect(doc?.elements.map((element) => element.id)).toEqual(["sk-0", "sk-1", "sk-2"]);
     expect(spec.tracks.flatMap((track) => track.targets).sort()).toEqual(["sk-0", "sk-1", "sk-2"]);
@@ -342,26 +342,26 @@ describe("deleting layers", () => {
     expect(store().spec.layers).toEqual({ "sk-2": { strokeWidth: 7 } });
   });
 
-  it("brings everything back with restoreSnapshot", () => {
+  it("brings everything back with undo", () => {
     store().loadSvg(example("orbita.svg"), "Órbita");
     const before = store().spec;
     store().selectAll();
-    const snapshot = store().deleteLayers();
+    store().deleteLayers();
     expect(store().doc).toBeNull();
-    if (snapshot) store().restoreSnapshot(snapshot);
+    store().undo();
     expect(store().doc?.elements).toHaveLength(4);
     expect(store().spec).toBe(before);
     expect(store().fileName).toBe("Órbita");
   });
 
-  it("joins the drawing history while drawing, so undo works", () => {
+  it("can be undone while drawing too", () => {
     store().enterDraw();
     store().addDrawnShapes(["M0 0H10V10H0Z"], "Desenho");
     store().addDrawnShapes(["M20 20L30 30"], "Desenho");
     store().select("sk-0");
     store().deleteLayers();
     expect(store().doc?.elements).toHaveLength(1);
-    store().undoDraw();
+    store().undo();
     expect(store().doc?.elements).toHaveLength(2);
   });
 
@@ -373,5 +373,325 @@ describe("deleting layers", () => {
     expect(store().draw.active).toBe(true);
     store().addDrawnShapes(["M0 0L5 5"], "Desenho");
     expect(store().doc?.elements).toHaveLength(1);
+  });
+});
+
+describe("undo and redo", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    useEditorStore.setState(getInitialState());
+    store().loadSvg(example("orbita.svg"), "Órbita");
+  });
+  afterEach(() => vi.useRealTimers());
+
+  const trackId = () => store().spec.tracks[0]?.id ?? "";
+
+  it("starts empty, and does nothing when there is nothing to undo or redo", () => {
+    const spec = store().spec;
+    store().undo();
+    store().redo();
+    expect(store().spec).toBe(spec);
+    expect(store().history.past).toHaveLength(0);
+  });
+
+  it("undoes and redoes a spec edit", () => {
+    const before = store().spec;
+    store().updateTiming(trackId(), { duration: 3 });
+    const after = store().spec;
+    store().undo();
+    expect(store().spec).toBe(before);
+    store().redo();
+    expect(store().spec).toBe(after);
+  });
+
+  it("undoes preset and layer edits one by one", () => {
+    const initial = store().spec;
+    store().selectAll();
+    store().applyPresetToSelection("pulse");
+    const afterPreset = store().spec;
+    store().updateLayers({ strokeWidth: 7 });
+    store().undo();
+    expect(store().spec).toBe(afterPreset);
+    store().undo();
+    expect(store().spec).toBe(initial);
+  });
+
+  it("merges a burst of the same edit into one step", () => {
+    const before = store().spec;
+    for (let i = 1; i <= 20; i++) {
+      store().updateTiming(trackId(), { duration: i / 10 });
+      vi.advanceTimersByTime(20);
+    }
+    expect(store().history.past).toHaveLength(1);
+    store().undo();
+    expect(store().spec).toBe(before);
+  });
+
+  it("keeps edits of different fields, or after a pause, as separate steps", () => {
+    store().updateTiming(trackId(), { duration: 2 });
+    store().updateTiming(trackId(), { delay: 1 });
+    expect(store().history.past).toHaveLength(2);
+    vi.advanceTimersByTime(600);
+    store().updateTiming(trackId(), { delay: 2 });
+    expect(store().history.past).toHaveLength(3);
+  });
+
+  it("drops the redo stack when something new is edited", () => {
+    store().updateTiming(trackId(), { duration: 2 });
+    store().undo();
+    expect(store().history.future).toHaveLength(1);
+    store().updateTiming(trackId(), { duration: 4 });
+    expect(store().history.future).toHaveLength(0);
+  });
+
+  it("keeps at most 100 steps", () => {
+    for (let i = 0; i < 120; i++) {
+      store().setA11yLabel(`label ${i}`);
+      vi.advanceTimersByTime(600);
+    }
+    expect(store().history.past).toHaveLength(100);
+  });
+
+  it("is not affected by selection, hover or playback", () => {
+    store().select("sk-0");
+    store().setHovered("sk-1");
+    store().togglePlaying();
+    store().setExportTab("react");
+    expect(store().history.past).toHaveLength(0);
+  });
+
+  it("restores the document and the selection with it", () => {
+    store().select("sk-1");
+    store().deleteLayers();
+    expect(store().doc?.elements).toHaveLength(3);
+    store().undo();
+    expect(store().doc?.elements).toHaveLength(4);
+    expect(store().selection).toEqual(["sk-1"]);
+    store().redo();
+    expect(store().doc?.elements).toHaveLength(3);
+  });
+
+  it("is cleared by loading another SVG and by reset", () => {
+    store().updateTiming(trackId(), { duration: 2 });
+    store().loadSvg(example("pico.svg"), "Pico");
+    expect(store().history.past).toHaveLength(0);
+    store().updateTiming(trackId(), { duration: 2 });
+    store().reset();
+    expect(store().history.past).toHaveLength(0);
+  });
+
+  it("shares one history between drawing and spec edits", () => {
+    store().enterDraw();
+    store().addDrawnShapes(["M0 0L10 10"], "Desenho");
+    store().updateTiming(trackId(), { duration: 5 });
+    store().undo();
+    expect(store().doc?.elements).toHaveLength(5);
+    store().undo();
+    expect(store().doc?.elements).toHaveLength(4);
+  });
+});
+
+describe("moving layers", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    useEditorStore.setState(getInitialState());
+    store().loadSvg(example("orbita.svg"), "Órbita");
+  });
+  afterEach(() => vi.useRealTimers());
+
+  const transformOf = (id: string) => {
+    const find = (
+      node: NonNullable<ReturnType<typeof store>["doc"]>["root"],
+    ): string | undefined => {
+      if (node.attrs["data-sk-id"] === id) return node.attrs.transform;
+      for (const child of node.children) {
+        if (child.type !== "element") continue;
+        const found = find(child);
+        if (found !== undefined) return found;
+      }
+      return undefined;
+    };
+    return store().doc ? find(store().doc?.root as never) : undefined;
+  };
+
+  it("edits the SVG, keeping ids, animations and selection", () => {
+    const tracks = store().spec.tracks;
+    store().select("sk-1");
+    store().moveLayers(["sk-1"], 4, -2);
+    // This layer was already rotated: the move goes in front of it.
+    expect(transformOf("sk-1")).toBe("translate(4 -2) rotate(-28 80 80)");
+    expect(store().doc?.elements).toHaveLength(4);
+    expect(store().spec.tracks.map((track) => track.targets)).toEqual(
+      tracks.map((track) => track.targets),
+    );
+    expect(store().selection).toEqual(["sk-1"]);
+  });
+
+  it("is one undo step, and redo moves it again", () => {
+    store().moveLayers(["sk-0"], 5, 5);
+    store().undo();
+    expect(transformOf("sk-0")).toBeUndefined();
+    store().redo();
+    expect(transformOf("sk-0")).toBe("translate(5 5)");
+  });
+
+  it("folds repeated nudges of the same layers into one step, but not a drag", () => {
+    store().moveLayers(["sk-0"], 1, 0, true);
+    store().moveLayers(["sk-0"], 1, 0, true);
+    store().moveLayers(["sk-0"], 1, 0, true);
+    expect(store().history.past).toHaveLength(1);
+    expect(transformOf("sk-0")).toBe("translate(3 0)");
+    store().moveLayers(["sk-0"], 1, 0);
+    store().moveLayers(["sk-0"], 1, 0);
+    expect(store().history.past).toHaveLength(3);
+  });
+
+  it("does nothing without a document, layers or distance", () => {
+    store().moveLayers(["sk-0"], 0, 0);
+    store().moveLayers([], 5, 5);
+    expect(store().history.past).toHaveLength(0);
+    useEditorStore.setState(getInitialState());
+    store().moveLayers(["sk-0"], 5, 5);
+    expect(store().doc).toBeNull();
+  });
+});
+
+describe("grouping layers", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    useEditorStore.setState(getInitialState());
+    store().loadSvg(example("orbita.svg"), "Órbita");
+  });
+  afterEach(() => vi.useRealTimers());
+
+  const kinds = () => selectLayerTree(store()).map((node) => node.kind);
+
+  it("groups the selection, selects the group and keeps every layer animated", () => {
+    store().selectMany(["sk-1", "sk-3"]);
+    expect(store().groupSelection()).toBeNull();
+    // The group takes the place of the top layer (sk-3), so the others close ranks below it.
+    expect(kinds()).toEqual(["layer", "layer", "group"]);
+    expect(store().selection).toEqual(["sk-2", "sk-3"]);
+    expect(store().doc?.elements).toHaveLength(4);
+    expect(
+      store()
+        .spec.tracks.flatMap((track) => track.targets)
+        .sort(),
+    ).toEqual(["sk-0", "sk-1", "sk-2", "sk-3"]);
+  });
+
+  it("carries a layer edit to the renumbered id", () => {
+    store().updateLayers({ strokeWidth: 7 }, ["sk-2"]);
+    store().selectMany(["sk-0", "sk-3"]);
+    store().groupSelection();
+    // Group = sk-0 + sk-3, placed at the end: the layer left out (sk-2) is now second, sk-1.
+    expect(store().spec.layers).toEqual({ "sk-1": { strokeWidth: 7 } });
+  });
+
+  it("explains what cannot be grouped, without leaving a step in the history", () => {
+    store().select("sk-0");
+    expect(store().groupSelection()).toBe("too-few");
+    store().clearSelection();
+    expect(store().groupSelection()).toBe("too-few");
+    expect(store().history.past).toHaveLength(0);
+  });
+
+  it("undoes and redoes a group", () => {
+    const before = store().doc;
+    store().selectMany(["sk-0", "sk-1"]);
+    store().groupSelection();
+    expect(kinds()).toContain("group");
+    store().undo();
+    expect(store().doc).toBe(before);
+    expect(kinds().every((kind) => kind === "layer")).toBe(true);
+    store().redo();
+    expect(kinds()).toContain("group");
+  });
+
+  it("ungroups, and says when there is no group", () => {
+    store().selectMany(["sk-0", "sk-1"]);
+    expect(store().ungroupSelection()).toBe("no-group");
+    store().groupSelection();
+    expect(store().ungroupSelection()).toBeNull();
+    expect(kinds().every((kind) => kind === "layer")).toBe(true);
+    expect(store().selection).toEqual(["sk-0", "sk-1"]);
+  });
+
+  it("moves a group as one node", () => {
+    store().selectMany(["sk-0", "sk-1"]);
+    store().groupSelection();
+    store().moveLayers(["sk-0", "sk-1"], 4, 2);
+    expect(store().doc?.raw).toContain('<g transform="translate(4 2)">');
+  });
+});
+
+describe("drawing over shapes", () => {
+  beforeEach(() => useEditorStore.setState(getInitialState()));
+
+  it("starts off, and is armed by setDrawOver", () => {
+    store().enterDraw();
+    expect(store().draw.overShapes).toBe(false);
+    store().setDrawOver(true);
+    expect(store().draw.overShapes).toBe(true);
+  });
+
+  it("is dropped by a new shape, another tool, and by entering or leaving draw mode", () => {
+    store().enterDraw();
+    store().setDrawOver(true);
+    store().addDrawnShapes(["M0 0L10 10"], "Desenho");
+    expect(store().draw.overShapes).toBe(false);
+
+    store().setDrawOver(true);
+    store().setDrawTool("rect");
+    expect(store().draw.overShapes).toBe(false);
+
+    store().setDrawOver(true);
+    store().exitDraw();
+    expect(store().draw.overShapes).toBe(false);
+    store().setDrawOver(true);
+    store().enterDraw();
+    expect(store().draw.overShapes).toBe(false);
+  });
+});
+
+describe("restarting the preview", () => {
+  beforeEach(() => {
+    useEditorStore.setState(getInitialState());
+    store().loadSvg(example("orbita.svg"), "Órbita");
+  });
+
+  const token = () => store().playback.restartToken;
+
+  it("does not restart when a layer is moved, grouped, ungrouped or deleted, or on undo and redo", () => {
+    const start = token();
+    store().moveLayers(["sk-0"], 3, 3);
+    store().selectMany(["sk-0", "sk-1"]);
+    store().groupSelection();
+    store().ungroupSelection();
+    store().select("sk-2");
+    store().deleteLayers();
+    store().undo();
+    store().redo();
+    expect(token()).toBe(start);
+  });
+
+  it("restarts only on an explicit restart, or when another SVG is loaded", () => {
+    const start = token();
+    store().restart();
+    expect(token()).toBe(start + 1);
+    store().loadSvg(example("pico.svg"), "Pico");
+    expect(token()).toBe(start + 2);
+  });
+
+  it("has an animation key that ignores which layers a step animates, but not its settings", () => {
+    const key = selectAnimationKey(store());
+    store().selectMany(["sk-0", "sk-1"]);
+    store().groupSelection();
+    store().moveLayers(["sk-0"], 2, 2);
+    expect(selectAnimationKey(store())).toBe(key);
+
+    const track = store().spec.tracks[0];
+    store().updateTiming(track?.id ?? "", { duration: 9 });
+    expect(selectAnimationKey(store())).not.toBe(key);
   });
 });

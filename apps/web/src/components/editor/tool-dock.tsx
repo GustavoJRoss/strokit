@@ -80,16 +80,23 @@ export function ToolDock({ extra }: { extra?: ReactNode }) {
   const enterDraw = useEditorStore((state) => state.enterDraw);
   const exitDraw = useEditorStore((state) => state.exitDraw);
   const setDrawTool = useEditorStore((state) => state.setDrawTool);
+  const setDrawOver = useEditorStore((state) => state.setDrawOver);
   const setDrawStyle = useEditorStore((state) => state.setDrawStyle);
-  const undoDraw = useEditorStore((state) => state.undoDraw);
-  const redoDraw = useEditorStore((state) => state.redoDraw);
+  const undo = useEditorStore((state) => state.undo);
+  const redo = useEditorStore((state) => state.redo);
+  const canUndo = useEditorStore((state) => state.history.past.length > 0);
+  const canRedo = useEditorStore((state) => state.history.future.length > 0);
   const { t } = useI18n();
   const copy = t.draw;
   const names: Record<DrawTool | "select", string> = { select: copy.select, ...copy.tools };
   const value = draw.active ? draw.tool : "select";
 
   const choose = (next: string) => {
-    if (!next) return;
+    if (!next) {
+      // Picking the tool that is already active again: draw over what is under the pointer.
+      if (draw.active) setDrawOver(!draw.overShapes);
+      return;
+    }
     if (next === "select") {
       if (draw.active) exitDraw();
       return;
@@ -103,7 +110,7 @@ export function ToolDock({ extra }: { extra?: ReactNode }) {
       <div className="flex max-w-full flex-col items-center gap-2">
         {draw.active && (
           <p className="hidden rounded-md bg-foreground/85 px-2 py-1 text-background text-xs sm:block">
-            {draw.tool === "pen" ? copy.penHint : copy.hint}
+            {draw.overShapes ? copy.overHint : draw.tool === "pen" ? copy.penHint : copy.hint}
           </p>
         )}
         <div
@@ -166,10 +173,10 @@ export function ToolDock({ extra }: { extra?: ReactNode }) {
                 </output>
               </div>
               <Separator orientation="vertical" className="h-6" />
-              <IconAction label={copy.undo} disabled={draw.past.length === 0} onClick={undoDraw}>
+              <IconAction label={copy.undo} disabled={!canUndo} onClick={undo}>
                 <Undo2Icon />
               </IconAction>
-              <IconAction label={copy.redo} disabled={draw.future.length === 0} onClick={redoDraw}>
+              <IconAction label={copy.redo} disabled={!canRedo} onClick={redo}>
                 <Redo2Icon />
               </IconAction>
             </>

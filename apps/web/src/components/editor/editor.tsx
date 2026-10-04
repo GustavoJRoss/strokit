@@ -12,6 +12,7 @@ import { PreviewCanvas } from "./preview-canvas";
 import { Toolbar } from "./toolbar";
 import { useDeleteLayers } from "./use-delete-layers";
 import { useDraft } from "./use-draft";
+import { useGroupLayers } from "./use-group-layers";
 import { useImporter } from "./use-importer";
 
 export function Editor() {
@@ -22,6 +23,7 @@ export function Editor() {
   const { t } = useI18n();
   useDraft();
   const deleteSelected = useDeleteLayers();
+  const { group, ungroup } = useGroupLayers();
 
   // Delete/Backspace remove the selected layers. Draw mode has its own keys (see DrawLayer).
   useEffect(() => {
@@ -43,6 +45,49 @@ export function Editor() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [deleteSelected]);
+
+  // Ctrl/Cmd+Z undoes, Shift+Ctrl/Cmd+Z (or Ctrl+Y) redoes. Text fields keep their own undo.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.altKey || !(event.metaKey || event.ctrlKey)) return;
+      const key = event.key.toLowerCase();
+      if (key !== "z" && key !== "y") return;
+      if (isEditableTarget(event.target)) return;
+      if (
+        event.target instanceof Element &&
+        event.target.closest("[role=dialog],[role=menu],[role=listbox]")
+      )
+        return;
+      event.preventDefault();
+      const { undo, redo } = useEditorStore.getState();
+      if (key === "y" || event.shiftKey) redo();
+      else undo();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Ctrl/Cmd+G groups the selection, with Shift it dissolves the group. The browser would
+  // otherwise use Ctrl+G to find the next match.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.altKey || !(event.metaKey || event.ctrlKey)) return;
+      if (event.key.toLowerCase() !== "g") return;
+      if (isEditableTarget(event.target)) return;
+      if (
+        event.target instanceof Element &&
+        event.target.closest("[role=dialog],[role=menu],[role=listbox]")
+      )
+        return;
+      const { draw, selection } = useEditorStore.getState();
+      if (draw.active || selection.length === 0) return;
+      event.preventDefault();
+      if (event.shiftKey) ungroup();
+      else group();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [group, ungroup]);
 
   useEffect(() => {
     const onPaste = (event: ClipboardEvent) => {

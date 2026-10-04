@@ -29,6 +29,8 @@ export const en: Dictionary = {
     play: "Play",
     pause: "Pause",
     restart: "Restart",
+    undo: "Undo",
+    redo: "Redo",
     speed: "Preview speed",
     background: "Preview background",
     backgrounds: { light: "Light", dark: "Dark", checker: "Checker" },
@@ -57,7 +59,8 @@ export const en: Dictionary = {
     width: "Stroke width",
     undo: "Undo",
     redo: "Redo",
-    hint: "Drag on the canvas. Shift keeps the proportion; Alt draws from the center.",
+    hint: "Drag on the canvas. Shift keeps the proportion; Alt draws from the center. Click a shape to select and move it.",
+    overHint: "Drawing over: drag to create a shape even on top of another one.",
     penHint:
       "Click to place points and drag to curve. Enter or double-click finishes; click the first point to close; Backspace removes the last.",
     untitled: "Drawing",
@@ -119,6 +122,16 @@ export const en: Dictionary = {
     showLayer: "Show layer",
     hideLayer: "Hide layer",
     edited: "Edited layer",
+    groupAction: "Group",
+    ungroupAction: "Ungroup",
+    groupErrors: {
+      "too-few": "Select at least two layers, or groups, at the same level to group.",
+      "partial-group":
+        "The selection cuts a group in half. Select the whole group, or only layers inside it.",
+      "no-group": "Select a whole group to ungroup.",
+      "group-has-style":
+        "This group has its own opacity, color or mask; ungrouping would change how it looks.",
+    },
     tags: {
       path: "Path",
       line: "Line",
@@ -558,6 +571,26 @@ export const en: Dictionary = {
     fullHistory: "See the full commit history on GitHub",
   },
   changelog: {
+    "steady-preview": {
+      title: "Preview no longer restarts on every edit",
+      body: "The animation no longer jumps back to the start every time you change the drawing. Moving, grouping, deleting or undoing a layer keeps the animation where it was. It only starts over when you click restart, load another SVG, or change the animation itself (preset, step, duration, delay or parameters).",
+    },
+    "select-while-drawing": {
+      title: "Select and move shapes while drawing",
+      body: "In Draw mode, clicking an existing shape now selects it (and dragging moves it) instead of starting another shape on top. A new shape is only created where there is none. To draw over a shape, click the active tool again.",
+    },
+    "group-layers": {
+      title: "Group layers",
+      body: "Select two or more layers and use the Group button in the panel (or Ctrl/Cmd+G) to put them in a group, like in Figma. Ctrl/Cmd+Shift+G ungroups. The group shows in the layers panel, moves everything together when dragged, and goes into the SVG and the exported code, with animations intact.",
+    },
+    "move-layers": {
+      title: "Drag layers on the canvas",
+      body: "You can now move SVG layers around: click a layer and drag it on the canvas (with several selected, they all move together), or use the arrow keys (Shift moves faster). Esc cancels the drag and Ctrl/Cmd+Z undoes the move. The position goes into the SVG and the exported code, and animations keep working.",
+    },
+    "undo-redo": {
+      title: "Undo and redo for everything",
+      body: "Ctrl/Cmd+Z now undoes any change, not just drawing: sliders, presets, sequence steps, colors and deleted layers. Ctrl/Cmd+Shift+Z (or Ctrl+Y) redoes, and the buttons in the top bar do the same. Dragging a slider counts as a single step, and the history keeps the last 100.",
+    },
     "canvas-zoom-pan": {
       title: "Zoom and pan the canvas",
       body: 'The canvas now zooms and moves: scroll (or pinch) to zoom in and out, drag the background — or hold Space, or use the middle button — to move it, and use the + and − buttons or keys. The "Center" button (or the 0 key) puts everything back. It works while drawing too, and the drawing lands exactly where you drag.',
