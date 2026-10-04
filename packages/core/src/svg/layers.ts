@@ -58,3 +58,50 @@ export function layerTree(root: SvgElementNode): LayerNode[] {
   while (nodes.length === 1 && nodes[0]?.kind === "group") nodes = nodes[0].children;
   return nodes;
 }
+
+/** Ids of every drawable under a node. */
+export function nodeIds(node: LayerNode): string[] {
+  return node.kind === "layer" ? [node.id] : node.ids;
+}
+
+/** Nodes from the top of the tree down to the layer, the layer last; `null` if it is not there. */
+export function layerPath(tree: readonly LayerNode[], id: string): LayerNode[] | null {
+  for (const node of tree) {
+    if (node.kind === "layer") {
+      if (node.id === id) return [node];
+      continue;
+    }
+    if (!node.ids.includes(id)) continue;
+    const inner = layerPath(node.children, id);
+    if (inner) return [node, ...inner];
+  }
+  return null;
+}
+
+/** The group with this key, anywhere in the tree. */
+export function findGroup(
+  tree: readonly LayerNode[],
+  key: string,
+): Extract<LayerNode, { kind: "group" }> | null {
+  for (const node of tree) {
+    if (node.kind !== "group") continue;
+    if (node.key === key) return node;
+    const inner = findGroup(node.children, key);
+    if (inner) return inner;
+  }
+  return null;
+}
+
+/** The group whose layers are exactly `ids` (any order), the outermost one if several match. */
+export function findGroupWithIds(
+  tree: readonly LayerNode[],
+  ids: readonly string[],
+): Extract<LayerNode, { kind: "group" }> | null {
+  for (const node of tree) {
+    if (node.kind !== "group") continue;
+    if (node.ids.length === ids.length && ids.every((id) => node.ids.includes(id))) return node;
+    const inner = findGroupWithIds(node.children, ids);
+    if (inner) return inner;
+  }
+  return null;
+}
