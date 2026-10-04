@@ -8,6 +8,11 @@ export type ChangelogEntry = { id: ChangelogId; date: string };
  * bodies live in the dictionaries (`t.changelog[id]`), like every other piece of UI text.
  */
 export const CHANGELOG: ChangelogEntry[] = [
+  { id: "steady-preview", date: "2026-10-04" },
+  { id: "select-while-drawing", date: "2026-10-04" },
+  { id: "group-layers", date: "2026-10-04" },
+  { id: "move-layers", date: "2026-10-04" },
+  { id: "undo-redo", date: "2026-10-04" },
   { id: "canvas-zoom-pan", date: "2026-09-30" },
   { id: "leaner-editor", date: "2026-09-30" },
   { id: "delete-layers", date: "2026-09-30" },

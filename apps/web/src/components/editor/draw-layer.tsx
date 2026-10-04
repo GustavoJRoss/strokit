@@ -54,7 +54,14 @@ function distance(a: DrawPoint, b: DrawPoint): number {
  * Transparent SVG over the preview while drawing. It has the viewBox of the document (or the
  * blank canvas), so a pointer position converts to viewBox units through its own screen matrix.
  */
-export function DrawLayer({ disabled = false }: { disabled?: boolean }) {
+export function DrawLayer({
+  disabled = false,
+  onPressShape,
+}: {
+  disabled?: boolean;
+  /** Called on a press: returns true when it landed on a shape that took the press over. */
+  onPressShape?: (event: React.PointerEvent<SVGSVGElement>) => boolean;
+}) {
   const doc = useEditorStore((state) => state.doc);
   const draw = useEditorStore((state) => state.draw);
   const { t } = useI18n();
@@ -136,24 +143,30 @@ export function DrawLayer({ disabled = false }: { disabled?: boolean }) {
           event.preventDefault();
           state.deleteLayers();
         }
-      } else if (mod && key === "z") {
-        if (placing && !event.shiftKey) undoAnchor();
-        else {
-          event.preventDefault();
-          if (event.shiftKey) state.redoDraw();
-          else state.undoDraw();
-        }
-      } else if (mod && key === "y") {
-        event.preventDefault();
-        state.redoDraw();
       } else if (!mod && !event.altKey && key === "v") {
         state.exitDraw();
       } else if (!mod && !event.altKey && SHORTCUT_TOOLS[key]) {
         state.setDrawTool(SHORTCUT_TOOLS[key]);
       }
     };
+    // Ctrl/Cmd+Z drops the last pen anchor first. Capture phase, so the editor-wide undo (which
+    // listens on the same window) never sees the key while an anchor can still be taken back.
+    const onUndoKey = (event: KeyboardEvent) => {
+      const placing = penRef.current;
+      if (!placing || isEditableTarget(event.target)) return;
+      if (!(event.metaKey || event.ctrlKey) || event.shiftKey || event.key.toLowerCase() !== "z")
+        return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const anchors = placing.anchors.slice(0, -1);
+      updatePen(anchors.length > 0 ? { ...placing, anchors, shaping: false } : null);
+    };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("keydown", onUndoKey, true);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("keydown", onUndoKey, true);
+    };
   }, [updatePen]);
 
   const penDown = (event: React.PointerEvent<SVGSVGElement>) => {
@@ -229,6 +242,8 @@ export function DrawLayer({ disabled = false }: { disabled?: boolean }) {
       )}
       onPointerDown={(event) => {
         if (event.button !== 0) return;
+        // A press on an existing shape selects or moves it; a pen path in progress keeps its clicks.
+        if (!penRef.current && onPressShape?.(event)) return;
         if (draw.tool === "pen") {
           penDown(event);
           return;

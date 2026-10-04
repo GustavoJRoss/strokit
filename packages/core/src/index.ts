@@ -92,8 +92,24 @@ export {
 export { type Easing, type EasingPreset, easingPresetSchema, type Timing } from "./spec/timing";
 export { type DeleteLayersResult, deleteLayers } from "./svg/delete";
 export { type ImportWarning, SvgImportError, type SvgImportErrorCode } from "./svg/errors";
+export {
+  type GroupErrorCode,
+  type GroupResult,
+  groupLayers,
+  type UngroupErrorCode,
+  type UngroupResult,
+  ungroupLayers,
+} from "./svg/group";
 export { type ImportOptions, type ImportResult, importSvg, sanitizeSvg } from "./svg/import";
-export { type LayerNode, layerTree } from "./svg/layers";
+export {
+  findGroup,
+  findGroupWithIds,
+  type LayerNode,
+  layerPath,
+  layerTree,
+  nodeIds,
+} from "./svg/layers";
+export { moveElements } from "./svg/move";
 export { normalizeSvg } from "./svg/normalize";
 export { type DomParserLike, MAX_SVG_BYTES, parseSvg } from "./svg/parse";
 export { serializeSvg } from "./svg/serialize";

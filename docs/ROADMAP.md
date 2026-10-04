@@ -195,9 +195,47 @@ Plano completo em fases A–D. Um modo "Desenhar" no próprio preview, sem paine
 
 ---
 
+## Fase 7H — Desfazer e refazer geral (incluída a pedido do autor)
+
+- [x] Histórico na store (`history.past/future`, limite de 100), com `undo`/`redo` e unificação do histórico do modo desenhar e do toast de exclusão
+- [x] Edições em rajada (sliders) agrupadas num passo só
+- [x] Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z e Ctrl+Y em todo o editor (a âncora da caneta tem prioridade); botões na barra superior
+- [x] Testes: `editor-store.test.ts` (histórico, agrupamento, limite, limpeza ao carregar)
+- [x] Changelog (pt/en/es)
+
+**Aceite:** mexer num slider e apertar Ctrl+Z volta ao valor anterior em um passo; excluir uma camada, desenhar e trocar de preset são desfeitos e refeitos na ordem.
+
+---
+
+## Fase 7I — Mover camadas no canvas (incluída a pedido do autor)
+
+- [x] `moveElements` no core (`svg/move.ts`): move pelo atributo `transform`, convertendo para o espaço do pai
+- [x] Ação `moveLayers` na store, desfazível (uma entrada por arrasto; setas agrupadas)
+- [x] Arrastar camada(s) no canvas (limiar de 4 px, Esc cancela), setas movem (Shift ×10)
+- [x] Testes: `move.test.ts` (core) e `editor-store.test.ts`
+- [x] Changelog (pt/en/es)
+
+**Aceite:** arrastar uma camada a move; com várias selecionadas, todas vão juntas; Ctrl+Z devolve; o CSS exportado e o SVG baixado mantêm a nova posição e as animações.
+
+---
+
+## Fase 7J — Agrupar e desagrupar (incluída a pedido do autor)
+
+- [x] `remapSpec` extraído de `deleteLayers` (`spec/remap.ts`)
+- [x] `groupLayers` / `ungroupLayers` no core (`svg/group.ts`): agrupa dentro do menor ancestral comum, por filhos inteiros; erros por código
+- [x] `moveElements` move o `<g>` quando a seleção cobre um grupo de 2+ camadas
+- [x] Helpers de árvore: `layerPath`, `findGroup`, `findGroupWithIds`, `nodeIds`
+- [x] Ações `groupSelection` / `ungroupSelection` (desfazíveis), atalhos Ctrl/Cmd+G e Ctrl/Cmd+Shift+G, botões no painel de camadas
+- [x] Testes: `group.test.ts`, `editor-store.test.ts`
+- [x] Changelog (pt/en/es)
+
+**Aceite:** selecionar duas camadas, agrupar (botão ou Ctrl+G), ver o grupo no painel, arrastar movendo tudo junto, desfazer com Ctrl+Z e desagrupar com Ctrl+Shift+G; o CSS exportado mantém o `<g>` e as animações.
+
+---
+
 ## Fase 6 — Polimento (opcional antes do lançamento)
 
-- [ ] Undo/redo (`zundo`) com atalhos
+- [x] Undo/redo com atalhos (feito na Fase 7H, na própria store, sem `zundo`)
 - [ ] Atalhos de teclado (espaço = play/pause, R = restart)
 - [ ] Mobile: editor em modo "somente visualizar + exportar"
 

@@ -1,4 +1,4 @@
-import { pruneTracks } from "../spec/defaults";
+import { remapSpec } from "../spec/remap";
 import type { AnimationSpec } from "../spec/schema";
 import { serializeSvg } from "./serialize";
 import { cloneNode, removeElements, type SvgElementNode } from "./tree";
@@ -41,19 +41,7 @@ export function deleteLayers(
     if (!doomed.has(element.id)) renumbered.set(element.id, `sk-${renumbered.size}`);
   }
 
-  const tracks = pruneTracks(
-    spec.tracks.map((track) => ({
-      ...track,
-      targets: track.targets.flatMap((id) => renumbered.get(id) ?? []),
-    })),
-  );
-  const { layers, ...rest } = spec;
-  const kept = Object.entries(layers ?? {}).flatMap(([id, override]) => {
-    const next = renumbered.get(id);
-    return next === undefined ? [] : [[next, override] as const];
-  });
-  const next: AnimationSpec = { ...rest, tracks };
-  if (kept.length > 0) next.layers = Object.fromEntries(kept);
+  const next = remapSpec(spec, renumbered);
 
   if (renumbered.size === 0) return { markup: null, spec: next, removed: doomed.size };
   const root = cloneNode(document.root);
